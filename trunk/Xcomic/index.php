@@ -4,7 +4,7 @@
 	--------------------------------------------
 	(Added for a more user friendly installation.
 	 Remove the following config file check to 
-	 increase page execution speed.)
+	 increase page execution speed)
 	*/
 	//Check for a config file
 	if(!file_exists('includes/config.php')) {
