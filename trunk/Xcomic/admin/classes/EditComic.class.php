@@ -52,7 +52,22 @@ class EditComic
 			$message->error('Unable to change comic title. SQL: '.$sql);
 		}
 	}
-	
+
+	function changeDate($inNewDate)
+	{
+		global $message;		
+				
+		$sql = '
+		    UPDATE '.XCOMIC_COMICS_TABLE.'
+			SET date = '.$this->dbc->quoteSmart($inNewDate).'
+			WHERE cid = '.$this->cid;
+		$result = $this->dbc->query($sql);
+		//Make the changes happen
+		if (PEAR::isError($result)) {
+			$message->error('Unable to change comic date. SQL: '.$sql);
+		}
+	}
+
 	function changeFile($inNewFile)
 	{
 		global $xcomicRootPath, $classEx, $message;
