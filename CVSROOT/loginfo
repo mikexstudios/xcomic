@@ -26,6 +26,6 @@
 # or
 #DEFAULT (echo ""; id; echo %{sVv}; date; cat) >> $CVSROOT/CVSROOT/commitlog
 
-CVSROOT /cvsroot/xcomic/CVSROOT/cvstools/syncmail %{sVv} mike.huynh@gmail.com
+CVSROOT /cvsroot/sitedocs/CVSROOT/cvstools/syncmail %{sVv} mike.huynh@gmail.com
 
-DEFAULT /cvsroot/xcomic/CVSROOT/cvstools/syncmail %{sVv} xcomic-cvs@lists.sourceforge.net
+DEFAULT /cvsroot/sitedocs/CVSROOT/cvstools/syncmail %{sVv} xcomic-cvs@lists.sourceforge.net
