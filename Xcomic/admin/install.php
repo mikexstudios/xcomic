@@ -142,23 +142,24 @@ function installXcomic() {
 	//Add URL Information
 	$inBaseUrl=(!empty($_REQUEST['baseurl'])) ? $_REQUEST['baseurl'] : null;
 	$inUrlToXcomic=(!empty($_REQUEST['urltoxcomic'])) ? $_REQUEST['urltoxcomic'] : null;
-	$sql_query[] = "INSERT INTO " . $table_prefix . "config VALUES ('baseUrl', '$inBaseUrl', 'Base url', 'The base url that Xcomic is running on (ie. http://www.yoururl.com)')";
-	$sql_query[] = "INSERT INTO " . $table_prefix . "config VALUES ('urlToXcomic', '$inUrlToXcomic', 'Url to Xcomic', 'The full url to the installation of Xcomic (ie. http://www.xcomic.com/xcomic)')";
-
-    $id = $db->nextId($table_prefix . 'users'); //This assumes that the users table is named users //Not anymore...
-    $sql_query[] = "INSERT INTO " . $table_prefix . "users VALUES ($id, '".$inUsUser."', '".md5($inUsPass)."', '".$inUsMail."')";
+	$sql_query[] = "INSERT INTO " . $table_prefix . "config VALUES ('1', '1', 'title', 'Xcomic', 'Title', 'A title for the comic'))";
+	$sql_query[] = "INSERT INTO " . $table_prefix . "config VALUES ('2', '1', 'baseUrl', '$inBaseUrl', 'Base url', 'The base url that Xcomic is running on (ie. http://www.yoururl.com)')";
+	$sql_query[] = "INSERT INTO " . $table_prefix . "config VALUES ('3', '1', 'urlToXcomic', '$inUrlToXcomic', 'Url to Xcomic', 'The full url to the installation of Xcomic (ie. http://www.xcomic.com/xcomic)')";
+	$sql_query[] = "INSERT INTO " . $table_prefix . "config VALUES ('4', '2', 'enableRSS', '1', 'Enable RSS', 'Enable Really Simple Syndication of comics'))";
+	$sql_query[] = "INSERT INTO " . $table_prefix . "config VALUES ('5', '0', 'rssNumComics', '5', 'Number of comics to syndicate', 'The number of comics syndicated in the RSS feed'))";
+	
+	$id = $db->nextId($table_prefix . 'users');
+	$sql_query[] = "INSERT INTO " . $table_prefix . "users VALUES ($id, '".$inUsUser."', '".md5($inUsPass)."', '".$inUsMail."')";
 	
 	for ($i = 0; $i < sizeof($sql_query); $i++) {
 		if (trim($sql_query[$i]) != '') {
 		    $result = $db->query($sql_query[$i]);
 			if (PEAR::isError($result)) {
-				//$error = $db->sql_error(); // Function no longer exists, but there is an object provided as part of $result
-				//when there is an error
-				die('Install error<br />'. $result->getMessage());
+				//Someone feel like making this look more 'pretty'?
+				die('Install error:<br />' . $result->getMessage());
 			}
 		}
 	}
-
 	
 	//Display success page
 	displayHeader();
