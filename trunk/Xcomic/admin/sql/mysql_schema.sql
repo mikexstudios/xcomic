@@ -25,7 +25,6 @@ CREATE TABLE `comics` (
   `title` varchar(50) NOT NULL default '',
   `filename` varchar(80) NOT NULL default '',
   `date` int(11) NOT NULL default '0',
-  `newsitem` int(255) unsigned default NULL,
   PRIMARY KEY  (`cid`)
 ) TYPE=MyISAM AUTO_INCREMENT=1 ;
 

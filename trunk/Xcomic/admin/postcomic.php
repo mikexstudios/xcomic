@@ -19,7 +19,8 @@ $formModeValue = 'postcomic';
 //Check for form submission
 if($_REQUEST['mode'] == $formModeValue) {
 	$comicTitle=(!empty($_REQUEST[$formComicTitle])) ? $security->secureText($_REQUEST[$formComicTitle]) : NULL;
-	$comicFile=(!empty($_FILES[$formComicFile])) ? $_FILES[$formComicFile] : NULL; //Default to left
+	//Must use $_FILES[$formComicFile]['name'] since empty on just $_FILES[$formComicFile] will always return false.
+	$comicFile=(!empty($_FILES[$formComicFile]['name'])) ? $_FILES[$formComicFile] : NULL; //Default to left
 	
 	include_once('./classes/PostComic.'.$classEx);
 	//Check for error
