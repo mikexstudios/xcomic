@@ -31,7 +31,7 @@ if ($mode == 'delete')  {
 //Check for form submission for edit user
 if (isset($_POST['submit'])) {
 
-$password = (!empty($_REQUEST['password'])) ? $security->secureText($_REQUEST['password']) : null;
+$password = (!empty($_REQUEST['editPassword'])) ? $security->secureText($_REQUEST['editPassword']) : null;
 $email = (!empty($_REQUEST['email'])) ? $security->allowOnlyEmail($_REQUEST['email']) : null;
 
 //Check for error
@@ -86,8 +86,8 @@ include './includes/menu.php';
  <h2>Edit <?php echo $row['username']; ?></h2>
  <div class="section-body">
   <form method="POST" action="" enctype="multipart/form-data">
-   <label for="'password">Change Password (leave blank to keep current password):</label><br />
-   <input type="password" name="password" size="20" /><br />
+   <label for="editPassword">Change Password (leave blank to keep current password):</label><br />
+   <input type="password" name="editPassword" size="20" /><br />
 
    <label for="email">Change E-mail Address:</label><br />
    <input type="text" name="email" value="<?php echo $row['email']; ?>" size="20" /><br />
