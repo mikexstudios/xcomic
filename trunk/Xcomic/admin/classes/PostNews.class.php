@@ -7,13 +7,6 @@ postNews - posts left or right rant
 $Id$
 */
 
-define('IN_XCOMIC', true);
-
-/*
-$xcomicRootPath='../';
-include_once($xcomicRootPath.'initialize.php');
-*/
-
 class PostNews {
 	
 	var $title;

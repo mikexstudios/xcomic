@@ -15,21 +15,26 @@ include_once($xcomicRootPath.'initialize.php');
 class Settings
 {	
 	var $configInfo; //Holds all configuration info records
-	
-	function Settings()
-	{	
+    var $dbc;
+
+	function Settings(&$dbc)
+	{
+        if (DB::isConnection($dbc)) {
+            $this->dbc =& $dbc;
+        }
 		//Grab settings from database
 		$this->getConfigInfo();	
 	}
 	
 	function getConfigInfo()
 	{
-		global $db, $message;
+		global $message;
+
+		$sql = '
+		    SELECT * 
+		    FROM ' . XCOMIC_CONFIG_TABLE;
 		
-		$sql = 'SELECT * 
-			FROM ' . XCOMIC_CONFIG_TABLE;
-		
-		$result = $db->getAll($sql);
+		$result = $this->dbc->getAll($sql);
 		if (PEAR::isError($result)) {
 			#$message->error("Could not query config information");
 			die('Could not query config information');
@@ -73,11 +78,12 @@ class Settings
 	
 	function addNewSetting($inKey, $inValue, $inDescription)
 	{
-		global $db, $message;
+		global $message;
 		
-		$sql = 'INSERT INTO '.XCOMIC_CONFIG_TABLE." (option, value, description)
+		$sql = '
+		    INSERT INTO '.XCOMIC_CONFIG_TABLE." (option, value, description)
 			VALUES ('$inKey', '$inValue', '$inDescription')";
-		$result = $db->query($sql);
+		$result = $this->dbc->query($sql);
 		if (PEAR::isError($result)) {
 			#$message->error("Could not add new setting!");
 			die('Could not add new setting!');
@@ -86,12 +92,13 @@ class Settings
 	
 	function changeSettingValue($inKey, $inValue)
 	{
-		global $db, $message;
+		global $message;
 		
-		$sql = 'UPDATE '.XCOMIC_CONFIG_TABLE."
+		$sql = '
+		    UPDATE '.XCOMIC_CONFIG_TABLE."
 			SET value = '$inValue'
 			WHERE `option` = '$inKey'"; //OPTION is a sql reserved word
-		$result = $db->query($sql);
+		$result = $this->dbc->query($sql);
 		if (PEAR::isError($result)) {
 			#$message->error('Could not change value for setting! SQL: '.$sql);
 			die('Could not change value for setting! SQL: '.$sql);
@@ -100,12 +107,13 @@ class Settings
 	
 	function changeSettingDescription($inKey, $inDescription)
 	{
-		global $db, $message;
+		global $message;
 		
-		$sql = 'UPDATE '.XCOMIC_CONFIG_TABLE."
+		$sql = '
+		    UPDATE '.XCOMIC_CONFIG_TABLE."
 			SET description = '$inDescription'
 			WHERE option = '$inKey'";
-		$result = $db->query($sql);
+		$result = $this->dbc->query($sql);
 		if (PEAR::isError($result)) {
 			#$message->error("Could not change description for setting!");
 			die('Could not change description for setting!');

@@ -17,9 +17,13 @@ class UserInformation
 {
 	
 	var $userInfo;
-	
-	function UserInformation($inUsername = null)
+    var $dbc;
+
+	function UserInformation(&$dbc, $inUsername = null)
 	{
+        if (DB::isConnection($dbc)) {
+            $this->dbc =& $dbc;
+        }
 		if (!empty($inUsername)) {
 			$this->getUserInfo($inUsername);
 		}
@@ -29,10 +33,12 @@ class UserInformation
 	{
 		global $db, $message;
 		
-		$sql = 'SELECT uid, username, password, email
+		$sql = '
+		    SELECT
+		        uid, username, password, email
 			FROM '.XCOMIC_USERS_TABLE." 
 			WHERE username='$inUsername'";
-		$result = $db->getRow($sql);
+		$result = $this->dbc->getRow($sql);
 		if (PEAR::isError($result)) {
 			#$message->error('Unable to get user info');
 			die('Unable to get user info');

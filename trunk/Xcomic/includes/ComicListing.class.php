@@ -15,17 +15,22 @@ include_once($xcomicRootPath.'initialize.php');
 class ComicListing {
 	
 	var $allComicInfo; //Holds all comic info records
-	
-	function ComicListing() {
-		
+	var $dbc;
+
+	function ComicListing(&$dbc) {
+        if (DB::isConnection($dbc)) {
+            $this->dbc =& $dbc;
+        }
 	}
 	
 	function queryComicInfo() {
-		global $db, $message;
+		global $message;
 		
-		$sql = 'SELECT cid, title, filename, date
+		$sql = '
+		    SELECT
+		        cid, title, filename, date
 			FROM '.XCOMIC_COMICS_TABLE;
-		$result = $db->getAll($sql);
+		$result = $this->dbc->getAll($sql);
 		if (PEAR::isError($result)) {
 			#$message->error('Unable to get comic information');
             die('Unable to get comic information');

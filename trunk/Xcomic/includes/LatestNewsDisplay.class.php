@@ -18,19 +18,20 @@ include_once 'NewsDisplay.class.php';
 class LatestNewsDisplay extends NewsDisplay
 {
 	
-	function LatestNewsDisplay()
+	function LatestNewsDisplay(&$dbc)
 	{
-		$this->NewsDisplay();
+		$this->NewsDisplay($dbc);
 		$this->getNewsInfo($this->getLatestNewsId());
 	}
 	
 	function getLatestNewsId()
 	{
-		global $db, $message;
+		global $message;
 		
-		$sql = 'SELECT MAX(id)
+		$sql = '
+		    SELECT MAX(id)
 			FROM '.XCOMIC_NEWS_TABLE;
-		$result = $db->getOne($sql);
+		$result = $this->dbc->getOne($sql);
 		if (PEAR::isError($result)) {
 			echo 'Unable to get latest news id. SQL: '.$sql;
 		}

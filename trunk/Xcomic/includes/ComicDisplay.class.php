@@ -18,11 +18,14 @@ class ComicDisplay
 	//var $comicsDir;
 	var $comicInfo; //Latest comic info
 	var $cid; //Holds current comic id
+	var $dbc;
 	
-	function ComicDisplay($inCid = null)
+	function ComicDisplay(&$dbc, $inCid = null)
 	{	
 		global $xcomicRootPath;
-		
+        if (DB::isConnection($dbc)) {
+            $this->dbc =& $dbc;
+        }
 		//Set comics directory
 		//$this->comicsDir = $xcomicRootPath.COMICS_DIR;
 		
@@ -37,11 +40,13 @@ class ComicDisplay
 	{
 		global $db, $message;
 		
-		$sql = 'SELECT cid, title, filename, date
+		$sql = '
+		    SELECT
+		        cid, title, filename, date
 			FROM '.XCOMIC_COMICS_TABLE." 
 			WHERE cid $idOperator $inCid
 			ORDER BY cid $inOrderBy";
-		$result = $db->getRow($sql);
+		$result = $this->dbc->getRow($sql);
 		if (PEAR::isError($result)) {
 			echo 'Unable to get latest comic info';
 		}

@@ -17,11 +17,6 @@ if (!defined('IN_XCOMIC')) {
 //$xcomicTemplate->clear_all_assign();
 
 //
-// Close our DB connection.
-//
-$db->sql_close();
-
-//
 // Compress buffered output if required and send to browser
 //
 if ($do_gzip_compress) {

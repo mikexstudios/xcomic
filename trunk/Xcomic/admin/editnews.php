@@ -20,7 +20,7 @@ $action = (!empty($_REQUEST['action'])) ? $security->secureText($_REQUEST['actio
 if ($action == 'delete') {
 	//Use the EditNews class to delete the news
 	include_once './classes/News.'.$classEx;
-	$news =& new News;
+	$news =& new News($db);
 	$news->delete($newsId);
 	
 	$message->say('The news entry was successfully deleted');
@@ -45,7 +45,7 @@ if (isset($_POST['submit'])) {
 	
 	//Make changes to the existing news entry
 	include_once './classes/News.'.$classEx;
-	$news = new News;
+	$news = new News($db);
     $news->updateNews($newsId, $newsTitle, $newsContent);
 	
 	//Display success page
@@ -58,7 +58,7 @@ if ($action != 'edit') {
 }
 //Get comic information from id
 include_once $xcomicRootPath.'includes/NewsDisplay.'.$classEx;
-$newsInformation = new NewsDisplay($newsId);
+$newsInformation = new NewsDisplay($db, $newsId);
 $newsTitle = $newsInformation->getTitle();
 $newsContent = $newsInformation->getContent();
 

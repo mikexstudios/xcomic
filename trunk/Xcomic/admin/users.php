@@ -29,7 +29,7 @@ if (empty($email)) {
 }
 
 //Register user
-$user =& new UserManagement();
+$user =& new UserManagement($db);
 $user->registerUser($username, $password, $email);
 	
 //Display success
@@ -41,8 +41,9 @@ $message->say('New user has been sucecssfully added.');
 $listOfUsers=''; //HTML code for the list of users
 
 //Get list of users
-$sql = 'SELECT uid, username 
-	FROM '.XCOMIC_USERS_TABLE.';';
+$sql = '
+    SELECT uid, username 
+	FROM '.XCOMIC_USERS_TABLE;
 $result = $db->getAll($sql);
 if (PEAR::isError($result)) {
 	$message->error('Could not get users list.');
@@ -82,7 +83,7 @@ foreach ($result as $row) {
 <div class="wrap">
  <h2>Add New User</h2>
  <div class="section-body">
-  <form method="post" action="" enctype="multipart/form-data">
+  <form method="post" action="">
    <label for="username">Username:</label><br />
    <input type="text" name="username" size="20" /><br />
 
