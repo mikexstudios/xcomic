@@ -8,76 +8,62 @@ $Id$
 define('IN_XCOMIC', true);
 
 //$xcomicRootPath='./'; //define in file that calls this file
-require_once($xcomicRootPath.'initialize.php');	//Include all page common settings
-include_once($xcomicRootPath.'includes/Security.'.$classEx);
-include_once($xcomicRootPath.'includes/LatestComicDisplay.class.php'); //Also includes ComicDisplay
+require_once $xcomicRootPath.'initialize.php';	//Include all page common settings
+include_once $xcomicRootPath.'includes/Security.'.$classEx;
+include_once $xcomicRootPath.'includes/LatestComicDisplay.class.php'; //Also includes ComicDisplay
 
 class Xcomic {
-	
-	var $comicDisplay;
-	var $newsDisplay;
-	var $security;
-	
-	var $cid;
-	
-	function Xcomic() {
-		//Create security object
-		$this->security = new Security();
-		
-		$this->cid=(!empty($_REQUEST[IN_CID])) ? $this->security->allowOnlyNumbers($_REQUEST[IN_CID]) : NULL; //Default to NULL
-		
-		//echo $this->cid;
-		
-		if(empty($this->cid))
-		{
+    var $comicDisplay;
+    var $newsDisplay;
+    var $security;
+    var $cid;
+
+    function Xcomic() {
+        $this->__construct();
+    }
+
+    function __construct() {
+        //Create security object
+        $this->security = new Security();
+
+        $this->cid = (!empty($_REQUEST[IN_CID])) ? $this->security->allowOnlyNumbers($_REQUEST[IN_CID]) : NULL; //Default to NULL
+
+		if (empty($this->cid)) {
 			//Latest comic
 			$this->comicDisplay = new LatestComicDisplay();
-		}
-		else
-		{
+		} else {
 			$this->comicDisplay = new ComicDisplay($this->cid);
-		}
-		
-	}
-	
-	function getComicTitle() {
-?>
-<div id="comictitle"><?php echo $this->comicDisplay->getTitle();	?></div>
-<?php	
-	}
-	
+		}    
+    }
+
+    function getComicTitle() {
+        return '<div id="comictitle">' . $this->comicDisplay->getTitle() .' </div>';
+    }
+
 	function getImageCode() {
 		global $message, $settings;
 		
 		//Check for non-existant comic
-		if ($this->comicDisplay->getTitle()=='')
-		{
-			echo 'You have selected a non-existant comic!';
-			return;
+		if ($this->comicDisplay->getTitle() == '') {
+			return 'You have selected a non-existant comic!';
 		}
 		
 		//Set variables
 		$comicImageUrl = $settings->getSetting('urlToXcomic').'/'.COMICS_DIR.'/'.$this->comicDisplay->getFilename();
 		$comicTitle = $this->comicDisplay->getTitle();
-?>
-			<div id="comic"><img src="<?php echo $comicImageUrl; ?>" alt="<?php echo $comicTitle; ?>"></div>
-<?php		
-
+		return '<div id="comic"><img src="' . $comicImageUrl . '" alt="' . $comicTitle . '"></div>';	
 	}
-	
+
 	function selectNewsDisplay() {
 		global $xcomicRootPath;
 		
 		//If cid is defined, use ComicAssociatedNewsDisplay
 		//Otherwise, use LatestNewsDisplay
-		if(!empty($this->cid))
-		{
-			include_once($xcomicRootPath.'includes/ComicAssociatedNewsDisplay.class.php'); //Also includes NewsDisplay
-			$this->newsDisplay = new ComicAssociatedNewsDisplay($this->cid, $inCategory);
-		}
-		else
-		{
-			include_once($xcomicRootPath.'includes/LatestNewsDisplay.class.php'); //Also includes NewsDisplay
+		if (!empty($this->cid)) {
+			include_once $xcomicRootPath.'includes/ComicAssociatedNewsDisplay.class.php'; //Also includes NewsDisplay
+			$this->newsDisplay = new ComicAssociatedNewsDisplay($this->cid);
+		} else {
+			include_once $xcomicRootPath.'includes/LatestNewsDisplay.class.php'; //Also includes NewsDisplay
 			$this->newsDisplay = new LatestNewsDisplay();
 		}
 					
@@ -104,15 +90,16 @@ class Xcomic {
 		$this->selectNewsDisplay();
 		
 		//Create UserInformation Object
-		include_once($xcomicRootPath.'includes/UserInformation.class.php');
+		include_once $xcomicRootPath.'includes/UserInformation.class.php';
 		$userInfo = new UserInformation($this->newsDisplay->getUsername());
 		
 		//If user is deleted, their email could be blank. Therefore, we set
 		//email to a blank string
 		$userEmail = $userInfo->getEmail();
-		if(empty($userEmail))
+		if (empty($userEmail)) {
 			$userEmail = '';
-		
+		}
+
 		//Set variables
 		/*
 		$consoleLink = '';
@@ -133,11 +120,11 @@ class Xcomic {
 </div>
 -->
 <div class="post">
-	<h2><?php echo $newsTitle; ?></h2>
-	<small>On <?php echo $newsDate; ?> <?php echo $newsTime; ?> by <a href="mailto:<?php echo $newsUserEmail; ?>"><?php echo $newsUsername; ?></a></small> 
-	<div class="entry">
-	<?php echo $newsContent; ?>
-	</div>
+ <h2><?php echo $newsTitle; ?></h2>
+ <small>On <?php echo $newsDate; ?> <?php echo $newsTime; ?> by <a href="mailto:<?php echo $newsUserEmail; ?>"><?php echo $newsUsername; ?></a></small> 
+ <div class="entry">
+  <?php echo $newsContent; ?>
+ </div>
 </div>
 <?php
 		
@@ -154,53 +141,45 @@ class Xcomic {
 		$comicOptionListCode=''; //Holds HTML for drop down
 		$comicDropdownHeader = 'Archives';
 		
-		if($this->comicDisplay->prevId()==false)
-		{
+		if ($this->comicDisplay->prevId() === false) {
 			$prevComicLink = '';
 			$prevComicText = '';
-		}
-		else
-		{
+		} else {
 			$prevComicLink = $settings->getSetting('baseUrl').$_SERVER["PHP_SELF"].'?cid='.$this->comicDisplay->prevId();
 			$prevComicText = '< Previous';
 		}
 		
-		if($this->comicDisplay->nextId()==false)
-		{
+		if ($this->comicDisplay->nextId() === false) {
 			$nextComicLink = '';
 			$nextComicText = '';
-		}
-		else
-		{
+		} else {
 			$nextComicLink = $settings->getSetting('baseUrl').$_SERVER["PHP_SELF"].'?cid='.$this->comicDisplay->nextId();
 			$nextComicText = 'Next >';
 		}
 				
 		//Generate drop down box ---------------------
-		include_once($xcomicRootPath.'includes/ComicListing.'.$classEx);
+		include_once $xcomicRootPath.'includes/ComicListing.'.$classEx;
 		$listComics = new ComicListing();
 		$comicsList = $listComics->getComicList(); //Array of comic listings
-		$numComics = $listComics->numComics(); //Number of elements in that array
-		
+
 		//Since $comicsList is in ascending order. We want the most recent comic first
 		//Therefore, set the for loop counting backwards
-		for($comicCount = $numComics-1; $comicCount >= 0 ; $comicCount--)
-		{
-			$comicOptionListCode .= '<option value="'.$comicsList[$comicCount]['cid'].'">'.date('Y-m-d', $comicsList[$comicCount]['date']).' ['.$comicsList[$comicCount]['cid'].'] '.$comicsList[$comicCount]['title']."</option>\n";
+		foreach ($comicsList as $row) {
+			$comicOptionListCode .= '<option value="'.$row['cid'].'">'.date('Y-m-d', $row['date']).' ['.$row['cid'].'] '.$row['title']."</option>\n";
 		}
 		//--------------------------------------------
 		
 		//Display page
 ?>
-<ul id="comicnav" class="comicnav-left">
+<ul class="comicnav comicnav-left">
 <li class="comicnav-link"><a href="<?php echo $prevComicLink; ?>"><?php echo $prevComicText; ?></a></li>
 </ul>
 
-<ul id="comicnav" class="comicnav-right">
+<ul class="comicnav comicnav-right">
 	<li class="comicnav-link"><a href="<?php echo $nextComicLink; ?>"><?php echo $nextComicText; ?></a></li>
 </ul>
 
-<form class="comicdropdown-form">
+<form class="comicdropdown-form" action="" method="post">
 <script language="javascript">
 <!--
 	//From MegaTokyo (http://www.megatokyo.com)
@@ -212,7 +191,7 @@ class Xcomic {
 //-->
 </script>
 <select onchange="StripJump(this.options[selectedIndex].value);" name="cid"> 
-<option value="" selected><?php echo $comicDropdownHeader; ?></option> 
+<option value="" selected="selected"><?php echo $comicDropdownHeader; ?></option> 
 <?php echo $comicOptionListCode; ?>
 </select>
 </form>
@@ -230,9 +209,6 @@ class Xcomic {
 			//Rounded off to three places
 			echo sprintf('%01.3f', $executionTime);
 	}
-	
-	
-	
 }
 
 /*

@@ -13,7 +13,8 @@ $Id$
 define('IN_XCMS', true);
 //$xcmsRootPath = "../";
 				
-class Syntax {
+class Syntax
+{
 	
 	//Class variables
 	var $text;
@@ -22,12 +23,14 @@ class Syntax {
 	var $strSearch, $strReplace, $regSearch, $regReplace;
 	
 	//Constructors
-	function Syntax() {
+	function Syntax()
+	{
 
 	}
 	
 	//The following two functions have been lifted off of Wordpress:
-	function wptexturize() {
+	function wptexturize()
+	{
 		$text=$this->text;
 		$output = '';
 		// Capture tags and everything inside them
@@ -75,7 +78,8 @@ class Syntax {
 		$this->text=$output;
 	}
 	
-	function wpautop() {
+	function wpautop()
+	{
 		$pee=$this->text; 
 		$br = 1;
 		$pee = $pee . "\n"; // just to make things a little easier, pad the end
@@ -101,7 +105,8 @@ class Syntax {
 		$this->text=$pee; 
 	}
 	
-	function parse($inText) {
+	function parse($inText)
+	{
 		$this->text = $inText;
 		
 		$this->wpautop();
@@ -127,5 +132,4 @@ testtext;
 $x = new Syntax();
 echo $x->parse($syntax);
 */
-
 ?>

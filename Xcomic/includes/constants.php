@@ -5,8 +5,7 @@ Xcomic
 $Id$
 */
 
-if ( !defined('IN_XCOMIC') )
-{
+if (!defined('IN_XCOMIC')) {
 	die('Hacking attempt');
 }
 
@@ -19,12 +18,12 @@ define('TEMPLATES_DIR', 'templates');
 define('COMICS_DIR', 'comics');
 
 //DATABASE
-define('XCOMIC_CONFIG_TABLE', $xcomicTablePrefix.'config');
-define('XCOMIC_NEWS_TABLE', $xcomicTablePrefix.'news');
-define('XCOMIC_COMICS_TABLE', $xcomicTablePrefix.'comics');
-define('XCOMIC_NEWSCATEGORY_TABLE', $xcomicTablePrefix.'newscategories');
-define('XCOMIC_USERS_TABLE', $xcomicTablePrefix.'users');
-define('XCOMIC_NEXTCOMICSTATUS_TABLE', $xcomicTablePrefix.'nextcomicstatus');
+define('XCOMIC_CONFIG_TABLE', $table_prefix.'config');
+define('XCOMIC_NEWS_TABLE', $table_prefix.'news');
+define('XCOMIC_COMICS_TABLE', $table_prefix.'comics');
+define('XCOMIC_NEWSCATEGORY_TABLE', $table_prefix.'newscategories');
+define('XCOMIC_USERS_TABLE', $table_prefix.'users');
+define('XCOMIC_NEXTCOMICSTATUS_TABLE', $table_prefix.'nextcomicstatus');
 
 //USER AUTH
 define('SESSION_USERNAME', 'sessionUsername');

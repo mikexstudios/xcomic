@@ -5,30 +5,27 @@ Xcomic
 $Id$
 */
 
-
-define('IN_XCOMIC', true);
-
-$xcomicRootPath='../';
-include_once($xcomicRootPath.'initialize.php');
+$xcomicRootPath = '../';
+include_once $xcomicRootPath.'initialize.php';
 
 
 //Start sessions
 session_start();
 
-class UserManagement {
+class UserManagement
+{	
+    var $username, $id; //password is unencrypted
+    var $md5pass;
 	
-	var $username, $password; //password is unencrypted
-	var $md5pass;
-	
-	function UserManagement($inUsername=NULL, $inPassword=NULL) {
+	function UserManagement($id = null, $inPassword = null)
+	{
 		global $message;
 		
-		if(!empty($inUsername))
-			$this->username = $inUsername;
-		if(!empty($inPassword))
-		{
-			$this->password = $inPassword;
-			$this->md5pass();
+		if (!empty($id)) {
+			$this->id = $id;
+		}
+		if (!empty($inPassword)) {
+			$this->md5pass($inPassword);
 		}
 		
 		/*
@@ -37,285 +34,273 @@ class UserManagement {
 		*/
 	}
 	
-	function setUsername($inUsername) {
+	function setUsername($inUsername)
+	{
 		$this->username = $inUsername;
 	}
 	
-	function setPassword($inPassword) {
-		$this->password = $inPassword;
-		
-		//md5 the password
-		$this->md5pass();
+	function setPassword($passwd)
+	{
+	    $this->md5pass($passwd);
 	}
 	
-	function md5pass() {
-		$this->md5pass = md5($this->password);
+	function md5pass($passwd)
+	{
+		$this->md5pass = md5($passwd);
 	}
 	
-	function setMd5Password($inMd5Password) {
+	function setMd5Password($inMd5Password)
+	{
 		$this->md5pass = $inMd5Password;	
 	}
 	
-	function registerUser() {
-		global $xcomicDb, $message;
+	function registerUser($username, $password, $email)
+	{
+		global $db, $message;
+		
+		$this->setUsername($username);
 		
 		//Check to see if username has been taken
-		if($this->isUsernameTaken())
-		{
+		if ($this->userExists()) {
 			$message->error('Sorry, that username has already been taken. Please select another one.');
 		}
 		
-		$sql = 'INSERT INTO '.XCOMIC_USERS_TABLE." (username, password) 
+		$this->setPassword($password);
+		
+		$id = $db->nextId(XCOMIC_USERS_TABLE);
+		$sql = 'INSERT INTO '.XCOMIC_USERS_TABLE.' (uid, username, password, email) 
 			VALUES (
-				'$this->username', 
-				'$this->md5pass'
-				);";
-		if(!($result = $xcomicDb->sql_query($sql)))
-		{
+			    '.$id.',
+				'.$db->quoteSmart($username).', 
+				'.$db->quoteSmart($this->md5pass).',
+				'.$db->quoteSmart($email).'
+				)';
+		$result = $db->query($sql);
+		if (PEAR::isError($result)) {
 			$message->error('Unable to add new user.');
 		}
 	}
 	
 	//Can add more fields
-	function editUserInfo($inEmail) {
-		global $xcomicDb, $message;
+	function editUserInfo($inEmail)
+	{
+		global $db, $message;
 		
 		//Update the email for the username
-		$sql = 'UPDATE '.XCOMIC_USERS_TABLE." 
-			SET email = '$inEmail' 
-			WHERE username = '$this->username';";
-		
-		if(!($result = $xcomicDb->sql_query($sql)))
-		{
+		$sql = 'UPDATE '.XCOMIC_USERS_TABLE.' 
+			SET email = '.$db->quoteSmart($inEmail).' 
+			WHERE uid = '.$this->id;
+		$result = $db->query($sql);
+		if (PEAR::isError($result)) {
 			$message->error('Unable to edit user info.');
 		}
 		
 	}
 	
-	function changePassword($inNewPassword) {
-		global $xcomicDb, $message;
+	function changePassword($inNewPassword)
+	{
+		global $db, $message;
 		
 		//Update the password in this class
 		$this->setPassword($inNewPassword);
 		
 		//Make changes to DB
-		$sql = 'UPDATE '.XCOMIC_USERS_TABLE." 
-			SET password = '$this->md5pass' 
-			WHERE username = '$this->username';";
-			
-		if(!($result = $xcomicDb->sql_query($sql)))
-		{
+		$sql = 'UPDATE '.XCOMIC_USERS_TABLE.'
+			SET password = '.$db->quoteSmart($this->md5pass).' 
+			WHERE uid = '.$this->id;
+	    $result = $db->query($sql);
+		if (PEAR::isError($result)) {
 			$message->error('Unable to change user password.');
 		}
 	}
 	
-	function deleteUser() {
-		global $xcomicDb, $message;
+	function deleteUser()
+	{
+		global $db, $message;
 		
 		//Check if user exists
-		if(!$this->userExists())
-		{
+		if (!$this->userExists()) {
 			$message->error("Can't delete non-existant user!");
 		}
 		
 		//Delete from DB
-		$sql = 'DELETE FROM '.XCOMIC_USERS_TABLE." 
-			WHERE username = '$this->username';";
-		
-		if(!($result = $xcomicDb->sql_query($sql)))
-		{
+		$sql = 'DELETE FROM '.XCOMIC_USERS_TABLE.'
+			WHERE uid = '.$this->id;
+		$result = $db->query($sql);
+		if (PEAR::isError($result)) {
 			$message->error('Unable to delete user.');
 		}
-		
-		
 	}
 	
-	function getUid() {
-		global $xcomicDb, $message;
+	function getUsername()
+	{
+	    if (isset($this->username)) {
+	        return $this->username;
+	    } else {
+		    global $db, $message;
 		
-		$sql = 'SELECT uid 
-			FROM '.XCOMIC_USERS_TABLE." 
-			WHERE username = '$this->username';";
-			
-		if(!($result = $xcomicDb->sql_query($sql)))
-		{
-			$message->error('Unable to get user id.');
-		}		
+		    $sql = 'SELECT username
+			    FROM '.XCOMIC_USERS_TABLE.' 
+			    WHERE uid = '.$this->id;
+			$result = $db->getOne($sql);
+		    if (PEAR::isError($result)) {
+		    	$message->error('Unable to get username.');
+		    }
 		
-		$userInfo = $xcomicDb->sql_fetchrow($result);
-		
-		//Return user id
-		return $userInfo['uid'];
+		    //Return username
+		    $this->username = $result;
+		    return $result;
+		}
 	}
 	
-	/**
-	 * Returns true if the username has been taken
-	 * by another user, false otherwise.
-	 */
-	function isUsernameTaken(){
+	function getUid()
+	{
+	    global $db, $message;
 		
-		//Basically the same thing as userExists();
-		return $this->userExists();
+		$sql = 'SELECT uid
+			FROM '.XCOMIC_USERS_TABLE.' 
+			WHERE username = '.$db->quoteSmart($this->username);
+	    $result = $db->getOne($sql);echo $sql;
+		if (PEAR::isError($result)) {
+		    $message->error('Unable to get user id.');
+		}
 		
+		//Return username
+		$this->id = $result;
+		return $result;  
 	}
 	
 	function userExists() {
-		global $xcomicDb, $message;
+		global $db, $message;
 		
 		$sql = 'SELECT username
 			FROM '.XCOMIC_USERS_TABLE.' 
-			WHERE username = "'.$this->username.'";';
-		
-		if(!($result = $xcomicDb->sql_query($sql)))
-		{
+			WHERE ';
+		    if (isset($this->id)) {
+			    $sql .= 'uid = '.$this->id;
+			} elseif (isset($this->username)) {
+			    $sql .= 'username = '.$db->quoteSmart($this->username);
+			}
+
+		$result = $db->getOne($sql);
+		if (PEAR::isError($result)) {
 			$message->error('Unable to read usernames.');
 		}
 		
-		if($xcomicDb->sql_numrows($result) > 0)
-		{
+		if (!empty($result)) {
 			//User exists
 			return true;
-		}
-		else
-		{
-			//User doesn't exist
-			return false;
-		}	
-			
+		} 
+		//User doesn't exist
+	    return false;
 	}
 	
-	function authUser() {
-		global $xcomicDb, $message;
-		
+	function authUser()
+	{
+		global $db, $message;
+	
 		//Verify that the user exists
-		if(!($this->userExists($this->username)))
-		{
+		if (!$this->userExists()) {
 			return false;
 			
 			//The following could weaken security
 			//$message->error('The entered username does not exist.');
 		}
-		
+
 		//Grab password from db
 		$sql = 'SELECT password 
-			FROM '.XCOMIC_USERS_TABLE." 
-			WHERE username = '$this->username';";
-		
-		if(!($result = $xcomicDb->sql_query($sql)))
-		{
+			FROM '.XCOMIC_USERS_TABLE.'
+			WHERE username = '.$db->quoteSmart($this->username);
+		$result = $db->getOne($sql);
+		if (PEAR::isError($result)) {
 			$message->error('Unable to retrieve user information.');
-		}		
-		
-		$userInfo = $xcomicDb->sql_fetchrow($result);
+		}
 		
 		//Return user id
-		if($this->md5pass == $userInfo['password'])
-		{
+		if ($this->md5pass == $result) {
 			//User authenticated
 			return true;
 		}
-		else
-		{
-			//Bad authentication. Password failure.
-			return false;
-		}
+		//Bad authentication. Password failure.
+		return false;
 	}
 	
-	function registerSessionVariables() {
-		
+	function registerSessionVariables()
+	{
 		//Set session variables
-		$_SESSION[SESSION_USERNAME] = $this->username;
-		$_SESSION[SESSION_PASSWORD] = $this->md5pass;
-		
+		$_SESSION['SESSION_USERNAME'] = $this->username;
+		$_SESSION['SESSION_PASSWORD'] = $this->md5pass;
 	}
 	
-	function setCookies($func='login') {
+	function setCookies($func = 'login')
+	{
 		
 		$cookieTime = 60*60*24*100; //Cookie persists for 100 days
 		
 		//If logging out
-		if($func=='login')
-		{
+		if ($func == 'login') {
 			//Set cookies from session variables
-			setcookie(COOKIE_USERNAME, $_SESSION[SESSION_USERNAME], time()+$cookieTime, "/");
-			setcookie(COOKIE_PASSWORD, $_SESSION[SESSION_PASSWORD], time()+$cookieTime, "/");
-		}
-		//Logout
-		else
-		{
+			setcookie(COOKIE_USERNAME, $_SESSION['SESSION_USERNAME'], time()+$cookieTime, "/");
+			setcookie(COOKIE_PASSWORD, $_SESSION['SESSION_PASSWORD'], time()+$cookieTime, "/");
+		} else {//Logout
 			//Minus the time set to logout. (Setting the time in the past)
 			setcookie(COOKIE_USERNAME, '', time()-$cookieTime, "/");
 			setcookie(COOKIE_PASSWORD, '', time()-$cookieTime, "/");	
 		}
 	}
 	
-	function isAlreadyLoggedIn() {
+	function isLoggedIn()
+	{
 		
 		//If cookies exists, set session variables with them
-		if(!empty($_COOKIE[COOKIE_USERNAME]) && !empty($_COOKIE[COOKIE_PASSWORD]))
-		{
-			$_SESSION[SESSION_USERNAME] = $_COOKIE[COOKIE_USERNAME];
-			$_SESSION[SESSION_PASSWORD] = $_COOKIE[COOKIE_PASSWORD];
+		if (!empty($_COOKIE['COOKIE_USERNAME']) && !empty($_COOKIE['COOKIE_PASSWORD'])) {
+			$_SESSION['SESSION_USERNAME'] = $_COOKIE['COOKIE_USERNAME'];
+			$_SESSION['SESSION_PASSWORD'] = $_COOKIE['COOKIE_PASSWORD'];
 		}
 		
-		//echo $_SESSION[SESSION_USERNAME];
-		//echo $_SESSION[SESSION_PASSWORD];
+		//echo $_SESSION['SESSION_USERNAME'];
+		//echo $_SESSION['SESSION_PASSWORD'];
 		
 		//Check if session variables have been set
-		if(!empty($_SESSION[SESSION_USERNAME]) && !empty($_SESSION[SESSION_PASSWORD]))
-		{
+		if (!empty($_SESSION['SESSION_USERNAME']) && !empty($_SESSION['SESSION_PASSWORD'])) {
 			
 			//Set username and password
-			$this->setUsername($_SESSION[SESSION_USERNAME]);
-			$this->setMd5Password($_SESSION[SESSION_PASSWORD]);
+			$this->setUsername($_SESSION['SESSION_USERNAME']);
+			$this->setMd5Password($_SESSION['SESSION_PASSWORD']);
 			
 			//Authenticate user
-			if($this->authUser())
-			{
+			if ($this->authUser()) {
 				//User logged in
 				return true;
-			}
-			else
-			{
+			} else {
 				//Session variables are incorrect. Unset
-				unset($_SESSION[SESSION_USERNAME]);
-				unset($_SESSION[SESSION_PASSWORD]);
+				unset($_SESSION['SESSION_USERNAME']);
+				unset($_SESSION['SESSION_PASSWORD']);
 				
 				//User not logged in
 				return false;	
 			}
-		}
-		else
-		{
+		} else {
 			//User not logged in
 			return false;
 		}
 		
 	}
 	
-	function getUsername() {
-	
-		return $this->username;
-		
-	}
-	
-	function processLogin($alsoDo='') {
+	function processLogin($alsoDo = '')
+	{
 		
 		//If authentication is correct, set sessions
-		if($this->authUser())
-		{
+		if ($this->authUser()) {
 			$this->registerSessionVariables();
 			
-			if($alsoDo == 'remember')
-			{
+			if ($alsoDo == 'remember') {
 				$this->rememberMe();
 			}
 			
 			//Sucess
 			return true;
-		}
-		else
-		{
+		} else {
 			//Failure
 			return false;
 		}
@@ -323,11 +308,13 @@ class UserManagement {
 	}
 	
 	//Set cookies to remember the user
-	function rememberMe() {
+	function rememberMe()
+	{
 		$this->setCookies();
 	}
 	
-	function logout() {
+	function logout()
+	{
 		
 		//Clear cookies
 		$this->setCookies('logout');
@@ -348,6 +335,4 @@ $x = new UserManagement('test', 'test');
 $x->registerUser();
 $x->editUserInfo('test@test.com');
 */
-
-
 ?>

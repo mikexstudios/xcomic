@@ -12,12 +12,13 @@ $xcomicRootPath='../';
 include_once($xcomicRootPath.'initialize.php');
 */
 
-class EditComic {
-	
+class EditComic
+{	
 	var $cid;
 	var $comicDir;
 	
-	function EditComic($inCid) {
+	function EditComic($inCid)
+	{
 		global $message, $xcomicRootPath;
 		
 		$this->comicDir = $xcomicRootPath.COMICS_DIR;
@@ -36,37 +37,33 @@ class EditComic {
 
 	}
 	
-	function setCid($inCid) {
+	function setCid($inCid)
+	{
 		$this->cid = $inCid;	
 	}
 	
-	function changeTitle($inNewTitle) {
-		global $xcomicDb, $message;		
+	function changeTitle($inNewTitle)
+	{
+		global $db, $message;		
 				
-		$sql='UPDATE '.XCOMIC_COMICS_TABLE."
-			SET title = '$inNewTitle'
-			WHERE cid = $this->cid";
-		
+		$sql = 'UPDATE '.XCOMIC_COMICS_TABLE.'
+			SET title = '.$db->quoteSmart($inNewTitle).'
+			WHERE cid = '.$this->cid;
+		$result = $db->query($sql);
 		//Make the changes happen
-		if ($result = $xcomicDb->sql_query($sql))
-		{
-			//Expect only one match so there is no need to loop.
-			//$xcmsDb->sql_fetchrow($result);
-		}
-		else
-		{
+		if (PEAR::isError($result)) {
 			$message->error('Unable to change comic title. SQL: '.$sql);
 		}
 	}
 	
-	function changeFile($inNewFile) {
-		global $xcomicRootPath, $classEx, $xcomicDb, $message;
+	function changeFile($inNewFile)
+	{
+		global $xcomicRootPath, $classEx, $db, $message;
 		
 		//Create a PostComic object and save the new file through that object
-		include_once($xcomicRootPath.'admin/classes/PostComic.'.$classEx);
+		include_once $xcomicRootPath.'admin/classes/PostComic.'.$classEx;
 		$postComic = new PostComic($inNewFile);
-		if($postComic->saveFile()) //If successful
-		{
+		if ($postComic->saveFile()) { //If successful
 			//Delete image for current cid first before
 			//the new filename is written to database.
 			$this->deleteFile();
@@ -74,67 +71,53 @@ class EditComic {
 			//Update database with new filename
 			$newComicFilename = $inNewFile['name'];
 			
-			$sql='UPDATE '.XCOMIC_COMICS_TABLE."
-				SET filename = '$newComicFilename'
-				WHERE cid = $this->cid";
-			
+			$sql='UPDATE '.XCOMIC_COMICS_TABLE.'
+				SET filename = '.$db->quoteSmart($newComicFilename).'
+				WHERE cid = '.$this->cid;
+			$result = $db->query($sql);
 			//Make the changes happen
-			if ($result = $xcomicDb->sql_query($sql))
-			{
-				//Expect only one match so there is no need to loop.
-				//$xcmsDb->sql_fetchrow($result);
-			}
-			else
-			{
+			if (PEAR::isError($result)) {
 				$message->error('Unable to change comic filename');
 			}
 			
 			return true; //Successful
 		}
-		else
-		{
-			return false; //Failed
-		}
+		return false; //Failed
 	}
 	
 	//TO DO: Add change of date/time
 	
-	function deleteFile() {
+	function deleteFile()
+	{
 		global $xcomicRootPath, $classEx, $message;
 		
 		//Get filename for current cid------
-		include_once($xcomicRootPath.'includes/ComicDisplay.'.$classEx);
+		include_once $xcomicRootPath.'includes/ComicDisplay.'.$classEx;
 		$comicInformation = new ComicDisplay($this->cid);
 		$currentComicFilename = $comicInformation->getFilename();
 		//----------------------------------
 		
 		//Delete image for current cid
-		if(!@unlink($this->comicDir.'/'.$currentComicFilename))
-		{
+		if (!@unlink($this->comicDir.'/'.$currentComicFilename)) {
 			//Don't die on error
 			//$message->error($this->comicDir.'/'.$currentComicFilename.' could not be deleted!');
 		}
 		
 	}
 	
-	function deleteComic() {
-		global $xcomicDb, $message;
+	function deleteComic()
+	{
+		global $db, $message;
 		
 		//Delete file first
 		$this->deleteFile();
 		
 		//Delete from database
-		$sql='DELETE FROM '.XCOMIC_COMICS_TABLE."
+		$sql = 'DELETE FROM '.XCOMIC_COMICS_TABLE."
 			WHERE cid = $this->cid";
-		
+		$result = $db->query($sql);
 		//Make the changes happen
-		if ($result = $xcomicDb->sql_query($sql))
-		{
-			//Expect only one match so there is no need to loop.
-			//$xcmsDb->sql_fetchrow($result);
-		}
-		else
-		{
+		if (PEAR::isError($result)) {
 			$message->error('Unable to delete comic!');
 		}
 		

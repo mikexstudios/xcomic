@@ -107,7 +107,7 @@ li, dd {
 	margin-bottom: 6px;
 }
 
-p, dl, dd, dt {
+label, p, dl, dd, dt {
 	line-height: 130%;
 }
 
@@ -118,6 +118,14 @@ textarea, input, select {
 	font-family: Georgia, "Times New Roman", Times, serif;
 	margin: 1px;
 	padding: 3px;
+}
+
+input, textarea {
+    margin-bottom: 10px;
+}
+
+br {
+	clear: left;
 }
 
 .alternate {

@@ -6,27 +6,24 @@
 	*/
 	//Include Xcomic core operation files
 	$xcomicRootPath = './';
-	include($xcomicRootPath.'Xcomic.php');
+	include $xcomicRootPath.'Xcomic.php';
 	
 	//Create Xcomic object
 	$xcomic = new Xcomic();
 	/*
 	---------------------------------------------------------
 	*/
+echo '<?xml version="1.0" encoding="UTF-8">';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
-
-<head>
-<title>Xcomic - description</title>
-<meta name="description" content="Xcomic, a web comic about [insert description]" />
-<meta name="keywords" content="xcomic, web comic, web manga, publishing platform" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-<link rel="stylesheet" type="text/css" href="styles/kubrick/layout.css" title="standard layout" media="screen" />
-
-<style type="text/css" media="screen">
+ <head>
+  <title>Xcomic - description</title>
+  <meta name="description" content="Xcomic, a web comic about [insert description]" />
+  <meta name="keywords" content="xcomic, web comic, web manga, publishing platform" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" type="text/css" href="styles/kubrick/layout.css" title="standard layout" media="screen" />
+  <style type="text/css" media="screen">
 
 		/* BEGIN IMAGE CSS */
 			/*	To accomodate differing install paths of WordPress, images are referred only here,
@@ -53,63 +50,50 @@
 			get cropped off of the image. */
 		
 		#headerimg 	{ background: url('styles/kubrick/images/personalheader.jpg') no-repeat top;}
-		
-	</style>
+  </style>
+ </head>
+ <body>
+  <div id="page">
+   <div id="header">
+    <div id="headerimg">
+     <h1><a href="asdf" title="asdf">Xcomic</a></h1>
+     <div class="description">a webcomic about stuff</div>
+    </div>
+   </div>
 
-</head>
+   <div id="navigation" class="middlecolumn">
+    <ul id="nav-menu">
+     <li><a href=''>Characters</a></li>
+     <li><a href=''>Information</a></li>
+     <li><a href=''>Other Works</a></li>
+     <li><a href=''>Forum</a></li>
+     <li><a href=''>Links</a></li>
+     <li><a href=''>About</a></li>
+     <li><a href=''>Blog</a></li>
+    </ul>
+   </div>
 
-<body>
-<div id="page">
-
-<div id="header">
-	<div id="headerimg">
-		<h1><a href="asdf" title="asdf">Xcomic</a></h1>
-		<div class="description">a webcomic about stuff</div>
-	</div>
-</div>
-
-<div id="navigation" class="middlecolumn">
-	<ul id="nav-menu">
-	
-		<li><a href=''>Characters</a></li>
-		<li><a href=''>Information</a></li>
-		<li><a href=''>Other Works</a></li>
-		<li><a href=''>Forum</a></li>
-		<li><a href=''>Links</a></li>
-		<li><a href=''>About</a></li>
-		<li><a href=''>Blog</a></li>
-	
-	</ul>
-</div>
-
-<div id="content" class="middlecolumn">
-
-	<?php $xcomic->getComicTitle(); ?>
-
-	<?php $xcomic->getImageCode(); ?>
-	
+   <div id="content" class="middlecolumn">
+    <?php
+        echo $xcomic->getComicTitle();
+        echo $xcomic->getImageCode();
+     ?>
 	<br />
-	
 	<div id="comic-functions">
 		<?php $xcomic->getComicNavCode(); ?>
 	</div>
-	
 	<?php $xcomic->getNewsCode('default'); ?>
-
-<!-- End div for id content -->
-</div>
-
-
-
-<div id="footer">
-<p>
-<a href="./admin">Administration Panel</a>
-<br />
-Page generated in <?php $xcomic->getExecutionTime(); ?> seconds <cite>Powered by <a href="http://www.mikexstudios.com" title="Powered by Xcomic, state-of-the-art web comic publishing platform"><strong>Xcomic</strong></a></cite> &copy; 2004 mikeXstudios. <a href="http://binarybonsai.com/kubrick/">Kubrick Design by Michael Heilemann</a>.
-</p>
-</div>
-
-<!-- Ending div for page-container -->
-</div>
-</body>
+    <!-- End div for id content -->
+   </div>
+   
+   <div id="footer">
+    <p>
+     <a href="./admin">Administration Panel</a>
+     <br />
+     Page generated in <?php $xcomic->getExecutionTime(); ?> seconds <cite>Powered by <a href="http://www.mikexstudios.com" title="Powered by Xcomic, state-of-the-art web comic publishing platform"><strong>Xcomic</strong></a></cite> &copy; 2004 mikeXstudios. <a href="http://binarybonsai.com/kubrick/">Kubrick Design by Michael Heilemann</a>.
+    </p>
+   </div>
+   <!-- Ending div for page-container -->
+  </div>
+ </body>
 </html>

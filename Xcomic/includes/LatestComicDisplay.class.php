@@ -10,37 +10,34 @@ define('IN_XCOMIC', true);
 
 $xcomicRootPath='../';
 */
-include_once('ComicDisplay.class.php');
+include_once 'ComicDisplay.class.php';
 
 
 
-class LatestComicDisplay extends ComicDisplay {
+class LatestComicDisplay extends ComicDisplay
+{
 
-	function LatestComicDisplay() {
-		
+	function LatestComicDisplay()
+	{
 		$this->ComicDisplay();
-		
 		$this->getComicInfo($this->getLatestComicId());
-		
 	}
 	
-	function getLatestComicId() {
-		global $xcomicDb, $message;
+	function getLatestComicId()
+	{
+		global $db, $message;
 		
 		$sql = 'SELECT MAX(cid)
 			FROM '.XCOMIC_COMICS_TABLE.';';
-			
+	    $result = $db->getOne($sql);
 		//Make the changes happen
-		if(!($result = $xcomicDb->sql_query($sql)))
-		{
-			$message->error('Unable to get latest comic id');
+		if (PEAR::isError($result)) {
+			#$message->error('Unable to get latest comic id');
+            die('Unable to get latest comic id');
 		}
 		
-		//Get the result (only one)
-		$row = $xcomicDb->sql_fetchrow($result);
-		
 		//Return latest comic id
-		return $row[0];
+		return $result;
 	}
 	
 }
@@ -51,5 +48,4 @@ $x = new LatestComicDisplay();
 //$x->getComicInfo(1);
 echo $x->getFilename();
 */
-
 ?>
