@@ -35,7 +35,7 @@ class Xcomic {
     }
 
     function getComicTitle() {
-        return '<div id="comictitle">' . stripslashes($this->comicDisplay->getTitle()) .' </div>';
+        return '<div id="comictitle">' . $this->security->removeMagicQuotes($this->comicDisplay->getTitle()) .' </div>';
     }
 
 	function getImageCode() {
@@ -49,7 +49,7 @@ class Xcomic {
 		//Set variables
 		$comicImageUrl = COMICS_DIR.'/'.$this->comicDisplay->getFilename();
 		$comicTitle = $this->comicDisplay->getTitle();
-		return '<div id="comic"><img src="' . $comicImageUrl . '" alt="' . $comicTitle . '" /></div>';	
+		return '<div id="comic"><img src="' . $comicImageUrl . '" alt="' . $this->security->removeMagicQuotes($comicTitle) . '" /></div>';	
 	}
 
 	function selectNewsDisplay() {
@@ -124,7 +124,7 @@ class Xcomic {
  <h2><?php echo $newsTitle; ?></h2>
  <small>On <?php echo $newsDate; ?> <?php echo $newsTime; ?> by <a href="mailto:<?php echo $newsUserEmail; ?>"><?php echo $newsUsername; ?></a></small> 
  <div class="entry">
-  <?php echo $newsContent; ?>
+  <?php echo $this->security->removeMagicQuotes($newsContent); ?>
  </div>
 </div>
 <?php
@@ -168,7 +168,7 @@ class Xcomic {
 		//Therefore, set the for loop counting backwards
 		for($comicCount = $numComics-1; $comicCount >= 0 ; $comicCount--)
 		{
-			$comicOptionListCode .= '<option value="'.$comicsList[$comicCount]['cid'].'">'.date('Y-m-d', $comicsList[$comicCount]['date']).' ['.$comicsList[$comicCount]['cid'].'] '.stripslashes($comicsList[$comicCount]['title'])."</option>\n";
+			$comicOptionListCode .= '<option value="'.$comicsList[$comicCount]['cid'].'">'.date('Y-m-d', $comicsList[$comicCount]['date']).' ['.$comicsList[$comicCount]['cid'].'] '.$this->security->removeMagicQuotes($comicsList[$comicCount]['title'])."</option>\n";
 		}
 		//--------------------------------------------
 		
@@ -203,25 +203,15 @@ class Xcomic {
 	}
 	
 	function getExecutionTime() {
-			global $xcomicStartTime;
-			
-			//Calculate the time needed to execute the script
-			$xcomicEndTime = strtok(microtime(), " ") + strtok(" ");
-			$executionTime = $xcomicEndTime-$xcomicStartTime;
-			
-			//Rounded off to three places
-			echo sprintf('%01.3f', $executionTime);
+		global $xcomicStartTime;
+
+		//Calculate the time needed to execute the script
+		$xcomicEndTime = strtok(microtime(), " ") + strtok(" ");
+		$executionTime = $xcomicEndTime-$xcomicStartTime;
+		
+		//Rounded off to three places
+		echo sprintf('%01.3f', $executionTime);
 	}
 }
-
-/*
-//Testing Xcomic
-$x = new Xcomic();
-$x->getImageCode();
-$x->getPrevNextCode();
-$x->getNewsCode();
-*/
-
-
 
 ?>
