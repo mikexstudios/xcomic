@@ -36,6 +36,10 @@ class EditComic {
 
 	}
 	
+	function setCid($inCid) {
+		$this->cid = $inCid;	
+	}
+	
 	function changeTitle($inNewTitle) {
 		global $xcomicDb, $message;		
 				
@@ -63,12 +67,10 @@ class EditComic {
 		$postComic = new PostComic($inNewFile);
 		if($postComic->saveFile()) //If successful
 		{
-			//Get filename for current cid------
-			include_once($xcomicRootPath.'includes/ComicDisplay.'.$classEx);
-			$comicInformation = new ComicDisplay($this->cid);
-			$currentComicFilename = $comicInformation->getFilename();
-			//----------------------------------
-			
+			//Delete image for current cid first before
+			//the new filename is written to database.
+			$this->deleteFile();
+		
 			//Update database with new filename
 			$newComicFilename = $inNewFile['name'];
 			
@@ -87,13 +89,6 @@ class EditComic {
 				$message->error('Unable to change comic filename');
 			}
 			
-			//Delete image for current cid
-			if(!@unlink($this->comicDir.'/'.$currentComicFilename))
-			{
-				//Don't die on error
-				//$message->error($this->comicDir.'/'.$currentComicFilename.' could not be deleted!');
-			}
-			
 			return true; //Successful
 		}
 		else
@@ -103,6 +98,47 @@ class EditComic {
 	}
 	
 	//TO DO: Add change of date/time
+	
+	function deleteFile() {
+		global $xcomicRootPath, $classEx, $message;
+		
+		//Get filename for current cid------
+		include_once($xcomicRootPath.'includes/ComicDisplay.'.$classEx);
+		$comicInformation = new ComicDisplay($this->cid);
+		$currentComicFilename = $comicInformation->getFilename();
+		//----------------------------------
+		
+		//Delete image for current cid
+		if(!@unlink($this->comicDir.'/'.$currentComicFilename))
+		{
+			//Don't die on error
+			//$message->error($this->comicDir.'/'.$currentComicFilename.' could not be deleted!');
+		}
+		
+	}
+	
+	function deleteComic() {
+		global $xcomicDb, $message;
+		
+		//Delete file first
+		$this->deleteFile();
+		
+		//Delete from database
+		$sql='DELETE FROM '.XCOMIC_COMICS_TABLE."
+			WHERE cid = $this->cid";
+		
+		//Make the changes happen
+		if ($result = $xcomicDb->sql_query($sql))
+		{
+			//Expect only one match so there is no need to loop.
+			//$xcmsDb->sql_fetchrow($result);
+		}
+		else
+		{
+			$message->error('Unable to delete comic!');
+		}
+		
+	}
 
 }
 

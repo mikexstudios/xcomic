@@ -18,26 +18,24 @@ class NewsDisplay {
 	
 	var $newsInfo; //Latest news info
 	var $id; //Holds current Id
-	var $category;
 	
-	function NewsDisplay($inCategory='default', $inId=NULL) {
-		
-		$this->category = $inCategory;
+	function NewsDisplay($inId=NULL) {
 		
 		if($inId!=NULL)
 		{
 			$this->id = $inId;
-			$this->getComicInfo($inId);
+			$this->getNewsInfo($inId);
 		}
 	
 	}
 	
-	function queryNewsInfo($inId, $inCategory, $idOperator='=') {
+	function queryNewsInfo($inId, $idOperator='=', $inOrderBy='') {
 		global $xcomicDb, $message;
 		
 		$sql = 'SELECT id, title, date, username, content
 			FROM '.XCOMIC_NEWS_TABLE." 
-			WHERE id $idOperator '$inId'";
+			WHERE id $idOperator $inId
+			ORDER BY id $inOrderBy";
 		
 		if(!($result = $xcomicDb->sql_query($sql)))
 		{
@@ -47,15 +45,12 @@ class NewsDisplay {
 		return $xcomicDb->sql_fetchrow($result);		
 	}
 	
-	function getNewsInfo($inId, $inCategory='default') {
+	function getNewsInfo($inId) {
 		
 		//Set this to current comic id
 		$this->id = $inId;
 		
-		//Set to current category
-		$this->category = $inCategory;
-		
-		$this->newsInfo = $this->queryNewsInfo($inId, $inCategory);
+		$this->newsInfo = $this->queryNewsInfo($this->id);
 		
 	}
 	
@@ -67,7 +62,7 @@ class NewsDisplay {
 	
 	function nextId($inCategory='default') {
 		
-		$next = $this->queryNewsInfo($this->id, $this->category, '>');
+		$next = $this->queryNewsInfo($this->id, '>', 'ASC');
 		
 		$nextId = $next['id'];
 		
@@ -83,7 +78,7 @@ class NewsDisplay {
 	}
 	
 	function prevId($inCategory='default') {
-		$prev = $this->queryComicInfo($this->id, $this->category, '<');
+		$prev = $this->queryComicInfo($this->id, '<', 'DESC');
 		$prevId = $prev['id'];
 		
 		if(empty($prevId))
@@ -124,12 +119,6 @@ class NewsDisplay {
 	function getContent() {
 	
 		return $this->newsInfo['content'];
-		
-	}
-	
-	function getCategory() {
-	
-		return $this->newsInfo['category'];
 		
 	}
 	

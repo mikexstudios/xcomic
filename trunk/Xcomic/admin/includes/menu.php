@@ -20,7 +20,7 @@ $menuEntries = array (
 				array('linkname' => 'Edit Comics', 'scriptname' => 'editcomiclist.php'),
 				//array('linkname' => 'Comic Status', 'scriptname' => 'comicstatus.php'),
 				array('linkname' => 'Post News', 'scriptname' => 'postnews.php'),
-				array('linkname' => 'Edit News', 'scriptname' => 'editnews.php'),
+				array('linkname' => 'Edit News', 'scriptname' => 'editnewslist.php'),
 				//array('linkname' => 'News Categories', 'scriptname' => 'newscategories.php'),
 				array('linkname' => 'Users', 'scriptname' => 'users.php'),
 				array('linkname' => 'Options', 'scriptname' => 'options.php'),

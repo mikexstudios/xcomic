@@ -27,7 +27,7 @@ class PostNews {
 	}
 	
 	function sendToDatabase() {
-		global $xcomicDb;
+		global $xcomicDb, $message;
 		
 		$sql='INSERT INTO '.XCOMIC_NEWS_TABLE." (title , date, username, content)
 			VALUES ( 
@@ -47,7 +47,7 @@ class PostNews {
 		}
 		else
 		{
-			echo "ERROR: Unable to add new news";
+			$message->error('Unable to add new news.');
 		}
 	}
 }

@@ -17,11 +17,11 @@ include_once('NewsDisplay.class.php');
 
 class LatestNewsDisplay extends NewsDisplay {
 	
-	function LatestNewsDisplay($inCategory='default') {
+	function LatestNewsDisplay() {
 
-		$this->NewsDisplay($inCategory);
+		$this->NewsDisplay();
 		
-		$this->getNewsInfo($this->getLatestNewsId(), $inCategory);
+		$this->getNewsInfo($this->getLatestNewsId());
 		
 	}
 	

@@ -3,11 +3,11 @@
 # http://www.phpmyadmin.net
 #
 # Host: localhost
-# Generation Time: Nov 17, 2004 at 07:57 PM
+# Generation Time: Nov 20, 2004 at 04:18 PM
 # Server version: 3.23.41
 # PHP Version: 4.3.6
 # 
-# Database : `xcomic065b`
+# Database : `xcomic070b`
 # 
 
 # --------------------------------------------------------
@@ -15,8 +15,8 @@
 #
 # Table structure for table `comics`
 #
-# Creation: Nov 17, 2004 at 07:56 PM
-# Last update: Nov 17, 2004 at 07:56 PM
+# Creation: Nov 20, 2004 at 04:16 PM
+# Last update: Nov 20, 2004 at 04:16 PM
 #
 
 DROP TABLE IF EXISTS `comics`;
@@ -38,14 +38,16 @@ CREATE TABLE `comics` (
 #
 # Table structure for table `config`
 #
-# Creation: Nov 17, 2004 at 07:56 PM
-# Last update: Nov 17, 2004 at 07:56 PM
+# Creation: Nov 20, 2004 at 04:17 PM
+# Last update: Nov 20, 2004 at 04:17 PM
 #
 
 DROP TABLE IF EXISTS `config`;
 CREATE TABLE `config` (
   `option` varchar(50) NOT NULL default '',
   `value` varchar(100) NOT NULL default '',
+  `name` varchar(100) NOT NULL default '',
+  `description` varchar(200) NOT NULL default '',
   PRIMARY KEY  (`option`)
 ) TYPE=MyISAM;
 
@@ -59,8 +61,8 @@ CREATE TABLE `config` (
 #
 # Table structure for table `news`
 #
-# Creation: Nov 17, 2004 at 07:56 PM
-# Last update: Nov 17, 2004 at 07:56 PM
+# Creation: Nov 20, 2004 at 04:16 PM
+# Last update: Nov 20, 2004 at 04:16 PM
 #
 
 DROP TABLE IF EXISTS `news`;
@@ -83,8 +85,8 @@ CREATE TABLE `news` (
 #
 # Table structure for table `users`
 #
-# Creation: Nov 17, 2004 at 07:56 PM
-# Last update: Nov 17, 2004 at 07:56 PM
+# Creation: Nov 20, 2004 at 04:16 PM
+# Last update: Nov 20, 2004 at 04:16 PM
 #
 
 DROP TABLE IF EXISTS `users`;

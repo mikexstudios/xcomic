@@ -124,8 +124,8 @@ function installXcomic() {
 	//Add URL Information
 	$inBaseUrl=(!empty($_REQUEST['baseurl'])) ? $_REQUEST['baseurl'] : NULL;
 	$inUrlToXcomic=(!empty($_REQUEST['urltoxcomic'])) ? $_REQUEST['urltoxcomic'] : NULL;
-	$sql_query[] = "INSERT INTO config VALUES ('baseUrl', '$inBaseUrl')";
-	$sql_query[] = "INSERT INTO config VALUES ('urlToXcomic', '$inUrlToXcomic')";
+	$sql_query[] = "INSERT INTO config VALUES ('baseUrl', '$inBaseUrl', 'Base url', 'The base url that Xcomic is running on (ie. http://www.yoururl.com)')";
+	$sql_query[] = "INSERT INTO config VALUES ('urlToXcomic', '$inUrlToXcomic', 'Url to Xcomic', 'The full url to the installation of Xcomic (ie. http://www.xcomic.com/xcomic)')";
 
 	
 	for ($i = 0; $i < sizeof($sql_query); $i++)
@@ -267,9 +267,13 @@ else
 	<p>We tried to guess these urls for you. Double check to make sure that they are correct.</p>
 	<p>
 	Base url:<br /><input type="text" name="baseurl" size="20" value="http://<?php echo $_SERVER["HTTP_HOST"]; ?>" />
+	<br />
+	<small>The base url that Xcomic is running on (ie. http://www.yoururl.com)</small>
 	</p>
 	<p>
 	Url to Xcomic:<br /><input type="text" name="urltoxcomic" size="20" value="http://<?php echo $_SERVER["HTTP_HOST"].str_replace('/admin/install.php', '', $_SERVER["PHP_SELF"]); ?>" />
+	<br />
+	<small>The full url to the installation of Xcomic (ie. http://www.xcomic.com/xcomic)</small>
 	</p>
 	
 	<p>
