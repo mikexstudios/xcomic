@@ -35,12 +35,18 @@ if ($action == $modeDelete) {
 //Check for form edit submission
 if (isset($_POST['submit'])) {
 	$comicTitle = (!empty($_REQUEST[$formComicTitle])) ? $security->secureText($_REQUEST[$formComicTitle]) : null;
+	$comicDateMonth = (!empty($_REQUEST[formDateMonth])) ? $security->secureText($_REQUEST[formDateMonth]) : null;
+	$comicDateDay = (!empty($_REQUEST[formDateDay])) ? $security->secureText($_REQUEST[formDateDay]) : null;
+	$comicDateYear = (!empty($_REQUEST[formDateYear])) ? $security->secureText($_REQUEST[formDateYear]) : null;
 	//Must use $_FILES[$formComicFile]['name'] since empty on just $_FILES[$formComicFile] will always return false.
 	$comicFile = (!empty($_FILES[$formComicFile]['name'])) ? $_FILES[$formComicFile] : null; //Default to left
 	
 	//Check for error
 	if (empty($comicTitle)) {
 		$message->error('The comic title was left blank. Please click back and fill it in.');
+	}
+	if (empty($comicDateMonth) || empty($comicDateDay) || empty($comicDateYear)) {
+		$message->error('One of the date fields was left blank. Please click back and fill it in.');
 	}
 	//Process file first and then the title. That way, if the file fails to upload, no changes
 	//are made.
@@ -57,6 +63,9 @@ if (isset($_POST['submit'])) {
 	//Change the title
 	$editComic->changeTitle($comicTitle);
 	
+	//Change the date
+	$editComic->changeDate(mktime(0, 0, 0, $comicDateMonth, $comicDateDay, $comicDateYear));
+
 	//Display success page
 	$message->say('The comic has been sucessfully modified.');
 } else {
@@ -69,6 +78,10 @@ if ($action != 'edit') {
 include_once $xcomicRootPath.'includes/ComicDisplay.'.$classEx;
 $comicInformation = new ComicDisplay($db, $comicId);
 $comicTitle = $comicInformation->getTitle();
+$comicTime = $comicInformation->queryComicInfo($comicId);
+$comicDateMonth = date('m', $comicTime['date']);
+$comicDateDay = date('d', $comicTime['date']);
+$comicDateYear = date('y', $comicTime['date']);
 
 //Include script header
 include './includes/header.php';
@@ -81,6 +94,9 @@ include './includes/menu.php';
  <div class="section-body">
   <form method="POST" action="" enctype="multipart/form-data">
    <input style="display: none;" type="hidden" name="<?php echo $urlComicId; ?>" value="<?php echo $comicId; ?>">
+
+   <label for="date">Date (MM-DD-YY)</label><br />
+   <input type="text" name="formDateMonth" value="<?php echo $comicDateMonth; ?>" size="3" /> <input type="text" name="formDateDay" value="<?php echo $comicDateDay; ?>" size="3" /> <input type="text" name="formDateYear" value="<?php echo $comicDateYear; ?>" size="3" /><br />
 
    <label for="<?php echo $formComicTitle; ?>">Change Comic Title:</labal><br />
    <input type="text" name="<?php echo $formComicTitle; ?>" value="<?php echo $comicTitle; ?>" size="80" /><br />
