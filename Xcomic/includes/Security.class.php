@@ -123,18 +123,23 @@ class Security
 		}
 	} 
 
-	
-	
-	
+	//Use this if you know quotes are possibly being added by magic quotes
+	//and that you didn't add any yourself.
+	function removeMagicQuotes($array)
+	{
+		if (!get_magic_quotes_gpc()) {
+			return $array;
+		} else {
+			foreach ($array as $k => $v) {
+				if (is_array($v)) {
+					$array[$k] = $this->removeMagicQuotes($v);
+				} else {
+					$array[$k] = stripslashes($v);
+				}
+			}
+			return $array;
+		}
+	}
 }
 
-/*	
-//Test Security
-$x = new Security();
-echo $x->allowOnlyChars("Hello, my name is mike! 12345")."\n";
-echo $x->allowOnlyNumbers("Hello, my name is mike! 12345")."\n";
-echo $x->allowOnlyWordsNumbers("Hello, my name is mike! 12345 $#&(@#$2")."\n";
-echo $x->secureText("Hello, my name is mike! 12345 $#&(@#$2")."\n";
-echo $x->addMagicQuotes("Hello, my name is mike! 12345 ''")."\n";
-*/
 ?>
