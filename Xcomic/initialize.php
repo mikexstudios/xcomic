@@ -36,54 +36,10 @@ include_once($xcomicRootPath.'includes/constants.'.$phpEx);
 	}
 //-----------------------------------------------
 
-//Template---------------------------------------
-	//Include Template wrapper class
-	include_once($xcomicRootPath.'includes/Template.class.'.$phpEx);
-	
-	//Grab configuration information
-	$configInfo = getConfigInfo();
-	
-	//Create instance of template class.
-	$xcomicTemplate = new Template();
-	
-	//Set root path to template directory 
-	$xcomicTemplate->setRootPath($xcomicRootPath.TEMPLATES_DIR);
-	
-	//Template settings
-	$xcomicTemplate->extTemplateObj->setWarningLevel(E_YAPTER_ERROR);
+//Configuration Information----------------------
+include_once($xcomicRootPath.'includes/Settings.'.$classEx);
+$settings = new Settings();
 //-----------------------------------------------
-
-//Message----------------------------------------
-include_once($xcomicRootPath.'includes/Message.'.$classEx);
-$message = new Message();
-//-----------------------------------------------
-
-function getConfigInfo() {
-	
-	global $xcomicDb, $message;
-	
-	$sql = "SELECT * 
-	FROM " . XCOMIC_CONFIG_TABLE;
-	
-	if( !($result = $xcomicDb->sql_query($sql)) )
-	{
-		$message->error("Could not query config information");
-	}
-	
-	while ( $row = $xcomicDb->sql_fetchrow($result) )
-	{
-		//Place configuration information in array
-		$configInfo[$row['option']] = $row['value'];
-	}
-	
-	return $configInfo;
-	
-}
-
-
-
-
-
 
 
 ?>

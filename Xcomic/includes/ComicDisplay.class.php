@@ -39,7 +39,8 @@ class ComicDisplay {
 		
 		$sql = 'SELECT cid, title, filename, date
 			FROM '.XCOMIC_COMICS_TABLE." 
-			WHERE cid $idOperator '$inCid'";
+			WHERE cid $idOperator '$inCid'
+			ORDER BY cid DESC";
 		
 		if(!($result = $xcomicDb->sql_query($sql)))
 		{

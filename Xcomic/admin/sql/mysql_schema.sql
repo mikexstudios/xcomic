@@ -3,11 +3,11 @@
 # http://www.phpmyadmin.net
 #
 # Host: localhost
-# Generation Time: Jun 18, 2004 at 09:15 AM
+# Generation Time: Nov 17, 2004 at 07:57 PM
 # Server version: 3.23.41
 # PHP Version: 4.3.6
 # 
-# Database : `testxcomic`
+# Database : `xcomic065b`
 # 
 
 # --------------------------------------------------------
@@ -15,8 +15,8 @@
 #
 # Table structure for table `comics`
 #
-# Creation: Jun 18, 2004 at 09:13 AM
-# Last update: Jun 18, 2004 at 09:13 AM
+# Creation: Nov 17, 2004 at 07:56 PM
+# Last update: Nov 17, 2004 at 07:56 PM
 #
 
 DROP TABLE IF EXISTS `comics`;
@@ -39,8 +39,8 @@ CREATE TABLE `comics` (
 #
 # Table structure for table `config`
 #
-# Creation: Jun 18, 2004 at 09:13 AM
-# Last update: Jun 18, 2004 at 09:13 AM
+# Creation: Nov 17, 2004 at 07:56 PM
+# Last update: Nov 17, 2004 at 07:56 PM
 #
 
 DROP TABLE IF EXISTS `config`;
@@ -54,22 +54,20 @@ CREATE TABLE `config` (
 # Dumping data for table `config`
 #
 
-INSERT INTO `config` VALUES ('usingTheme', 'default');
 
 # --------------------------------------------------------
 
 #
 # Table structure for table `news`
 #
-# Creation: Jun 18, 2004 at 09:13 AM
-# Last update: Jun 18, 2004 at 09:13 AM
+# Creation: Nov 17, 2004 at 07:56 PM
+# Last update: Nov 17, 2004 at 07:56 PM
 #
 
 DROP TABLE IF EXISTS `news`;
 CREATE TABLE `news` (
   `id` int(10) NOT NULL auto_increment,
   `title` varchar(100) NOT NULL default '',
-  `category` varchar(100) NOT NULL default 'default',
   `date` int(11) NOT NULL default '0',
   `username` varchar(50) NOT NULL default '',
   `content` text NOT NULL,
@@ -84,57 +82,10 @@ CREATE TABLE `news` (
 # --------------------------------------------------------
 
 #
-# Table structure for table `newscategories`
-#
-# Creation: Jun 18, 2004 at 09:13 AM
-# Last update: Jun 18, 2004 at 09:13 AM
-#
-
-DROP TABLE IF EXISTS `newscategories`;
-CREATE TABLE `newscategories` (
-  `catid` int(100) unsigned NOT NULL auto_increment,
-  `catname` varchar(100) NOT NULL default '',
-  PRIMARY KEY  (`catid`)
-) TYPE=MyISAM AUTO_INCREMENT=3 ;
-
-#
-# Dumping data for table `newscategories`
-#
-
-INSERT INTO `newscategories` VALUES (1, 'default');
-INSERT INTO `newscategories` VALUES (2, 'right');
-
-# --------------------------------------------------------
-
-#
-# Table structure for table `nextcomicstatus`
-#
-# Creation: Jun 18, 2004 at 09:13 AM
-# Last update: Jun 18, 2004 at 09:13 AM
-#
-
-DROP TABLE IF EXISTS `nextcomicstatus`;
-CREATE TABLE `nextcomicstatus` (
-  `ncid` int(3) NOT NULL default '0',
-  `nextdate` int(11) NOT NULL default '0',
-  `percentstatus` int(4) NOT NULL default '0',
-  `comments` text NOT NULL,
-  PRIMARY KEY  (`ncid`)
-) TYPE=MyISAM;
-
-#
-# Dumping data for table `nextcomicstatus`
-#
-
-INSERT INTO `nextcomicstatus` VALUES (0, '2004-06-16', 1, 'This is where the comments for the next comic status goes.');
-
-# --------------------------------------------------------
-
-#
 # Table structure for table `users`
 #
-# Creation: Jun 18, 2004 at 09:14 AM
-# Last update: Jun 18, 2004 at 09:14 AM
+# Creation: Nov 17, 2004 at 07:56 PM
+# Last update: Nov 17, 2004 at 07:56 PM
 #
 
 DROP TABLE IF EXISTS `users`;

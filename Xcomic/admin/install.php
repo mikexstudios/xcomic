@@ -111,7 +111,7 @@ function installXcomic() {
 	$delimiter = $available_dbms[$dbms]['DELIM']; 
 	$delimiter_basic = $available_dbms[$dbms]['DELIM_BASIC']; 
 	
-	include_once('./sql_parse.php'); //phpBB's DB schema cleaning
+	include_once('./includes/sql_parse.php'); //phpBB's DB schema cleaning
 	$sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema));
 	$sql_query = preg_replace('/xcomic_/', $table_prefix, $sql_query);
 
@@ -172,7 +172,7 @@ function displayHeader() {
 <meta name="author" content="mikexstudios" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<link rel="stylesheet" type="text/css" href="../templates/admin/styles/admin.css" title="default" media="screen" />
+<link rel="stylesheet" type="text/css" href="./styles/admin.css" title="default" media="screen" />
 </head>
 
 <body>

@@ -35,14 +35,13 @@ class NewsDisplay {
 	function queryNewsInfo($inId, $inCategory, $idOperator='=') {
 		global $xcomicDb, $message;
 		
-		$sql = 'SELECT id, title, category, date, username, content
+		$sql = 'SELECT id, title, date, username, content
 			FROM '.XCOMIC_NEWS_TABLE." 
-			WHERE id $idOperator '$inId'
-			AND category='$inCategory'";
+			WHERE id $idOperator '$inId'";
 		
 		if(!($result = $xcomicDb->sql_query($sql)))
 		{
-			$message->error('Unable to get latest news info');
+			echo 'Unable to get latest news info. SQL: '.$sql;
 		}
 		
 		return $xcomicDb->sql_fetchrow($result);		
