@@ -27,7 +27,7 @@ class Settings
 		global $db, $message;
 		
 		$sql = 'SELECT * 
-		FROM ' . XCOMIC_CONFIG_TABLE;
+			FROM ' . XCOMIC_CONFIG_TABLE;
 		
 		$result = $db->getAll($sql);
 		if (PEAR::isError($result)) {

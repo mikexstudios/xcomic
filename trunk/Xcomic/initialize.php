@@ -24,10 +24,10 @@ include_once $xcomicRootPath.'extension.inc';
 	//Create database object
     $dsn = array(
         'phptype'  => $dbms,
-        'username' => $xcomicDbUser,
-        'password' => $xcomicDbPasswd,
-        'hostspec' => $xcomicDbHost,
-        'database' => $xcomicDbName,
+        'username' => $dbUser,
+        'password' => $dbPasswd,
+        'hostspec' => $dbHost,
+        'database' => $dbName,
     );
     
     $options = array(
