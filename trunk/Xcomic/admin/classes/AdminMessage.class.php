@@ -12,36 +12,35 @@ $xcomicRootPath='../';
 include_once($xcomicRootPath.'initialize.php');
 */
 
-class AdminMessage {
+class AdminMessage
+{
 	
 	var $noMenu; //To determine whether or not to display the menu
 	
-	function AdminMessage() {
+	function AdminMessage()
+	{
 		$this->noMenu = false; //Initialize to display menu
 	}
 		
-	function say($inMsg, $type='message') {
+	function say($inMsg, $type = 'message')
+	{
 		global $xcomicStartTime;
 		
 		//Determine section title
-		$sectionTitle;
-		if($type=='error')
-		{
+		//$sectionTitle;
+		if ($type == 'error') {
 			$sectionTitle = 'Error';
-		}
-		else
-		{
+		} else {
 			$sectionTitle = 'Message';
 		}
 		
 		//Include script header
-		include('./includes/header.php');
+		include './includes/header.php';
 		
 		//Check to see if menu will be displayed
-		if($this->noMenu == false)
-		{
+		if ($this->noMenu === false) {
 			//Include script menu
-			include('./includes/menu.php');
+			include './includes/menu.php';
 		}
 ?>
 <div class="wrap">
@@ -53,14 +52,16 @@ class AdminMessage {
 <?php	
 
 		//Include script footer
-		include('./includes/footer.php');
+		include './includes/footer.php';
 	}
 	
-	function error($inMsg) {
+	function error($inMsg)
+	{
 		$this->say($inMsg, 'error');	
 	}
 	
-	function setNoMenu($inBoolean = 'true') {
+	function setNoMenu($inBoolean = 'true')
+	{
 		$this->noMenu = $inBoolean;	
 	}
 		
@@ -71,8 +72,4 @@ class AdminMessage {
 $x = new Message(true);
 $x->say("This is a error message");
 */
-
-
-
-
 ?>

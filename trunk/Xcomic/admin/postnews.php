@@ -7,70 +7,54 @@ $Id$
 
 //Xcomic settings
 define('IN_XCOMIC', true);
-$xcomicRootPath = "../";
-
-require_once('./admininitialize.php');	//Include all admin common settings
-
-//Form field variables
-$sectionTitle = 'Post New News';
-$formNewsTitle = 'newsTitle';
-$formNewsContent = 'newsContent';
-$formModeValue = 'postnews';
+$xcomicRootPath = '../';
+require_once './admininitialize.php';	//Include all admin common settings
 
 //Check for form submission
-if($_REQUEST['mode'] == $formModeValue) {
-		
-	$newsTitle=(!empty($_REQUEST[$formNewsTitle])) ? $security->secureText($_REQUEST[$formNewsTitle]) : NULL;
-	$newsContent=(!empty($_REQUEST[$formNewsContent])) ? $security->secureText($_REQUEST[$formNewsContent]) : NULL;
+if (isset($_POST['submit'])) {
+	$newsTitle = (!empty($_REQUEST['newsTitle'])) ? $security->secureText($_REQUEST['newsTitle']) : null;
+	$newsContent = (!empty($_REQUEST['newsContent'])) ? $security->secureText($_REQUEST['newsContent']) : null;
 	
 	//Check for error
-	if($newsTitle==NULL)
+	if (is_null($newsTitle)) {
 		$message->error('The news title was left blank. Please click back and fill it in.');
-
-	if($newsContent==NULL)
+    }
+	if (is_null($newsContent)) {
 		$message->error('The news content was left blank. Please click back and fill it in.');
-	
+	}
 	//Texturize. Convert into HTML
-	include_once('./classes/Syntax.'.$classEx);
+	include_once './classes/Syntax.'.$classEx;
 	$syntax = new Syntax();
 	$newsContent = $syntax->parse($newsContent);
 	
 	//Actually post the news
-	include_once('./classes/PostNews.'.$classEx);
-	$postNews = new PostNews($newsContent, $newsTitle, $userManagement->getUsername());
-	$postNews->sendToDatabase();
+	include_once './classes/News.'.$classEx;
+	$news =& new News;
+	$news->addNews($newsTitle, $newsContent, $userManagement->getUid(), $userManagement->getUsername());
 	
 	//Display success page
 	$message->say('News has been sucessfully posted.');		
-}
-else {
+} else {
 
 //Include script header
-include('./includes/header.php');
+include './includes/header.php';
 
 //Include script menu
-include('./includes/menu.php');
+include './includes/menu.php';
 ?>
 <div class="wrap">
-	<div class="section-title"><h2><?php echo $sectionTitle; ?></h2></div>
-	<div class="section-body">
-	<form method="POST" action="" enctype="multipart/form-data">
-	<input type="hidden" name="mode" value="<?php echo $formModeValue; ?>">
-	
-	<p>
-	Title:<br /><input type="text" name="<?php echo $formNewsTitle; ?>" size="80" value="" />
-	</p>
-	
-	<p>
-	Content:<br />
-	<textarea wrap="soft" name="<?php echo $formNewsContent; ?>" rows="20" cols="70"></textarea>
-	</p>
+ <h2>Post New News</h2>
+ <div class="section-body">
+  <form method="POST" action="" enctype="multipart/form-data">	
+   <label for="<?php echo 'newsTitle'; ?>">Title:</label><br />
+   <input type="text" name="<?php echo 'newsTitle'; ?>" size="80" value="" /><br />
 
-	<p>
-	<input type="submit" name="submit" value="Post!" />
-	</p>
-	</form>
-	</div>
+   <label for="<?php echo 'newsContent'; ?>">Content:</label><br />
+   <textarea wrap="soft" name="<?php echo 'newsContent'; ?>" rows="20" cols="70"></textarea><br />
+
+   <input type="submit" name="submit" value="Post!" />
+  </form>
+ </div>
 </div>
 
 <?php

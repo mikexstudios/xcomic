@@ -7,32 +7,21 @@ $Id$
 
 //Xcomic settings
 define('IN_XCOMIC', true);
-$xcomicRootPath = "../";
+$xcomicRootPath = '../';
+require_once './admininitialize.php';	//Include all admin common settings
 
-require_once('./admininitialize.php');	//Include all admin common settings
-
-//Form field variables
-$sectionTitle = 'Edit User';
-$username = ''; //User being edited
-$formUsername = 'username';
-$formPassword = 'password';
-$formEmail = 'email';
-$formModeAction = 'edituser';
-$urlUsername = 'username'; //For the GET url
-$formModeEditUser = 'edit';
-$formModeDeleteUser = 'delete';
-
-$username=(!empty($_REQUEST[$urlUsername])) ? $security->secureText($_REQUEST[$urlUsername]) : NULL;
+$id = (!empty($_REQUEST['id'])) ? $security->secureText($_REQUEST['id']) : null;
 //If username is null, redirect to users
-if(empty($username))
+if (empty($id)) {
 	header('Location: users.php');
+}
+
+$mode = (!empty($_REQUEST['mode'])) ? $security->secureText($_REQUEST['mode']) : null;
 
 //Check for form submission for delete user
-$mode=(!empty($_REQUEST['mode'])) ? $security->secureText($_REQUEST['mode']) : NULL;
-if($mode == $formModeDeleteUser) 
-{
+if ($mode == 'delete')  {
 	//Delete user using User Management class
-	$deleteUser = new UserManagement($username);
+	$deleteUser = new UserManagement($id);
 	$deleteUser->deleteUser();
 	
 	//Display success
@@ -40,101 +29,76 @@ if($mode == $formModeDeleteUser)
 }
 
 //Check for form submission for edit user
-if($_REQUEST['mode'] == $formModeAction) {
+if (isset($_POST['submit'])) {
 
-$password=(!empty($_REQUEST[$formPassword])) ? $security->secureText($_REQUEST[$formPassword]) : NULL;
-$email=(!empty($_REQUEST[$formEmail])) ? $security->allowOnlyEmail($_REQUEST[$formEmail]) : NULL;
+$password = (!empty($_REQUEST['password'])) ? $security->secureText($_REQUEST['password']) : null;
+$email = (!empty($_REQUEST['email'])) ? $security->allowOnlyEmail($_REQUEST['email']) : null;
 
 //Check for error
 /* Password can be blank
 if(empty($password))
 	$message->error('The password was left blank. Please click back and fill it in.');
 */
-if(empty($email))
+if (empty($email)) {
 	$message->error('The email address was left blank. Please click back and fill it in.');
-
+}
 //Register user
-$userFunctions = new UserManagement($username, $password);
+$userFunctions = new UserManagement($id);
 
 //Check if user exists
-if($userFunctions->userExists())
-{
+if ($userFunctions->userExists()) {
 	$userFunctions->editUserInfo($email);
 	//If password is left blank, do not change
-	if(!empty($password))
+	if (!empty($password)) {
 		$userFunctions->changePassword($password);
-}
-else 
-{
+    }
+} else  {
 	$message->error('The user you are trying to edit does not exist!');
 }
 	
 //Display success
 $message->say('User has been sucecssfully modified.');
 
-}
-else {
+} else {
 	
 //Check to see if mode is edit
-if($mode != $formModeEditUser) 
-{
+if ($mode != 'edit')  {
 	$message->error('Invalid mode specified!');
 }
 
 //Get user information
 //Get list of users. SELECT [options go here]
-$sql = 'SELECT email 
+$sql = 'SELECT username, email 
 	FROM '.XCOMIC_USERS_TABLE."
-	WHERE username = '$username';";
-
-if( !($result = $xcomicDb->sql_query($sql)) )
-{
+	WHERE uid = '$id';";
+$row = $db->getRow($sql);
+if (PEAR::isError($row)) {
 	$message->error("Could not get users list.");
 }
-$row = $xcomicDb->sql_fetchrow($result);
-
-//Set variables
-$userEmail = $row['email'];
 
 //Include script header
-include('./includes/header.php');
+include './includes/header.php';
 
 //Include script menu
-include('./includes/menu.php');
+include './includes/menu.php';
 ?>
 <div class="wrap">
-	<div class="section-title"><h2><?php echo $sectionTitle; ?></h2></div>
-	<div class="section-body">
-	<div class="user-list">
-	<p>
-		<form method="POST" action="" enctype="multipart/form-data">
-		<input type="hidden" name="mode" value="<?php echo $formModeAction; ?>">
-		
-		<p>
-		Username: <input type="hidden" name="<?php echo $formUsername; ?>" value="<?php echo $username; ?>" /><strong><?php echo $username; ?></strong>
-		</p>
-		
-		<p>
-		Change Password (leave blank to keep current password):<br /><input type="password" name="<?php echo $formPassword; ?>" size="20" />
-		</p>
-		
-		<p>
-		Change E-mail Address:<br /><input type="text" name="<?php echo $formEmail; ?>" value="<?php echo $userEmail; ?>" size="20" />
-		</p>
-	
-		<p>
-		<input type="submit" name="submit" value="Make Changes to User" />
-		</p>
-		</form>
-	</p>
-	</div>
+ <h2>Edit <?php echo $row['username']; ?></h2>
+ <div class="section-body">
+  <form method="POST" action="" enctype="multipart/form-data">
+   <label for="'password">Change Password (leave blank to keep current password):</label><br />
+   <input type="password" name="password" size="20" /><br />
+
+   <label for="email">Change E-mail Address:</label><br />
+   <input type="text" name="email" value="<?php echo $row['email']; ?>" size="20" /><br />
+
+   <input type="submit" name="submit" value="Make Changes to User" />
+  </form>
+ </div>
 </div>
 
 <?php
-
 //Include script footer
-include('./includes/footer.php');
-
+include './includes/footer.php';
 } //End check form for submission
-
 ?>

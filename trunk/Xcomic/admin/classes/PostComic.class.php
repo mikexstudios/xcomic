@@ -8,18 +8,20 @@ $Id$
 define('IN_XCOMIC', true);
 
 /*
-$xcomicRootPath='../';
-include_once($xcomicRootPath.'initialize.php');
+$xcomicRootPath = '../';
+include_once $xcomicRootPath.'initialize.php';
 */
 
-class PostComic {
+class PostComic
+{
 	
 	var $title;
 	var $comicFile; //$_FILES type
 	var $comicFilename;
 	var $comicDir;
 	
-	function PostComic($inComicFile, $inTitle=NULL) {
+	function PostComic($inComicFile, $inTitle = null)
+	{
 		global $message, $xcomicRootPath;
 		
 		$this->comicDir = $xcomicRootPath.COMICS_DIR;
@@ -34,7 +36,8 @@ class PostComic {
 		}
 	}
 	
-	function saveFile() {
+	function saveFile()
+	{
 		global $message;
 		
 		//Special thanks to simple_upload.php (author unknown) and Wordpress for
@@ -50,16 +53,18 @@ class PostComic {
 		
 		//Security Checks-----------------------------------------
 		//File Name Check
-	    	if ( $fileName =="") 
-			$message->error('Invalid File Name Specified: '.$fileName);
+	    	if ($fileName == '') {
+			    $message->error('Invalid File Name Specified: '.$fileName);
+			}
 	    	/*
 	    	//File Size Check
 	    	if ( $fileSize > 500000)
 	        $message->error('The file size is over 500K.');
 	     */
 	    	//File Type Check
-	    	if ( $fileType == "text/plain" )
-			$message->error('Sorry, You cannot upload any script file');
+	    	if ($fileType == 'text/plain') {
+			    $message->error('Sorry, You cannot upload any script file');
+			}
 		//---------------------------------------------------------
 
 		//Upload---------------------------------------------------
@@ -67,11 +72,13 @@ class PostComic {
 	    	$result  =  move_uploaded_file($tempName, $filePath);
 		// move_uploaded_file() can fail if open_basedir in PHP.INI doesn't
 		// include your tmp directory. Try copy instead?
-		if(!result)
+		if (!$result) {
 			$result = copy($tempName, $filePath);
+	    }
 		// Still couldn't get it. Give up.
-		if (!result)
+		if (!$result) {
 			$message->error('Couldn\'t Upload Your File to '.$filePath);
+		}
 		//---------------------------------------------------------
 		
 		//Delete temporary image, if needed
@@ -82,27 +89,21 @@ class PostComic {
 		
 	}
 	
-	function sendToDatabase() {
-		global $xcomicDb, $message;		
-				
-		$sql='INSERT INTO '.XCOMIC_COMICS_TABLE." (title , filename , date)
-			VALUES ( 
-				'$this->title', 
-				'$this->comicFilename', 
-				".time()."
-				)";
-				
-				
-		//echo $sql;
+	function sendToDatabase()
+	{
+		global $db, $message;		
 		
+		$id = $db->nextId(XCOMIC_COMICS_TABLE);
+		$sql = 'INSERT INTO '.XCOMIC_COMICS_TABLE.' (cid, title , filename , date)
+			VALUES ( 
+			    '.$id.',
+				'.$db->quoteSmart($this->title).', 
+				'.$db->quoteSmart($this->comicFilename).', 
+				'.time().'
+				)';
+		$result = $db->query($sql);
 		//Make the changes happen
-		if ($result = $xcomicDb->sql_query($sql))
-		{
-			//Expect only one match so there is no need to loop.
-			//$xcmsDb->sql_fetchrow($result);
-		}
-		else
-		{
+		if (PEAR::isError($result)) {
 			$message->error('ERROR: Unable to add new comic');
 		}
 	}
@@ -114,5 +115,4 @@ class PostComic {
 $x = new PostNews("This is a test", "Title1", "left");
 $x->sendToDatabase();
 */
-
 ?>

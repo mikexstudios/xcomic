@@ -13,61 +13,57 @@ include_once($xcomicRootPath.'initialize.php');
 */
 
 
-class UserInformation {
+class UserInformation
+{
 	
 	var $userInfo;
 	
-	function UserInformation($inUsername=NULL) {
-		if(!empty($inUsername))
-		{
+	function UserInformation($inUsername = null)
+	{
+		if (!empty($inUsername)) {
 			$this->getUserInfo($inUsername);
 		}
 	}
 	
-	function queryUserInfo($inUsername) {
-		global $xcomicDb, $message;
+	function queryUserInfo($inUsername)
+	{
+		global $db, $message;
 		
 		$sql = 'SELECT uid, username, password, email
 			FROM '.XCOMIC_USERS_TABLE." 
 			WHERE username='$inUsername'";
-		
-		if(!($result = $xcomicDb->sql_query($sql)))
-		{
-			$message->error('Unable to get user info');
+		$result = $db->getRow($sql);
+		if (PEAR::isError($result)) {
+			#$message->error('Unable to get user info');
+			die('Unable to get user info');
 		}
 		
-		return $xcomicDb->sql_fetchrow($result);
+		return $result;
 	}
 	
-	function getUserInfo($inUsername) {
-		
+	function getUserInfo($inUsername)
+	{
 		$this->userInfo = $this->queryUserInfo($inUsername);
-		
 	}
 	
-	function getId() {
-		
+	function getId()
+    {
 		return $this->userInfo['uid'];
-		
 	}
 	
-	function getUsername() {
-		
+	function getUsername()
+	{
 		return $this->userInfo['username'];
-		
 	}
 	
 	//Returns md5 password
 	function getPassword() {
-		
 		return $this->userInfo['password'];
-		
 	}
 	
-	function getEmail() {
-		
+	function getEmail()
+	{
 		return $this->userInfo['email'];
-		
 	}
 	
 }
@@ -88,6 +84,4 @@ if($x->prevId()==false)
 else
 	echo $x->prevId();
 */
-
-
 ?>

@@ -10,34 +10,38 @@ built off of phpbb and wiki system
 
 //TODO: Magic quotes
 	
-class Security {
-	
+class Security 
+{	
 	//Constructor
 	//function Security() {
 	//}
 	
 	//Allows only one connected string of letters, numbers, or _.
 	//Note: Allows the null character to go through
-	function allowOnlyChars($inString) {
+	function allowOnlyChars($inString)
+	{
 		$pattern='/\W/i'; //i disregards case \W is any non-word(not a letter, number, or underscore)
 		$replace=''; //Replace with nothing
 		//Allow only words to pass
 		return preg_replace($pattern, $replace, $inString);	
 	}
 	
-	function allowOnlyNumbers($inString) {
+	function allowOnlyNumbers($inString)
+	{
 		$pattern='/\D/i'; //i disregards case \D is any non-decimal digit
 		$replace=''; //Replace with nothing
 		//Allow only numbers to pass
 		return preg_replace($pattern, $replace, $inString);	
 	}
 	
-	function allowOnlyEmail($inString) {
+	function allowOnlyEmail($inString)
+	{
 		return $inString;	
 	}
 	
 	//Allows words and whitespace characters. No punctuation.
-	function allowOnlyWordsNumbers($inString) {
+	function allowOnlyWordsNumbers($inString)
+	{
 		$pattern='/[^\w\s]/i'; //i disregards case \w is any word or \s whitespace
 		$replace=''; //Replace with nothing
 		//Allow only words to pass
@@ -45,29 +49,35 @@ class Security {
 	}
 	
 	//Performs magic quotes on text through addslashes
-	function secureText($inString) {
+	function secureText($inString)
+	{
 		return $this->slashText($inString);
 	}
 	
-	function slashText($inString) {
+	function slashText($inString)
+	{
 		return $this->addMagicQuotes($inString);
 	}
 	
 	//Reverses addslashes
-	function unsecureText($inString) {
+	function unsecureText($inString)
+	{
 		return $this->unslashText($inString);
 	}
 	
-	function unslashText($inString) {
+	function unslashText($inString)
+	{
 		//Unquote something slashed by addslashes or magic quotes
 		return stripslashes($inString);
 	}
 	
-	function escapeHTML($inString) {
+	function escapeHTML($inString)
+	{
 		return htmlentities($inString);	
 	}
 	
-	function escapeSQL($inString) {
+	function escapeSQL($inString)
+	{
 		return $this->addMagicQuotes($inString);	
 	}
 	
@@ -80,7 +90,8 @@ class Security {
 	}
 	*/
 	
-	function removeHTML($inString) {
+	function removeHTML($inString)
+	{
 		//Removes all HTML and PHP tags from a string
 		return strip_tags($inString);	
 	}
@@ -95,7 +106,11 @@ class Security {
 	*/
 	
 	//From Wordpress
-	function addMagicQuotes($array) {
+	function addMagicQuotes($array)
+	{
+	    if (!is_array($array)) {
+	        echo 'Isnt array';
+	    }
 		if (!get_magic_quotes_gpc()) {
 			foreach ($array as $k => $v) {
 				if (is_array($v)) {
@@ -105,9 +120,7 @@ class Security {
 				}
 			}
 			return $array;
-		}
-		else
-		{
+		} else {
 			//Magic quotes is enabled. Just return it.
 			return $array;
 		}
@@ -127,5 +140,4 @@ echo $x->allowOnlyWordsNumbers("Hello, my name is mike! 12345 $#&(@#$2")."\n";
 echo $x->secureText("Hello, my name is mike! 12345 $#&(@#$2")."\n";
 echo $x->addMagicQuotes("Hello, my name is mike! 12345 ''")."\n";
 */
-
 ?>

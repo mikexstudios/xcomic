@@ -1,45 +1,18 @@
-# phpMyAdmin SQL Dump
-# version 2.5.2-pl1
-# http://www.phpmyadmin.net
-#
-# Host: localhost
-# Generation Time: Nov 20, 2004 at 04:18 PM
-# Server version: 3.23.41
-# PHP Version: 4.3.6
-# 
-# Database : `xcomic070b`
-# 
-
-# --------------------------------------------------------
-
 #
 # Table structure for table `comics`
-#
-# Creation: Nov 20, 2004 at 04:16 PM
-# Last update: Nov 20, 2004 at 04:16 PM
 #
 
 DROP TABLE IF EXISTS `comics`;
 CREATE TABLE `comics` (
-  `cid` int(255) unsigned NOT NULL auto_increment,
+  `cid` int(255) unsigned NOT NULL,
   `title` varchar(50) NOT NULL default '',
   `filename` varchar(80) NOT NULL default '',
   `date` int(11) NOT NULL default '0',
   PRIMARY KEY  (`cid`)
-) TYPE=MyISAM AUTO_INCREMENT=1 ;
-
-#
-# Dumping data for table `comics`
-#
-
-
-# --------------------------------------------------------
+) TYPE=MyISAM;
 
 #
 # Table structure for table `config`
-#
-# Creation: Nov 20, 2004 at 04:17 PM
-# Last update: Nov 20, 2004 at 04:17 PM
 #
 
 DROP TABLE IF EXISTS `config`;
@@ -51,55 +24,32 @@ CREATE TABLE `config` (
   PRIMARY KEY  (`option`)
 ) TYPE=MyISAM;
 
-#
-# Dumping data for table `config`
-#
-
-
-# --------------------------------------------------------
 
 #
 # Table structure for table `news`
 #
-# Creation: Nov 20, 2004 at 04:16 PM
-# Last update: Nov 20, 2004 at 04:16 PM
-#
 
 DROP TABLE IF EXISTS `news`;
 CREATE TABLE `news` (
-  `id` int(10) NOT NULL auto_increment,
+  `id` int(10) unsigned NOT NULL,
+  `cid` int(255) unsigned NOT NULL default '0',
   `title` varchar(100) NOT NULL default '',
-  `date` int(11) NOT NULL default '0',
+  `date` int(11) unsigned NOT NULL default '0',
   `username` varchar(50) NOT NULL default '',
+  `uid` int(10) unsigned NOT NULL default '0',
   `content` text NOT NULL,
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM PACK_KEYS=0 AUTO_INCREMENT=1 ;
-
-#
-# Dumping data for table `news`
-#
-
-
-# --------------------------------------------------------
+) TYPE=MyISAM;
 
 #
 # Table structure for table `users`
 #
-# Creation: Nov 20, 2004 at 04:16 PM
-# Last update: Nov 20, 2004 at 04:16 PM
-#
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
-  `uid` int(11) NOT NULL auto_increment,
+  `uid` int(11) unsigned NOT NULL,
   `username` varchar(50) NOT NULL default '',
   `password` varchar(32) NOT NULL default '',
   `email` varchar(80) NOT NULL default '',
   PRIMARY KEY  (`uid`)
-) TYPE=MyISAM AUTO_INCREMENT=2 ;
-
-#
-# Dumping data for table `users`
-#
-
-INSERT INTO `users` VALUES (1, 'admin', '925ad2679b095816cfc0cf772f467229', 'yourname@yourdomain.com');
+) TYPE=MyISAM;

@@ -11,37 +11,32 @@ define('IN_XCOMIC', true);
 $xcomicRootPath='../';
 include_once($xcomicRootPath.'initialize.php');
 */
-include_once('NewsDisplay.class.php');
+include_once 'NewsDisplay.class.php';
 
 
 
-class LatestNewsDisplay extends NewsDisplay {
+class LatestNewsDisplay extends NewsDisplay
+{
 	
-	function LatestNewsDisplay() {
-
+	function LatestNewsDisplay()
+	{
 		$this->NewsDisplay();
-		
 		$this->getNewsInfo($this->getLatestNewsId());
-		
 	}
 	
-	function getLatestNewsId() {
-		global $xcomicDb, $message;
+	function getLatestNewsId()
+	{
+		global $db, $message;
 		
 		$sql = 'SELECT MAX(id)
 			FROM '.XCOMIC_NEWS_TABLE;
-			
-		//Make the changes happen
-		if(!($result = $xcomicDb->sql_query($sql)))
-		{
+		$result = $db->getOne($sql);
+		if (PEAR::isError($result)) {
 			echo 'Unable to get latest news id. SQL: '.$sql;
 		}
-		
-		//Get the result (only one)
-		$row = $xcomicDb->sql_fetchrow($result);
-		
+
 		//Return latest news id
-		return $row[0];
+		return $result;
 	}
 	
 }
@@ -56,7 +51,4 @@ $y = new LatestNewsDisplay('right');
 echo $y->getTitle();
 echo $y->getContent();
 */
-
-
-
 ?>

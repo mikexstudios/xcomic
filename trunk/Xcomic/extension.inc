@@ -11,9 +11,8 @@
  * 
  ***************************************************************************/ 
 
-if ( !defined('IN_XCOMIC') )
-{
-	die("Hacking attempt");
+if (!defined('IN_XCOMIC')) {
+	die('Hacking attempt');
 }
 
 //

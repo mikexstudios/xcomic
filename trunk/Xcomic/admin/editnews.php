@@ -7,110 +7,83 @@ $Id$
 
 //Xcomic settings
 define('IN_XCOMIC', true);
-$xcomicRootPath = "../";
-
-require_once('./admininitialize.php');	//Include all admin common settings
-
-//Form field variables
-$sectionTitle = 'Edit News';
-$urlNewsId = 'nid'; //From GET url
-$urlModeAction = 'action';
-$modeEdit = 'edit';
-$modeDelete = 'delete';
-$formNewsTitle = 'newsTitle';
-$formNewsContent = 'newsContent';
-$formModeAction = 'mode';
-$formModeValue = 'editnews';
+$xcomicRootPath = '../';
+require_once './admininitialize.php';	//Include all admin common settings
 
 //Check for correct input
-$newsId=(!empty($_REQUEST[$urlNewsId])) ? $security->secureText($_REQUEST[$urlNewsId]) : NULL;
-if(empty($newsId))
+$newsId = (!empty($_REQUEST['nid'])) ? $security->secureText($_REQUEST['nid']) : null;
+if (empty($newsId)) {
 	$message->error('No News Id specified!');
-
+}
 //Check for delete submission
-$action=(!empty($_REQUEST[$urlModeAction])) ? $security->secureText($_REQUEST[$urlModeAction]) : NULL;
-if($action == $modeDelete)
-{
+$action = (!empty($_REQUEST['action'])) ? $security->secureText($_REQUEST['action']) : null;
+if ($action == 'delete') {
 	//Use the EditNews class to delete the news
-	include_once('./classes/EditNews.'.$classEx);
-	$editNews = new EditNews($newsId);
-	$editNews->delete();
+	include_once './classes/News.'.$classEx;
+	$news =& new News;
+	$news->delete($newsId);
 	
 	$message->say('The news entry was successfully deleted');
 }
 
 //Check for form edit submission
-if($_REQUEST[$formModeAction] == $formModeValue) {
-	$newsTitle=(!empty($_REQUEST[$formNewsTitle])) ? $security->secureText($_REQUEST[$formNewsTitle]) : NULL;
-	$newsContent=(!empty($_REQUEST[$formNewsContent])) ? $security->secureText($_REQUEST[$formNewsContent]) : NULL;
+if (isset($_POST['submit'])) {
+	$newsTitle = (!empty($_REQUEST['newsTitle'])) ? $security->secureText($_REQUEST['newsTitle']) : null;
+	$newsContent = (!empty($_REQUEST['newsContent'])) ? $security->secureText($_REQUEST['newsContent']) : null;
 	
 	//Check for error
-	if($newsTitle==NULL)
+	if (is_null($newsTitle)) {
 		$message->error('The news title was left blank. Please click back and fill it in.');
-	if($newsContent==NULL)
+    }
+	if (is_null($newsContent)) {
 		$message->error('The news content was left blank. Please click back and fill it in.');
-	
+	}
 	//Texturize. Convert into HTML
-	include_once('./classes/Syntax.'.$classEx);
+	include_once './classes/Syntax.'.$classEx;
 	$syntax = new Syntax();
 	$newsContent = $syntax->parse($newsContent);
 	
 	//Make changes to the existing news entry
-	include_once('./classes/EditNews.'.$classEx);
-	$editNews = new EditNews($newsId);
-	//Change title
-	$editNews->changeTitle($newsTitle);
-	//Change content
-	$editNews->changeContent($newsContent);
+	include_once './classes/News.'.$classEx;
+	$news = new News;
+    $news->updateNews($newsId, $newsTitle, $newsContent);
 	
 	//Display success page
 	$message->say('News entry has been sucessfully modified.');
-}
-else {
+} else {
 
 //Make sure we are in edit mode
-if($action != $modeEdit)
+if ($action != 'edit') {
 	$message->error('Invalid mode specified!');
-
+}
 //Get comic information from id
-include_once($xcomicRootPath.'includes/NewsDisplay.'.$classEx);
+include_once $xcomicRootPath.'includes/NewsDisplay.'.$classEx;
 $newsInformation = new NewsDisplay($newsId);
 $newsTitle = $newsInformation->getTitle();
 $newsContent = $newsInformation->getContent();
 
 //Include script header
-include('./includes/header.php');
+include './includes/header.php';
 
 //Include script menu
-include('./includes/menu.php');
+include './includes/menu.php';
 ?>
 <div class="wrap">
-	<div class="section-title"><h2><?php echo $sectionTitle; ?></h2></div>
-	<div class="section-body">
-	<form method="POST" action="" enctype="multipart/form-data">
-	<input type="hidden" name="<?php echo $formModeAction; ?>" value="<?php echo $formModeValue; ?>">
-	
-	<p>
-	Title:<br /><input type="text" name="<?php echo $formNewsTitle; ?>" size="80" value="<?php echo $newsTitle; ?>" />
-	</p>
-	
-	<p>
-	Content:<br />
-	<textarea wrap="soft" name="<?php echo $formNewsContent; ?>" rows="20" cols="70"><?php echo $newsContent; ?></textarea>
-	</p>
+ <h2>Edit News</h2>
+ <div class="section-body">
+  <form method="post" action="" enctype="multipart/form-data">
+   <label for="<?php echo 'newsTitle'; ?>">Title:</label><br />
+   <input type="text" name="<?php echo 'newsTitle'; ?>" size="80" value="<?php echo $newsTitle; ?>" /><br />
 
-	<p>
-	<input type="submit" name="submit" value="Post!" />
-	</p>
-	</form>
-	</div>
+   <label for="<?php echo 'newsContent'; ?>">Content:<br />
+   <textarea wrap="soft" name="<?php echo 'newsContent'; ?>" rows="20" cols="70"><?php echo $newsContent; ?></textarea><br />
+
+   <input type="submit" name="submit" value="Post!" />
+  </form>
+ </div>
 </div>
-
 <?php
-
 //Include script footer
-include('./includes/footer.php');
-
+include './includes/footer.php';
 } //End check form for submission
-
 ?>

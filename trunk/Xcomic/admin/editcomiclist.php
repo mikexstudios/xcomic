@@ -7,9 +7,8 @@ $Id$
 
 //Xcomic settings
 define('IN_XCOMIC', true);
-$xcomicRootPath = "../";
-
-require_once('./admininitialize.php');	//Include all admin common settings
+$xcomicRootPath = '../';
+require_once './admininitialize.php';	//Include all admin common settings
 	
 //Get list of comics in database and display in table format
 include_once($xcomicRootPath.'includes/ComicListing.'.$classEx);
@@ -18,13 +17,13 @@ $comicsList = $listComics->getComicList(); //Array of comic listings
 $numComics = $listComics->numComics(); //Number of elements in that array
 
 //Include script header
-include('./includes/header.php');
+include './includes/header.php';
 
 //Include script menu
-include('./includes/menu.php');
+include './includes/menu.php';
 ?>
 <div class="wrap">
-	<div class="section-title"><h2>Edit Comics</h2></div>
+ <h2>Edit Comics</h2>
 	<div class="section-body">
 	<table width="100%" cellpadding="3" cellspacing="3"> 
 	  <tr> 
@@ -38,8 +37,7 @@ include('./includes/menu.php');
 <?php
 //Since $comicsList is in ascending order. We want the most recent comic first
 //Therefore, set the for loop counting backwards
-for($comicCount = $numComics-1; $comicCount >= 0 ; $comicCount--)
-{
+for ($comicCount = $numComics-1; $comicCount >= 0 ; $comicCount--) {
 ?>
   <tr style='background-color: #eee'> 
     <th scope="row"><?php echo $comicsList[$comicCount]['cid']; ?></th> 
@@ -57,8 +55,6 @@ for($comicCount = $numComics-1; $comicCount >= 0 ; $comicCount--)
 </div>
 
 <?php
-
 //Include script footer
-include('./includes/footer.php');
-
+include './includes/footer.php';
 ?>

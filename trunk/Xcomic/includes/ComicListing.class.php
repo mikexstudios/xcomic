@@ -21,27 +21,20 @@ class ComicListing {
 	}
 	
 	function queryComicInfo() {
-		global $xcomicDb, $message;
+		global $db, $message;
 		
 		$sql = 'SELECT cid, title, filename, date
 			FROM '.XCOMIC_COMICS_TABLE;
-		
-		if(!($result = $xcomicDb->sql_query($sql)))
-		{
-			$message->error('Unable to get comic information');
+		$result = $db->getAll($sql);
+		if (PEAR::isError($result)) {
+			#$message->error('Unable to get comic information');
+            die('Unable to get comic information');
 		}
-		
-		//Place all returned queries in an array
-		for($rowCount=0; $rowCount < $xcomicDb->sql_numrows($result); $rowCount++)
-		{
-			$rows[] = $xcomicDb->sql_fetchrow($result);
-		}
-		
-		return $rows;
+
+		return $result;
 	}
 	
 	function getComicList() {
-		
 		$this->allComicInfo = $this->queryComicInfo();
 		return $this->allComicInfo;
 		
@@ -50,7 +43,6 @@ class ComicListing {
 	//Returns num of rows in array. Useful for 
 	//using in a for loop.
 	function numComics() {
-	
 		return count($this->allComicInfo);
 		
 	}

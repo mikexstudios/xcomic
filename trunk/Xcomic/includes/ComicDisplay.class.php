@@ -13,118 +13,105 @@ include_once($xcomicRootPath.'initialize.php');
 */
 
 
-class ComicDisplay {
-	
+class ComicDisplay
+{	
 	//var $comicsDir;
 	var $comicInfo; //Latest comic info
 	var $cid; //Holds current comic id
 	
-	function ComicDisplay($inCid=NULL) {
-		
+	function ComicDisplay($inCid = null)
+	{	
 		global $xcomicRootPath;
 		
 		//Set comics directory
 		//$this->comicsDir = $xcomicRootPath.COMICS_DIR;
 		
-		if($inCid!=NULL)
-		{
+		if ($inCid != null) {
 			$this->cid = $inCid;
 			$this->getComicInfo($inCid);
 		}
 	
 	}
 	
-	function queryComicInfo($inCid, $idOperator='=', $inOrderBy='') {
-		global $xcomicDb, $message;
+	function queryComicInfo($inCid, $idOperator = '=', $inOrderBy = '')
+	{
+		global $db, $message;
 		
 		$sql = 'SELECT cid, title, filename, date
 			FROM '.XCOMIC_COMICS_TABLE." 
 			WHERE cid $idOperator $inCid
 			ORDER BY cid $inOrderBy";
-		
-		if(!($result = $xcomicDb->sql_query($sql)))
-		{
+		$result = $db->getRow($sql);
+		if (PEAR::isError($result)) {
 			echo 'Unable to get latest comic info';
 		}
 		
-		return $xcomicDb->sql_fetchrow($result);
+		return $result;
 	}
 	
-	function getComicInfo($inCid) {
-		
+	function getComicInfo($inCid)
+	{	
 		//Set this to current comic id
 		$this->cid = $inCid;
 		
-		$this->comicInfo = $this->queryComicInfo($inCid);
-		
+		$this->comicInfo = $this->queryComicInfo($inCid);	
 	}
 	
-	function setCurrentComicId($inCid) {
-	
-		$this->cid = $inCid;
-			
+	function setCurrentComicId($inCid)
+	{
+		$this->cid = $inCid;		
 	}
 	
-	function nextId() {
+	function nextId()
+	{
 		$next = $this->queryComicInfo($this->cid, '>', 'ASC');
 		$nextId = $next['cid'];
 		
-		if(empty($nextId))
-		{
+		if (empty($nextId)) {
 			//There is no next Id
 			return false;
-		}
-		else
-		{
+		} else {
 			return $nextId;
 		}
 	}
 	
-	function prevId() {
+	function prevId()
+	{
 		$prev = $this->queryComicInfo($this->cid, '<', 'DESC');
 		$prevId = $prev['cid'];
 		
-		if(empty($prevId))
-		{
+		if (empty($prevId)) {
 			//There is no prev Id
 			return false;
-		}
-		else
-		{
+		} else {
 			return $prevId;
 		}
 	}
 	
-	function getId() {
-		
+	function getId()
+	{
 		return $this->comicInfo['cid'];
-		
 	}
 	
-	function getFilename() {
-	
+	function getFilename()
+	{
 		return $this->comicInfo['filename'];
-		
 	}
 	
-	function getTitle() {
-	
+	function getTitle()
+	{
 		return $this->comicInfo['title'];
-		
 	}
 	
-	function getNewsItem() {
-	
+	function getNewsItem()
+	{
 		return $this->comicInfo['newsitem'];
 		
 	}
 	
 	function getDate() {
-	
 		return $this->comicInfo['date'];
-		
 	}
-	
 }
 
 /*
@@ -143,6 +130,4 @@ if($x->prevId()==false)
 else
 	echo $x->prevId();
 */
-
-
 ?>

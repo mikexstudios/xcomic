@@ -13,44 +13,54 @@ function installXcomic() {
 	global $xcomicRootPath;
 	
 	//Include extension info
-	include_once($xcomicRootPath.'extension.inc');
+	include_once $xcomicRootPath.'extension.inc';
 	
 	//Select correct database file
-	$dbms=(!empty($_REQUEST['dbms'])) ? $_REQUEST['dbms'] : NULL;
-	include_once($xcomicRootPath.'includes/selectDatabase.php');
+	$dbms = (!empty($_REQUEST['dbms'])) ? $_REQUEST['dbms'] : null;
 	
 	//Get rest of database info
-	$inDbHost=(!empty($_REQUEST['dbhost'])) ? $_REQUEST['dbhost'] : NULL;
-	$inDbName=(!empty($_REQUEST['dbname'])) ? $_REQUEST['dbname'] : NULL;
-	$inDbUser=(!empty($_REQUEST['dbuser'])) ? $_REQUEST['dbuser'] : NULL;
-	$inDbPass=(!empty($_REQUEST['dbpass'])) ? $_REQUEST['dbpass'] : NULL;
+	$inDbHost = (!empty($_REQUEST['dbhost'])) ? $_REQUEST['dbhost'] : null;
+	$inDbName = (!empty($_REQUEST['dbname'])) ? $_REQUEST['dbname'] : null;
+	$inDbUser = (!empty($_REQUEST['dbuser'])) ? $_REQUEST['dbuser'] : null;
+	$inDbPass = (!empty($_REQUEST['dbpass'])) ? $_REQUEST['dbpass'] : null;
 	
-	//Try to connect to database
-	$xcomicDb = new sql_db($inDbHost, $inDbUser, $inDbPass, $inDbName, false);
-	if(!$xcomicDb->db_connect_id)
-	{
+	require_once 'DB.php';
+	//Create database object
+    $dsn = array(
+        'phptype'  => $dbms,
+        'username' => $inDbUser,
+        'password' => $inDbPasswd,
+        'hostspec' => $inDbHost,
+        'database' => $inDbName,
+    );
+    
+    $options = array(
+        'debug'       => 2,
+        'portability' => DB_PORTABILITY_ALL,
+    );
+
+	$db = DB::connect($dsn, $options);
+	if (PEAR::isError($db)) {
 	   die('Could not connect to the database');
 	}
+	$db->setFetchMode(DB_FETCHMODE_ASSOC);
 	
 	//Write database connection do config.php
 	// Write out the config file.
-	$config_data = '<?php'."\n\n";
+	$config_data = '<?php';
 	$config_data .= "\n// Xcomic auto-generated config file\n// Do not change anything in this file!\n\n";
 	$config_data .= '$dbms = \'' . $dbms . '\';' . "\n\n";
-	$config_data .= '$xcomicDbHost = \'' . $inDbHost . '\';' . "\n";
-	$config_data .= '$xcomicDbName = \'' . $inDbName . '\';' . "\n";
-	$config_data .= '$xcomicDbUser = \'' . $inDbUser . '\';' . "\n";
-	$config_data .= '$xcomicDbPasswd = \'' . $inDbPass . '\';' . "\n\n";
+	$config_data .= '$dbHost = \'' . $inDbHost . '\';' . "\n";
+	$config_data .= '$dbName = \'' . $inDbName . '\';' . "\n";
+	$config_data .= '$dbUser = \'' . $inDbUser . '\';' . "\n";
+	$config_data .= '$dbPasswd = \'' . $inDbPass . '\';' . "\n\n";
 	$config_data .= '$table_prefix = \'' . $xcomicTablePrefix . '\';' . "\n\n";
 	$config_data .= 'define(\'XCOMIC_INSTALLED\', true);'."\n\n";	
 	$config_data .= '?' . '>'; // Done this to prevent highlighting editors getting confused!
 	
-	if (!($fp = @fopen($xcomicRootPath . 'includes/config.'.$phpEx, 'w')))
-	{
+	if (!($fp = @fopen($xcomicRootPath . 'includes/config.'.$phpEx, 'w'))) {
 		die('Could not open includes/config.php for writing!');
-	}
-	else
-	{
+	} else {
 		$result = @fputs($fp, $config_data, strlen($config_data));
 		@fclose($fp);
 	}
@@ -111,31 +121,29 @@ function installXcomic() {
 	$delimiter = $available_dbms[$dbms]['DELIM']; 
 	$delimiter_basic = $available_dbms[$dbms]['DELIM_BASIC']; 
 	
-	include_once('./includes/sql_parse.php'); //phpBB's DB schema cleaning
+	include_once './includes/sql_parse.php'; //phpBB's DB schema cleaning
 	$sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema));
 	$sql_query = preg_replace('/xcomic_/', $table_prefix, $sql_query);
 
 	$sql_query = remove_remarks($sql_query);
 	
-	//echo $sql_query;
-	
 	$sql_query = split_sql_file($sql_query, $delimiter);
 	
 	//Add URL Information
-	$inBaseUrl=(!empty($_REQUEST['baseurl'])) ? $_REQUEST['baseurl'] : NULL;
-	$inUrlToXcomic=(!empty($_REQUEST['urltoxcomic'])) ? $_REQUEST['urltoxcomic'] : NULL;
+	$inBaseUrl=(!empty($_REQUEST['baseurl'])) ? $_REQUEST['baseurl'] : null;
+	$inUrlToXcomic=(!empty($_REQUEST['urltoxcomic'])) ? $_REQUEST['urltoxcomic'] : null;
 	$sql_query[] = "INSERT INTO config VALUES ('baseUrl', '$inBaseUrl', 'Base url', 'The base url that Xcomic is running on (ie. http://www.yoururl.com)')";
 	$sql_query[] = "INSERT INTO config VALUES ('urlToXcomic', '$inUrlToXcomic', 'Url to Xcomic', 'The full url to the installation of Xcomic (ie. http://www.xcomic.com/xcomic)')";
 
+    $id = $db->nextId(XCOMIC_USERS_TABLE);
+    $sql_query[] = "INSERT INTO users VALUES ($id, 'admin', '925ad2679b095816cfc0cf772f467229', 'example@example.com');"
 	
-	for ($i = 0; $i < sizeof($sql_query); $i++)
-	{
-		if (trim($sql_query[$i]) != '')
-		{
-			if (!($result = $xcomicDb->sql_query($sql_query[$i])))
-			{
-				$error = $xcomicDb->sql_error();
-				die("Install error: $error");
+	for ($i = 0; $i < sizeof($sql_query); $i++) {
+		if (trim($sql_query[$i]) != '') {
+		    $result = $db->query($sql_query[$i])
+			if (PEAR::isError($result)) {
+				$error = $db->sql_error();
+				die('Install error: '.$error);
 			}
 		}
 	}
@@ -204,8 +212,7 @@ function displayFooter() {
 //Main action
 
 //First check if config.php already exists. If so, do not execute this script
-if(file_exists($xcomicRootPath.'includes/config.php'))
-{
+if (file_exists($xcomicRootPath.'includes/config.php')) {
 	displayHeader();
 ?>	
 	
@@ -220,12 +227,9 @@ if(file_exists($xcomicRootPath.'includes/config.php'))
 	exit;
 }
 
-if($_REQUEST['action']=='install')
-{
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'install') {
 	installXcomic();
-}
-else
-{
+} else {
 	//Display install page
 	displayHeader();
 ?>

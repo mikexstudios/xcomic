@@ -8,8 +8,7 @@ Xcomic
 $Id$
 */
 
-if ( !defined('IN_XCOMIC') )
-{
+if (!defined('IN_XCOMIC')) {
 	die('Hacking attempt');
 }
 
@@ -20,13 +19,12 @@ if ( !defined('IN_XCOMIC') )
 //
 // Close our DB connection.
 //
-$xcomicDb->sql_close();
+$db->sql_close();
 
 //
 // Compress buffered output if required and send to browser
 //
-if ( $do_gzip_compress )
-{
+if ($do_gzip_compress) {
 	//
 	// Borrowed from php.net!
 	//
