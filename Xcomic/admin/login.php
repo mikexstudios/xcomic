@@ -26,7 +26,7 @@ $inPassword = (!empty($_REQUEST['password'])) ? $security->allowOnlyChars($_REQU
 //Set them in User Management
 $userManagement->setUsername($inUsername);
 $userManagement->setPassword($inPassword);	
-echo $userManagement->getUsername();
+
 //Process login information
 if ($userManagement->processLogin('remember')) {
 	header('Location: index.php');
@@ -42,7 +42,7 @@ include './includes/header.php';
  <h2>Login</h2>
  <div class="section-body">
   <form method="POST" action="" enctype="multipart/form-data">
-   <label for="username">Username:<br />
+   <label for="username">Username:</label><br />
    <input type="text" name="<?php echo 'username'; ?>" size="20" /><br />
 
    <label for="password">Password:</label><br />
