@@ -27,7 +27,7 @@ if (isset($_REQUEST[$formModeAction]) && $_REQUEST[$formModeAction] == $formMode
 			//$optionList[$key] = $value;
 			$settings->changeSettingValue($key, $value);
 		}
-		//echo $key.' = '.$value."\n";
+		//echo $key.' = '.$value."<br />";
 	}
 	
 	//Display success page
@@ -57,7 +57,14 @@ foreach ($configInfo as $singleConfig) {
     <tr valign="top">
      <th scope="row"><?php echo $singleConfig['name']; ?></th>
      <td>
-      <input name="<?php echo $singleConfig['option']; ?>" type="text" id="<?php echo $singleConfig['option']; ?>" value="<?php echo $singleConfig['value']; ?>" size="50" />
+      <?php
+	if ($singleConfig['type'] == '1') { ?>
+		<input name="<?php echo $singleConfig['option']; ?>" type="text" id="<?php echo $singleConfig['option']; ?>" value="<?php echo $singleConfig['value']; ?>" size="50" />
+	<?php } elseif ($singleConfig['type'] == '2') { ?>
+		<input name="<?php echo $singleConfig['option']; ?>" type="radio" value="1" <?php if ($singleConfig['value'] == '1') { echo 'CHECKED'; } ?> /> Yes <input name="<?php echo $singleConfig['option']; ?>" type="radio" value="0" <?php if ($singleConfig['value'] == '0') { echo 'CHECKED'; } ?> /> No
+	<?php } elseif ($singleConfig['type'] == '0') { ?>
+		<input name="<?php echo $singleConfig['option']; ?>" type="text" id="<?php echo $singleConfig['option']; ?>" value="<?php echo $singleConfig['value']; ?>" size="5" />
+	<?php } ?>
       <br />
       <?php echo $singleConfig['description']; ?>
      </td>
