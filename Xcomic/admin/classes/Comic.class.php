@@ -62,6 +62,11 @@ class Comic
 	    	if ($fileType == 'text/plain') {
 			    $message->error('Sorry, You cannot upload any script file');
 			}
+		//Fix added 3/10/05, see http://xcomic.mikexstudios.com/forum/viewtopic.php?pid=174
+		//for reason
+		if (getimagesize($tempName) === FALSE) {
+			$message->error('Sorry, you can only upload images.');
+		}
 		//---------------------------------------------------------
 
 		//Upload---------------------------------------------------
