@@ -30,7 +30,8 @@
 	/*
 	---------------------------------------------------------
 	*/
-echo '<?xml version="1.0" encoding="UTF-8">';
+//Mike: This isn't an XML page...
+//echo '<?xml version="1.0" encoding="UTF-8">';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -91,10 +92,10 @@ echo '<?xml version="1.0" encoding="UTF-8">';
    </div>
 
    <div id="content" class="middlecolumn">
-    <?php
-        echo $xcomic->getComicTitle();
-        echo $xcomic->getImageCode();
-     ?>
+    <?php echo $xcomic->getComicTitle(); ?>
+    
+    <?php echo $xcomic->getImageCode(); ?>
+
 	<br />
 	<div id="comic-functions">
 		<?php $xcomic->getComicNavCode(); //Will make two calls to queryComicInfo. Hence the double messages.?>

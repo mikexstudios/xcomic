@@ -43,7 +43,7 @@ class Xcomic {
 		
 		//Check for non-existant comic
 		if ($this->comicDisplay->getTitle() == '') {
-			return 'You have selected a non-existant comic!';
+			return 'The comic you selected does not exist!';
 		}
 		
 		//Set variables
@@ -111,6 +111,9 @@ class Xcomic {
 		$newsUserEmail = $userEmail;
 		$newsUsername = $this->newsDisplay->getUsername();
 		$newsContent = $this->newsDisplay->getContent();
+		
+		# Empty News Error fixed by Tom Parkison (trparky@toms-world.org)
+		if ($newsContent != '') { //If news exists, then display
 ?>
 <!--
 <div class="console">
@@ -125,7 +128,7 @@ class Xcomic {
  </div>
 </div>
 <?php
-		
+		} //End newsContent empty check		
 	}
 
 	function getComicNavCode() {
@@ -163,12 +166,6 @@ class Xcomic {
 
 		//Since $comicsList is in ascending order. We want the most recent comic first
 		//Therefore, set the for loop counting backwards
-		/* The following does not work for this instance where we want the most recent comic
-		first:
-		foreach ($comicsList as $row) {
-			$comicOptionListCode .= '<option value="'.$row['cid'].'">'.date('Y-m-d', $row['date']).' ['.$row['cid'].'] '.$row['title']."</option>\n";
-		}
-		*/
 		for($comicCount = $numComics-1; $comicCount >= 0 ; $comicCount--)
 		{
 			$comicOptionListCode .= '<option value="'.$comicsList[$comicCount]['cid'].'">'.date('Y-m-d', $comicsList[$comicCount]['date']).' ['.$comicsList[$comicCount]['cid'].'] '.$comicsList[$comicCount]['title']."</option>\n";
