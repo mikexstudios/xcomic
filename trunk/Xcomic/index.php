@@ -36,7 +36,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml">
  <head>
-  <title>Xcomic - description</title>
+  <title><?php echo $xcomic->security->removeMagicQuotes($settings->getSetting('title')); ?></title>
   <meta name="description" content="Xcomic, a web comic about [insert description]" />
   <meta name="keywords" content="xcomic, web comic, web manga, publishing platform" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -74,8 +74,8 @@
   <div id="page">
    <div id="header">
     <div id="headerimg">
-     <h1><a href="./index.php" title="asdf">Xcomic</a></h1>
-     <div class="description">a webcomic about stuff</div>
+     <h1><a href="./index.php" title="<?php echo $xcomic->security->removeMagicQuotes($settings->getSetting('title')); ?>"><?php echo $xcomic->security->removeMagicQuotes($settings->getSetting('title')); ?></a></h1>
+     <div class="description">Powered by <a href="http://xcomic.sourceforge.net" title="Xcomic">Xcomic</a></div>
     </div>
    </div>
 
