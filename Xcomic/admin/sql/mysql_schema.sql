@@ -17,11 +17,14 @@ CREATE TABLE `xcomic_comics` (
 
 DROP TABLE IF EXISTS `xcomic_config`;
 CREATE TABLE `xcomic_config` (
+  `order` smallint(5) unsigned NOT NULL default '0',
+  `type` tinyint(2) unsigned NOT NULL default '0',
   `option` varchar(50) NOT NULL default '',
   `value` varchar(100) NOT NULL default '',
   `name` varchar(100) NOT NULL default '',
   `description` varchar(200) NOT NULL default '',
-  PRIMARY KEY  (`option`)
+  PRIMARY KEY  (`option`),
+  UNIQUE KEY `order` (`order`)
 ) TYPE=MyISAM;
 
 
