@@ -125,20 +125,14 @@ class Security
 
 	//Use this if you know quotes are possibly being added by magic quotes
 	//and that you didn't add any yourself.
-	function removeMagicQuotes($array)
+	function removeMagicQuotes($inString)
 	{
 		if (!get_magic_quotes_gpc()) {
-			return $array;
+			return $inString;
 		} else {
-			foreach ($array as $k => $v) {
-				if (is_array($v)) {
-					$array[$k] = $this->removeMagicQuotes($v);
-				} else {
-					$array[$k] = stripslashes($v);
-				}
-			}
-			return $array;
+			$string = stripslashes($inString);
 		}
+		return $string;
 	}
 }
 
