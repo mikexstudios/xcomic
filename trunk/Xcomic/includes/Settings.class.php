@@ -32,7 +32,7 @@ class Settings
 
 		$sql = '
 		    SELECT * 
-		    FROM ' . XCOMIC_CONFIG_TABLE;
+		    FROM ' . XCOMIC_CONFIG_TABLE . ' ORDER BY `order` ASC';
 		
 		$result = $this->dbc->getAll($sql);
 		if (PEAR::isError($result)) {
@@ -42,6 +42,8 @@ class Settings
 		
 		foreach ($result as $row) {
 			//Place configuration information in array
+			$this->configInfo[$row['option']]['order'] = $row['order'];
+			$this->configInfo[$row['option']]['type'] = $row['type'];
 			$this->configInfo[$row['option']]['option'] = $row['option'];
 			$this->configInfo[$row['option']]['value'] = $row['value'];
 			$this->configInfo[$row['option']]['name'] = $row['name'];
@@ -51,6 +53,16 @@ class Settings
 	}
 	
 	//Kind of useless, but used by doesSettingExist to check for existance
+	function getOrder($inKey)
+	{
+		return $this->configInfo[$inKey]['order'];
+	}
+	
+	function getType($inKey)
+	{
+		return $this->configInfo[$inKey]['type'];
+	}
+
 	function getOption($inKey)
 	{
 		return $this->configInfo[$inKey]['option'];	
@@ -76,13 +88,13 @@ class Settings
 		return $this->configInfo;	
 	}
 	
-	function addNewSetting($inKey, $inValue, $inDescription)
+	function addNewSetting($inOrder, $inType, $inKey, $inValue, $inDescription)
 	{
 		global $message;
 		
 		$sql = '
-		    INSERT INTO '.XCOMIC_CONFIG_TABLE." (option, value, description)
-			VALUES ('$inKey', '$inValue', '$inDescription')";
+		    INSERT INTO '.XCOMIC_CONFIG_TABLE." (order, type, option, value, description)
+			VALUES ('$inOrder', '$inType', '$inKey', '$inValue', '$inDescription')";
 		$result = $this->dbc->query($sql);
 		if (PEAR::isError($result)) {
 			#$message->error("Could not add new setting!");
@@ -93,7 +105,7 @@ class Settings
 	function changeSettingValue($inKey, $inValue)
 	{
 		global $message;
-		
+
 		$sql = '
 		    UPDATE '.XCOMIC_CONFIG_TABLE."
 			SET value = '$inValue'
