@@ -8,10 +8,6 @@ built off of phpbb and wiki system
 
 $Id$
 */
-
-//Xcms settings
-define('IN_XCMS', true);
-//$xcmsRootPath = "../";
 				
 class Syntax
 {

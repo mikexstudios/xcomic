@@ -16,11 +16,16 @@ class UserManagement
 {	
     var $username, $id; //password is unencrypted
     var $md5pass;
+    var $dbc;
 	
-	function UserManagement($id = null, $inPassword = null)
+	function UserManagement(&$dbc, $id = null, $inPassword = null)
 	{
 		global $message;
 		
+        if (DB::isConnection($dbc)) {
+            $this->dbc =& $dbc;
+        }
+
 		if (!empty($id)) {
 			$this->id = $id;
 		}
@@ -56,7 +61,7 @@ class UserManagement
 	
 	function registerUser($username, $password, $email)
 	{
-		global $db, $message;
+		global $message;
 		
 		$this->setUsername($username);
 		
@@ -67,15 +72,16 @@ class UserManagement
 		
 		$this->setPassword($password);
 		
-		$id = $db->nextId(XCOMIC_USERS_TABLE);
-		$sql = 'INSERT INTO '.XCOMIC_USERS_TABLE.' (uid, username, password, email) 
+		$id = $this->dbc->nextId(XCOMIC_USERS_TABLE);
+		$sql = '
+		    INSERT INTO '.XCOMIC_USERS_TABLE.' (uid, username, password, email) 
 			VALUES (
 			    '.$id.',
-				'.$db->quoteSmart($username).', 
-				'.$db->quoteSmart($this->md5pass).',
-				'.$db->quoteSmart($email).'
+				'.$this->dbc->quoteSmart($username).', 
+				'.$this->dbc->quoteSmart($this->md5pass).',
+				'.$this->dbc->quoteSmart($email).'
 				)';
-		$result = $db->query($sql);
+		$result = $this->dbc->query($sql);
 		if (PEAR::isError($result)) {
 			$message->error('Unable to add new user.');
 		}
@@ -84,13 +90,14 @@ class UserManagement
 	//Can add more fields
 	function editUserInfo($inEmail)
 	{
-		global $db, $message;
+		global $message;
 		
 		//Update the email for the username
-		$sql = 'UPDATE '.XCOMIC_USERS_TABLE.' 
-			SET email = '.$db->quoteSmart($inEmail).' 
+		$sql = '
+		    UPDATE '.XCOMIC_USERS_TABLE.' 
+			SET email = '.$this->dbc->quoteSmart($inEmail).' 
 			WHERE uid = '.$this->id;
-		$result = $db->query($sql);
+		$result = $this->dbc->query($sql);
 		if (PEAR::isError($result)) {
 			$message->error('Unable to edit user info.');
 		}
@@ -99,16 +106,17 @@ class UserManagement
 	
 	function changePassword($inNewPassword)
 	{
-		global $db, $message;
+		global $message;
 		
 		//Update the password in this class
 		$this->setPassword($inNewPassword);
 		
 		//Make changes to DB
-		$sql = 'UPDATE '.XCOMIC_USERS_TABLE.'
-			SET password = '.$db->quoteSmart($this->md5pass).' 
+		$sql = '
+		    UPDATE '.XCOMIC_USERS_TABLE.'
+			SET password = '.$this->dbc->quoteSmart($this->md5pass).' 
 			WHERE uid = '.$this->id;
-	    $result = $db->query($sql);
+	    $result = $this->dbc->query($sql);
 		if (PEAR::isError($result)) {
 			$message->error('Unable to change user password.');
 		}
@@ -116,7 +124,7 @@ class UserManagement
 	
 	function deleteUser()
 	{
-		global $db, $message;
+		global $message;
 		
 		//Check if user exists
 		if (!$this->userExists()) {
@@ -124,9 +132,10 @@ class UserManagement
 		}
 		
 		//Delete from DB
-		$sql = 'DELETE FROM '.XCOMIC_USERS_TABLE.'
+		$sql = '
+		    DELETE FROM '.XCOMIC_USERS_TABLE.'
 			WHERE uid = '.$this->id;
-		$result = $db->query($sql);
+		$result = $this->dbc->query($sql);
 		if (PEAR::isError($result)) {
 			$message->error('Unable to delete user.');
 		}
@@ -136,31 +145,32 @@ class UserManagement
 	{
 	    if (isset($this->username)) {
 	        return $this->username;
-	    } else {
-		    global $db, $message;
-		
-		    $sql = 'SELECT username
-			    FROM '.XCOMIC_USERS_TABLE.' 
-			    WHERE uid = '.$this->id;
-			$result = $db->getOne($sql);
-		    if (PEAR::isError($result)) {
-		    	$message->error('Unable to get username.');
-		    }
-		
-		    //Return username
-		    $this->username = $result;
-		    return $result;
+	    }
+		global $message;
+
+		$sql = '
+		    SELECT username
+			FROM '.XCOMIC_USERS_TABLE.' 
+			WHERE uid = '.$this->id;
+	    $result = $this->dbc->getOne($sql);
+		if (PEAR::isError($result)) {
+		    $message->error('Unable to get username.');
 		}
+
+		//Return username
+		$this->username = $result;
+		return $result;
 	}
 	
 	function getUid()
 	{
-	    global $db, $message;
+	    global $message;
 		
-		$sql = 'SELECT uid
+		$sql = '
+		    SELECT uid
 			FROM '.XCOMIC_USERS_TABLE.' 
-			WHERE username = '.$db->quoteSmart($this->username);
-	    $result = $db->getOne($sql);echo $sql;
+			WHERE username = '.$this->dbc->quoteSmart($this->username);
+	    $result = $this->dbc->getOne($sql);
 		if (PEAR::isError($result)) {
 		    $message->error('Unable to get user id.');
 		}
@@ -171,22 +181,28 @@ class UserManagement
 	}
 	
 	function userExists() {
-		global $db, $message;
+		global $message;
 		
-		$sql = 'SELECT username
+		if (!isset($this->username) && !isset($this->id)) {
+		    return false;
+		}
+		
+		$sql = '
+		    SELECT username
 			FROM '.XCOMIC_USERS_TABLE.' 
 			WHERE ';
 		    if (isset($this->id)) {
 			    $sql .= 'uid = '.$this->id;
 			} elseif (isset($this->username)) {
-			    $sql .= 'username = '.$db->quoteSmart($this->username);
+			    $sql .= 'username = '.$this->dbc->quoteSmart($this->username);
 			} else {
 				//Neither id or username is set so the hypothetical user
 				//does not exist.
-				return false;	
+				return false;
 			}
-		
-		$result = $db->getOne($sql);
+
+		$result = $this->dbc->getOne($sql);
+
 		if (PEAR::isError($result)) {
 			echo 'Unable to read usernames.';
 			//$message->error('Unable to read usernames.');
@@ -202,7 +218,7 @@ class UserManagement
 	
 	function authUser()
 	{
-		global $db, $message;
+		global $message;
 	
 		//Verify that the user exists
 		if (!$this->userExists()) {
@@ -213,11 +229,12 @@ class UserManagement
 		}
 
 		//Grab password from db
-		$sql = 'SELECT password 
+		$sql = '
+		    SELECT password 
 			FROM '.XCOMIC_USERS_TABLE.'
-			WHERE username = '.$db->quoteSmart($this->username);
-		
-		$result = $db->getOne($sql);
+			WHERE username = '.$this->dbc->quoteSmart($this->username);
+
+		$result = $this->dbc->getOne($sql);
 		if (PEAR::isError($result)) {
 			$message->error('Unable to retrieve user information.');
 		}
@@ -306,11 +323,9 @@ class UserManagement
 			
 			//Success
 			return true;
-		} else {
-			//Failure
-			return false;
 		}
-		
+		//Failure
+		return false;
 	}
 	
 	//Set cookies to remember the user

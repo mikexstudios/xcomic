@@ -5,25 +5,22 @@ Xcomic
 $Id$
 */
 
-define('IN_XCOMIC', true);
-
-/*
-$xcomicRootPath = '../';
-include_once $xcomicRootPath.'initialize.php';
-*/
-
-class PostComic
+class Comics
 {
-	
 	var $title;
 	var $comicFile; //$_FILES type
 	var $comicFilename;
 	var $comicDir;
+	var $cid;
+	var $dbc;
 	
-	function PostComic($inComicFile, $inTitle = null)
+	function Comics(&$dbc, $inComicFile, $inTitle = null)
 	{
 		global $message, $xcomicRootPath;
 		
+        if (DB::isConnection($dbc)) {
+            $this->dbc =& $dbc;
+        }
 		$this->comicDir = $xcomicRootPath.COMICS_DIR;
 		
 		$this->comicFile = $inComicFile;
@@ -91,17 +88,18 @@ class PostComic
 	
 	function sendToDatabase()
 	{
-		global $db, $message;		
+		global $message;		
 		
-		$id = $db->nextId(XCOMIC_COMICS_TABLE);
-		$sql = 'INSERT INTO '.XCOMIC_COMICS_TABLE.' (cid, title , filename , date)
+		$id = $this->dbc->nextId(XCOMIC_COMICS_TABLE);
+		$sql = '
+		    INSERT INTO '.XCOMIC_COMICS_TABLE.' (cid, title , filename , date)
 			VALUES ( 
 			    '.$id.',
-				'.$db->quoteSmart($this->title).', 
-				'.$db->quoteSmart($this->comicFilename).', 
+				'.$this->dbc->quoteSmart($this->title).', 
+				'.$this->dbc->quoteSmart($this->comicFilename).', 
 				'.time().'
 				)';
-		$result = $db->query($sql);
+		$result = $this->dbc->query($sql);
 		//Make the changes happen
 		if (PEAR::isError($result)) {
 			$message->error('ERROR: Unable to add new comic');

@@ -12,11 +12,6 @@ $executionTime = $xcomicEndTime-$xcomicStartTime;
  </body>
 </html>
 <?php
-//
-// Close our DB connection.
-//
-//$db->sql_close();
-
 //End the script
 exit;
 ?>

@@ -12,7 +12,7 @@ require_once './admininitialize.php';	//Include all admin common settings
 	
 //Get list of comics in database and display in table format
 include_once $xcomicRootPath.'includes/NewsListing.'.$classEx;
-$listNews = new NewsListing();
+$listNews = new NewsListing($db);
 $newsList = $listNews->getNewsList(); //Array of news listings
 $numNews = $listNews->numNews(); //Number of elements in that array
 

@@ -8,12 +8,13 @@ Xcomic
 $Id$
 */
 
+$xcomicRootPath = '../';
 //Include everything from the main initialize.php
 include_once $xcomicRootPath.'initialize.php';
 
 //Create Security Class
 include_once $xcomicRootPath.'includes/Security.'.$classEx;
-$security = new Security();
+$security = new Security($db);
 
 //Create AdminMessage class
 include_once './classes/AdminMessage.'.$classEx;

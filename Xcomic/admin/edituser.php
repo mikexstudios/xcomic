@@ -21,7 +21,7 @@ $mode = (!empty($_REQUEST['mode'])) ? $security->secureText($_REQUEST['mode']) :
 //Check for form submission for delete user
 if ($mode == 'delete')  {
 	//Delete user using User Management class
-	$deleteUser = new UserManagement($id);
+	$deleteUser = new UserManagement($db, $id);
 	$deleteUser->deleteUser();
 	
 	//Display success
@@ -43,7 +43,7 @@ if (empty($email)) {
 	$message->error('The email address was left blank. Please click back and fill it in.');
 }
 //Register user
-$userFunctions = new UserManagement($id);
+$userFunctions = new UserManagement($db, $id);
 
 //Check if user exists
 if ($userFunctions->userExists()) {
@@ -85,9 +85,9 @@ include './includes/menu.php';
 <div class="wrap">
  <h2>Edit <?php echo $row['username']; ?></h2>
  <div class="section-body">
-  <form method="POST" action="" enctype="multipart/form-data">
-   <label for="editPassword">Change Password (leave blank to keep current password):</label><br />
-   <input type="password" name="editPassword" size="20" /><br />
+  <form method="post" action="">
+   <label for="'password">Change Password (leave blank to keep current password):</label><br />
+   <input type="password" name="password" size="20" /><br />
 
    <label for="email">Change E-mail Address:</label><br />
    <input type="text" name="email" value="<?php echo $row['email']; ?>" size="20" /><br />

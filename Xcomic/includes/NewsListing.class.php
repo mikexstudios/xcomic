@@ -16,19 +16,24 @@ class NewsListing
 {
 	
 	var $allNewsInfo; //Holds all News info records
-	
-	function NewsListing()
+    var $dbc;
+
+	function NewsListing(&$dbc)
 	{
-		
+        if (DB::isConnection($dbc)) {
+            $this->dbc =& $dbc;
+        }
 	}
 	
 	function queryNewsInfo()
 	{
 		global $db, $message;
 		
-		$sql = 'SELECT id, title, date, username, content
+		$sql = '
+		    SELECT
+		        id, title, date, username, content
 			FROM '.XCOMIC_NEWS_TABLE;
-		$result = $db->getAll($sql);
+		$result = $this->dbc->getAll($sql);
 		if (PEAR::isError($result)) {
 			#$message->error('Unable to get news information. SQL: '.$sql);
 			die('Unable to get news information. SQL: '.$sql);

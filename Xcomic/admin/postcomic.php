@@ -31,7 +31,7 @@ if (isset($_POST['submit'])) {
 	//echo $comicFile['tmp_name'];
 	
 	//Actually post the news
-	$postComic = new PostComic($comicFile, $comicTitle);
+	$postComic =& new Comics($db, $comicFile, $comicTitle);
 	if ($postComic->saveFile()) {
 		$postComic->sendToDatabase();
 	}

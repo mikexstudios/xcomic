@@ -26,7 +26,7 @@ $action = (!empty($_REQUEST['action'])) ? $security->secureText($_REQUEST['actio
 if ($action == $modeDelete) {
 	//Use the EditComic class to delete the comic
 	include_once './classes/EditComic.'.$classEx;
-	$editComic = new EditComic($comicId);
+	$editComic = new EditComic($db, $comicId);
 	$editComic->deleteComic();
 	
 	$message->say('The comic was successfully deleted');
@@ -45,7 +45,7 @@ if (isset($_POST['submit'])) {
 	//Process file first and then the title. That way, if the file fails to upload, no changes
 	//are made.
 	include_once './classes/EditComic.'.$classEx;
-	$editComic = new EditComic($comicId);
+	$editComic =& new EditComic($db, $comicId);
 	
 	//If the comicFile is not empty, make the edit
 	if (!empty($comicFile['name'])) {
@@ -67,7 +67,7 @@ if ($action != 'edit') {
 }
 //Get comic information from id
 include_once $xcomicRootPath.'includes/ComicDisplay.'.$classEx;
-$comicInformation = new ComicDisplay($comicId);
+$comicInformation = new ComicDisplay($db, $comicId);
 $comicTitle = $comicInformation->getTitle();
 
 //Include script header

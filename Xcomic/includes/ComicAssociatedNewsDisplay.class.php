@@ -19,14 +19,13 @@ class ComicAssociatedNewsDisplay extends NewsDisplay
 {
 	
 	var $comicDisplay;
-	
-	function ComicAssociatedNewsDisplay($inCid, $inCategory = 'default')
-	{
 
-		$this->NewsDisplay($inCategory);
+	function ComicAssociatedNewsDisplay(&$dbc, $inCid, $inCategory = 'default')
+	{
+		$this->NewsDisplay($dbc, $inCategory);
 		
 		//Create ComicDisplay object
-		$this->comicDisplay = new ComicDisplay($inCid);
+		$this->comicDisplay = new ComicDisplay($dbc, $inCid);
 		
 		$this->getNewsInfo($this->getAssociatedNewsId(), $inCategory);
 		
@@ -34,7 +33,7 @@ class ComicAssociatedNewsDisplay extends NewsDisplay
 	
 	function getAssociatedNewsId()
 	{
-		global $db, $message;
+		global $message;
 		
 		//comicDate holds *nix timestamp
 		$comicDate = $this->comicDisplay->getDate();
@@ -42,11 +41,12 @@ class ComicAssociatedNewsDisplay extends NewsDisplay
 		//Get the latest news id at the date of
 		//the comic or earlier. We assume here that
 		//the higher the id, the more recent it is.
-		$sql = 'SELECT MAX(id)
+		$sql = '
+		    SELECT MAX(id)
 			FROM '.XCOMIC_NEWS_TABLE."
 			WHERE date <= '$comicDate'";
 			
-		$result = $db->getOne($sql);
+		$result = $this->dbc->getOne($sql);
 		if (PEAR::isError($result)) {
 			echo 'Unable to get the latest news id associated with the selected comic. SQL: '.$sql;
 			exit;
@@ -70,9 +70,8 @@ class ComicAssociatedNewsDisplay extends NewsDisplay
 		$this->setCurrentNewsId($result);
 		if ($this->nextId() != false) {	
 			return $this->nextId();
-		} else {
-			return $result;
 		}
+        return $result;
 	}
 	
 }

@@ -18,9 +18,11 @@ class NewsDisplay
 {	
 	var $newsInfo; //Latest news info
 	var $id; //Holds current Id
+	var $dbc;
 	
-	function NewsDisplay($inId = null)
+	function NewsDisplay(&$dbc, $inId = null)
 	{
+	    $this->dbc =& $dbc;
 		if ($inId != null) {
 			$this->id = $inId;
 			$this->getNewsInfo($inId);
@@ -29,13 +31,15 @@ class NewsDisplay
 	
 	function queryNewsInfo($inId, $idOperator = '=', $inOrderBy = '')
 	{
-		global $db, $message;
-		
-		$sql = 'SELECT id, title, date, username, content
+		global $message;
+
+		$sql = '
+		    SELECT
+		        id, title, date, username, content
 			FROM '.XCOMIC_NEWS_TABLE." 
 			WHERE id $idOperator $inId
 			ORDER BY id $inOrderBy";
-		$result = $db->getRow($sql);
+		$result = $this->dbc->getRow($sql);
 		if (PEAR::isError($result)) {
 			echo 'Unable to get latest news info. SQL: '.$sql;
 		}
@@ -63,9 +67,8 @@ class NewsDisplay
 		if (empty($nextId)) {
 			//There is no next Id
 			return false;
-		} else {
-			return $nextId;
 		}
+        return $nextId;
 	}
 	
 	function prevId($inCategory = 'default')
@@ -76,9 +79,8 @@ class NewsDisplay
 		if (empty($prevId)) {
 			//There is no prev Id
 			return false;
-		} else {
-			return $prevId;
 		}
+        return $prevId;
 	}
 	
 	function getId()

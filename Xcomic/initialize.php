@@ -18,7 +18,7 @@ include_once $xcomicRootPath.'extension.inc';
 
 //Database---------------------------------------
 	//Include database configuration information
-	include_once $xcomicRootPath.'includes/config.'.$phpEx;
+	include_once $xcomicRootPath.'includes/config.php';
 	
 	require_once 'DB.php';
 	//Create database object
@@ -43,11 +43,11 @@ include_once $xcomicRootPath.'extension.inc';
 //-----------------------------------------------
 
 //Import global constants
-include_once $xcomicRootPath.'includes/constants.'.$phpEx;
+include_once $xcomicRootPath.'includes/constants.php';
 
 //Configuration Information----------------------
 include_once $xcomicRootPath.'includes/Settings.'.$classEx;
-$settings = new Settings();
+$settings = new Settings($db);
 //-----------------------------------------------
 
 

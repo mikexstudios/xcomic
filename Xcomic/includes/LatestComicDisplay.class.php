@@ -17,19 +17,20 @@ include_once 'ComicDisplay.class.php';
 class LatestComicDisplay extends ComicDisplay
 {
 
-	function LatestComicDisplay()
+	function LatestComicDisplay(&$dbc)
 	{
-		$this->ComicDisplay();
+		$this->ComicDisplay($dbc);
 		$this->getComicInfo($this->getLatestComicId());
 	}
 	
 	function getLatestComicId()
 	{
-		global $db, $message;
+		global $message;
 		
-		$sql = 'SELECT MAX(cid)
+		$sql = '
+		    SELECT MAX(cid)
 			FROM '.XCOMIC_COMICS_TABLE.';';
-	    $result = $db->getOne($sql);
+	    $result = $this->dbc->getOne($sql);
 		//Make the changes happen
 		if (PEAR::isError($result)) {
 			#$message->error('Unable to get latest comic id');

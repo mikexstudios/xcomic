@@ -17,22 +17,20 @@ class Xcomic {
     var $newsDisplay;
     var $security;
     var $cid;
+    var $dbc;
 
-    function Xcomic() {
-        $this->__construct();
-    }
-
-    function __construct() {
+    function Xcomic(&$dbc) {
+        $this->dbc =& $dbc;
         //Create security object
-        $this->security = new Security();
+        $this->security = new Security($dbc);
 
         $this->cid = (!empty($_REQUEST[IN_CID])) ? $this->security->allowOnlyNumbers($_REQUEST[IN_CID]) : NULL; //Default to NULL
 
 		if (empty($this->cid)) {
 			//Latest comic
-			$this->comicDisplay = new LatestComicDisplay();
+			$this->comicDisplay = new LatestComicDisplay($this->dbc);
 		} else {
-			$this->comicDisplay = new ComicDisplay($this->cid);
+			$this->comicDisplay = new ComicDisplay($this->dbc, $this->cid);
 		}    
     }
 
@@ -49,9 +47,9 @@ class Xcomic {
 		}
 		
 		//Set variables
-		$comicImageUrl = $settings->getSetting('urlToXcomic').'/'.COMICS_DIR.'/'.$this->comicDisplay->getFilename();
+		$comicImageUrl = COMICS_DIR.'/'.$this->comicDisplay->getFilename();
 		$comicTitle = $this->comicDisplay->getTitle();
-		return '<div id="comic"><img src="' . $comicImageUrl . '" alt="' . $comicTitle . '"></div>';	
+		return '<div id="comic"><img src="' . $comicImageUrl . '" alt="' . $comicTitle . '" /></div>';	
 	}
 
 	function selectNewsDisplay() {
@@ -61,10 +59,10 @@ class Xcomic {
 		//Otherwise, use LatestNewsDisplay
 		if (!empty($this->cid)) {
 			include_once $xcomicRootPath.'includes/ComicAssociatedNewsDisplay.class.php'; //Also includes NewsDisplay
-			$this->newsDisplay = new ComicAssociatedNewsDisplay($this->cid);
+			$this->newsDisplay = new ComicAssociatedNewsDisplay($this->dbc, $this->cid);
 		} else {
 			include_once $xcomicRootPath.'includes/LatestNewsDisplay.class.php'; //Also includes NewsDisplay
-			$this->newsDisplay = new LatestNewsDisplay();
+			$this->newsDisplay = new LatestNewsDisplay($this->dbc);
 		}
 					
 	}
@@ -91,7 +89,7 @@ class Xcomic {
 		
 		//Create UserInformation Object
 		include_once $xcomicRootPath.'includes/UserInformation.class.php';
-		$userInfo = new UserInformation($this->newsDisplay->getUsername());
+		$userInfo = new UserInformation($this->dbc, $this->newsDisplay->getUsername());
 		
 		//If user is deleted, their email could be blank. Therefore, we set
 		//email to a blank string
@@ -158,8 +156,8 @@ class Xcomic {
 		}
 				
 		//Generate drop down box ---------------------
-		include_once $xcomicRootPath.'includes/ComicListing.'.$classEx;
-		$listComics = new ComicListing();
+		include_once $xcomicRootPath.'includes/ComicListing.class.php';
+		$listComics = new ComicListing($this->dbc);
 		$comicsList = $listComics->getComicList(); //Array of comic listings
 
 		//Since $comicsList is in ascending order. We want the most recent comic first

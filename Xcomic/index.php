@@ -7,7 +7,7 @@
 	 increase page execution speed.)
 	*/
 	//Check for a config file
-	if(!file_exists('includes/config.php')) {
+	if (!file_exists('includes/config.php')) {
 		//Redirect to installation page
 		header('Location: admin/install.php');	
 	}
@@ -26,7 +26,7 @@
 	include $xcomicRootPath.'Xcomic.php';
 	
 	//Create Xcomic object
-	$xcomic = new Xcomic();
+	$xcomic = new Xcomic($db);
 	/*
 	---------------------------------------------------------
 	*/
@@ -105,7 +105,7 @@ echo '<?xml version="1.0" encoding="UTF-8">';
    
    <div id="footer">
     <p>
-     <a href="./admin">Administration Panel</a>
+     <a href="admin/">Administration Panel</a>
      <br />
      Page generated in <?php $xcomic->getExecutionTime(); ?> seconds <cite>Powered by <a href="http://xcomic.sourceforge.net" title="Powered by Xcomic, state-of-the-art web comic publishing platform"><strong>Xcomic</strong></a></cite> &copy; 2004-2005 Xcomic. <a href="http://binarybonsai.com/kubrick/">Kubrick Design by Michael Heilemann</a>.
     </p>

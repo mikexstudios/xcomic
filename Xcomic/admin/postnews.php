@@ -29,7 +29,7 @@ if (isset($_POST['submit'])) {
 	
 	//Actually post the news
 	include_once './classes/News.'.$classEx;
-	$news =& new News;
+	$news =& new News($db);
 	$news->addNews($newsTitle, $newsContent, $userManagement->getUid(), $userManagement->getUsername());
 	
 	//Display success page

@@ -8,13 +8,12 @@ $Id$
 include_once 'classes/UserManagement.'.$classEx; //Login/Logout
 
 //Create User Management object
-$userManagement = new UserManagement();
+$userManagement = new UserManagement($db);
 
 //AUTHORIZATION: Check to see if user has the privledge to access this
-if (!($userManagement->isLoggedIn())) {	
+if (!$userManagement->isLoggedIn()) {	
 	//User does not have access. Display login page.
-	$redirect = $settings->getSetting('urlToXcomic') . '/admin/login.php';
-	header('Location: '.$redirect);
+    header('Location: login.php');
 	exit; //To keep script for further execution
 }
 ?>
