@@ -44,7 +44,7 @@ class ComicDisplay {
 		
 		if(!($result = $xcomicDb->sql_query($sql)))
 		{
-			$message->error('Unable to get latest comic info');
+			echo 'Unable to get latest comic info';
 		}
 		
 		return $xcomicDb->sql_fetchrow($result);
