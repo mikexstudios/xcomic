@@ -12,31 +12,13 @@ $xcomicRootPath = "../";
 require_once('./admininitialize.php');	//Include all admin common settings
 
 //Form field variables
-$sectionTitle = 'User Functions';
 $formNewUsername = 'newusername';
 $formNewPassword = 'newpassword';
 $formNewEmail = 'newemail';
 $formModeAddUser = 'adduser';
-$formModeDeleteUser = 'deleteuser';
+$formModeEditUser = 'edit';
+$formModeDeleteUser = 'delete';
 $formEditDeleteUsername = 'username'; //For the GET url
-
-//Check for form submission for delete user
-if($_REQUEST['mode'] == $formModeDeleteUser) {
-
-$username=(!empty($_REQUEST[$formEditDeleteUsername])) ? $security->allowOnlyChars($_REQUEST[$formEditDeleteUsername]) : NULL;
-
-//Check for error
-if(empty($username))
-	$message->error('The username was left blank or invalidly filled.');
-
-//Delete user using User Management class
-$deleteUser = new UserManagement($username);
-$deleteUser->deleteUser();
-
-//Display success
-$message->say('User has been sucecssfully deleted.');
-
-}
 
 //Check for form submission for add user
 if($_REQUEST['mode'] == $formModeAddUser) {
@@ -78,45 +60,41 @@ if( !($result = $xcomicDb->sql_query($sql)) )
 	$message->error("Could not get users list.");
 }
 
-while ( $row = $xcomicDb->sql_fetchrow($result) )
-{
-	//For each user, generate HTML
-	$listOfUsers.='
-	<tr class="each-user">
-		<td class="list-username">'.$row['username'].'</td>
-		<td class="list-userfunc"><a href="edituser.php?'.$formEditDeleteUsername.'='.$row['username'].'">Edit</a></td>
-		<td class="list-userfunc"><a href="'.$_SERVER['PHP_SELF'].'?mode='.$formModeDeleteUser.'&'.$formEditDeleteUsername.'='.$row['username'].'">Delete</a></td>
-	</tr>
-	';
-}
-
 //Include script header
 include('./includes/header.php');
 
 //Include script menu
 include('./includes/menu.php');
 ?>
+
 <div class="wrap">
-	<div class="section-title"><h2><?php echo $sectionTitle; ?></h2></div>
+	<div class="section-title"><h2>Users</h2></div>
 	<div class="section-body">
-	<div class="user-list">
-		<table cellspacing="0" cellpadding="5" class="user-list">
-		<tr class="each-user">
-			<td class="list-username">Username:</td>
-			<td class="list-userfunc" colspan="2">Functions:</td>
+	<table cellpadding="3" cellspacing="3" width="100%">
+		<tr>
+			<th>Username</th>
+			<th>Edit</th>
+			<th>Delete</th>
 		</tr>
-		<?php echo $listOfUsers; ?>
-		<!--
-		<tr class="each-user">
-			<td class="list-username">Admin</td>
-			<td class="list-userfunc"><a href="">Edit</a></td>
-			<td class="list-userfunc"><a href="">Delete</a></td>
+<?php
+while ( $row = $xcomicDb->sql_fetchrow($result) )
+{
+?>
+		<tr class="alternate">
+			<td><strong><?php echo $row['username']; ?></strong></td>
+			<td><a href="edituser.php?mode=<?php echo $formModeEditUser; ?>&<?php echo $formEditDeleteUsername; ?>=<?php echo $row['username']; ?>" class="edit">Edit</a></td>
+			<td><a href="edituser.php?mode=<?php echo $formModeDeleteUser; ?>&<?php echo $formEditDeleteUsername; ?>=<?php echo $row['username']; ?>" class="delete" onclick="return confirm('You are about to delete this user. \'OK\' to delete, \'Cancel\' to stop.')">Delete</a></td>
 		</tr>
-		-->
-		</table>
+<?php
+}
+?>	
+	</table>
 	</div>
-	
-	<p class="sub-section-title">Add a new user:</p>
+</div>
+
+<div class="wrap">
+	<div class="section-title"><h2>Add New User</h2></div>
+	<div class="section-body">
 	<p>
 		<form method="POST" action="" enctype="multipart/form-data">
 		<input type="hidden" name="mode" value="<?php echo $formModeAddUser; ?>">
@@ -133,7 +111,7 @@ include('./includes/menu.php');
 		E-mail Address:<br /><input type="text" name="<?php echo $formNewEmail; ?>" size="20" />
 		</p>
 	
-		<p>
+		<p class="submit">
 		<input type="submit" name="submit" value="Add New User" />
 		</p>
 		</form>

@@ -14,20 +14,37 @@ require_once('./admininitialize.php');	//Include all admin common settings
 //Form field variables
 $sectionTitle = 'Edit Comic';
 $urlComicId = 'cid'; //From GET url
+$urlModeAction = 'action';
+$modeEdit = 'edit';
+$modeDelete = 'delete';
 $formComicTitle = 'comicTitle';
 $formComicFile = 'comicFile';
-$formModeValue = 'editcomic';
+$formModeEdit = 'editcomic';
 
-//Check for form submission
-if($_REQUEST['mode'] == $formModeValue) {
-	$comicId=(!empty($_REQUEST[$urlComicId])) ? $security->secureText($_REQUEST[$urlComicId]) : NULL;
+//Check for correct input
+$comicId=(!empty($_REQUEST[$urlComicId])) ? $security->secureText($_REQUEST[$urlComicId]) : NULL;
+if(empty($comicId))
+	$message->error('No Comid Id specified!');
+
+//Check for delete submission
+$action=(!empty($_REQUEST[$urlModeAction])) ? $security->secureText($_REQUEST[$urlModeAction]) : NULL;
+if($action == $modeDelete)
+{
+	//Use the EditComic class to delete the comic
+	include_once('./classes/EditComic.'.$classEx);
+	$editComic = new EditComic($comicId);
+	$editComic->deleteComic();
+	
+	$message->say('The comic was successfully deleted');
+}
+
+//Check for form edit submission
+if($_REQUEST['mode'] == $formModeEdit) {
 	$comicTitle=(!empty($_REQUEST[$formComicTitle])) ? $security->secureText($_REQUEST[$formComicTitle]) : NULL;
 	//Must use $_FILES[$formComicFile]['name'] since empty on just $_FILES[$formComicFile] will always return false.
 	$comicFile=(!empty($_FILES[$formComicFile]['name'])) ? $_FILES[$formComicFile] : NULL; //Default to left
 	
 	//Check for error
-	if(empty($comicId))
-		$message->error('No Comid Id specified to edit!');
 	if(empty($comicTitle))
 		$message->error('The comic title was left blank. Please click back and fill it in.');
 	
@@ -53,12 +70,9 @@ if($_REQUEST['mode'] == $formModeValue) {
 }
 else {
 
-//Get comic id to edit
-$comicId=(!empty($_REQUEST[$urlComicId])) ? $security->secureText($_REQUEST[$urlComicId]) : NULL;
-if(empty($comicId))
-{
-	$message->error('No Comid Id specified to edit!');
-}
+//Make sure we are in edit mode
+if($action != $modeEdit)
+	$message->error('Invalid mode specified!');
 
 //Get comic information from id
 include_once($xcomicRootPath.'includes/ComicDisplay.'.$classEx);
@@ -75,7 +89,7 @@ include('./includes/menu.php');
 	<div class="section-title"><h2><?php echo $sectionTitle; ?></h2></div>
 	<div class="section-body">
 	<form method="POST" action="" enctype="multipart/form-data">
-	<input type="hidden" name="mode" value="<?php echo $formModeValue; ?>">
+	<input type="hidden" name="mode" value="<?php echo $formModeEdit; ?>">
 	
 	<input type="hidden" name="<?php echo $urlComicId; ?>" value="<?php echo $comicId; ?>">
 	

@@ -1,0 +1,15 @@
+Version 0.8.0 on 11/20/04
+-------------
+Forced add of a comics directory
+Added Edit Comic
+Added Edit News
+Added Options
+Revised Settings
+Fixed Link Bugs
+Modified SQL table
+Other small changes and code tweaks.
+Fully Usable
+
+Version 0.7.4
+-------------
+Added Edit Posts Functionality (minus the Delete Comic). Made some small changes to other admin files.

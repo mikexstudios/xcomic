@@ -61,7 +61,7 @@ class Xcomic {
 
 	}
 	
-	function selectNewsDisplay($inCategory='default') {
+	function selectNewsDisplay() {
 		global $xcomicRootPath;
 		
 		//If cid is defined, use ComicAssociatedNewsDisplay
@@ -74,12 +74,12 @@ class Xcomic {
 		else
 		{
 			include_once($xcomicRootPath.'includes/LatestNewsDisplay.class.php'); //Also includes NewsDisplay
-			$this->newsDisplay = new LatestNewsDisplay($inCategory);
+			$this->newsDisplay = new LatestNewsDisplay();
 		}
 					
 	}
 	
-	function getNewsCode($inCategory='default') {
+	function getNewsCode() {
 		global $xcomicRootPath, $settings;
 		
 		//Display variables
@@ -97,7 +97,7 @@ class Xcomic {
 		$newsContent = '';
 		
 		//Create NewsDisplay object depending on cid
-		$this->selectNewsDisplay($inCategory);
+		$this->selectNewsDisplay();
 		
 		//Create UserInformation Object
 		include_once($xcomicRootPath.'includes/UserInformation.class.php');
@@ -168,7 +168,7 @@ class Xcomic {
 		}
 		else
 		{
-			$nextComicLink = $configInfo['baseUrl'].$_SERVER["PHP_SELF"].'?cid='.$this->comicDisplay->nextId();
+			$nextComicLink = $settings->getSetting('baseUrl').$_SERVER["PHP_SELF"].'?cid='.$this->comicDisplay->nextId();
 			$nextComicText = 'Next >';
 		}
 				

@@ -19,13 +19,27 @@ $formPassword = 'password';
 $formEmail = 'email';
 $formModeAction = 'edituser';
 $urlUsername = 'username'; //For the GET url
+$formModeEditUser = 'edit';
+$formModeDeleteUser = 'delete';
 
 $username=(!empty($_REQUEST[$urlUsername])) ? $security->secureText($_REQUEST[$urlUsername]) : NULL;
 //If username is null, redirect to users
 if(empty($username))
 	header('Location: users.php');
 
-//Check for form submission for add user
+//Check for form submission for delete user
+$mode=(!empty($_REQUEST['mode'])) ? $security->secureText($_REQUEST['mode']) : NULL;
+if($mode == $formModeDeleteUser) 
+{
+	//Delete user using User Management class
+	$deleteUser = new UserManagement($username);
+	$deleteUser->deleteUser();
+	
+	//Display success
+	$message->say('User has been sucecssfully deleted.');
+}
+
+//Check for form submission for edit user
 if($_REQUEST['mode'] == $formModeAction) {
 
 $password=(!empty($_REQUEST[$formPassword])) ? $security->secureText($_REQUEST[$formPassword]) : NULL;
@@ -60,6 +74,12 @@ $message->say('User has been sucecssfully modified.');
 
 }
 else {
+	
+//Check to see if mode is edit
+if($mode != $formModeEditUser) 
+{
+	$message->error('Invalid mode specified!');
+}
 
 //Get user information
 //Get list of users. SELECT [options go here]

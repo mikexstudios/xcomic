@@ -34,13 +34,13 @@ class ComicDisplay {
 	
 	}
 	
-	function queryComicInfo($inCid, $idOperator='=') {
+	function queryComicInfo($inCid, $idOperator='=', $inOrderBy='') {
 		global $xcomicDb, $message;
 		
 		$sql = 'SELECT cid, title, filename, date
 			FROM '.XCOMIC_COMICS_TABLE." 
-			WHERE cid $idOperator '$inCid'
-			ORDER BY cid DESC";
+			WHERE cid $idOperator $inCid
+			ORDER BY cid $inOrderBy";
 		
 		if(!($result = $xcomicDb->sql_query($sql)))
 		{
@@ -66,7 +66,7 @@ class ComicDisplay {
 	}
 	
 	function nextId() {
-		$next = $this->queryComicInfo($this->cid, '>');
+		$next = $this->queryComicInfo($this->cid, '>', 'ASC');
 		$nextId = $next['cid'];
 		
 		if(empty($nextId))
@@ -81,7 +81,7 @@ class ComicDisplay {
 	}
 	
 	function prevId() {
-		$prev = $this->queryComicInfo($this->cid, '<');
+		$prev = $this->queryComicInfo($this->cid, '<', 'DESC');
 		$prevId = $prev['cid'];
 		
 		if(empty($prevId))
