@@ -1,10 +1,18 @@
 <?php
+	/* 
+	DO NOT REMOVE THE FOLLLOWING. IT CALLS THE XCOMIC SCRIPT.
+	---------------------------------------------------------
+	$Id$
+	*/
 	//Include Xcomic core operation files
 	$xcomicRootPath = './';
 	include($xcomicRootPath.'Xcomic.php');
 	
 	//Create Xcomic object
 	$xcomic = new Xcomic();
+	/*
+	---------------------------------------------------------
+	*/
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
 
@@ -12,9 +20,8 @@
 
 <head>
 <title>Xcomic - description</title>
-<meta name="description" content="Tokei Mizuro, a web comic about [insert description]" />
-<meta name="keywords" content="tokei, mizuro, web, comic, dave, kerkeslager" />
-<meta name="author" content="David Kerkeslager" />
+<meta name="description" content="Xcomic, a web comic about [insert description]" />
+<meta name="keywords" content="xcomic, web comic, web manga, publishing platform" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 <link rel="stylesheet" type="text/css" href="styles/kubrick/layout.css" title="standard layout" media="screen" />
@@ -76,6 +83,8 @@
 </div>
 
 <div id="content" class="middlecolumn">
+
+	<?php $xcomic->getComicTitle(); ?>
 
 	<?php $xcomic->getImageCode(); ?>
 	
