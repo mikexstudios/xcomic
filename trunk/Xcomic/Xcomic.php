@@ -40,8 +40,14 @@ class Xcomic {
 		
 	}
 	
+	function getComicTitle() {
+?>
+<div id="comictitle"><?php echo $this->comicDisplay->getTitle();	?></div>
+<?php	
+	}
+	
 	function getImageCode() {
-		global $xcomicTemplate, $configInfo, $message, $settings;
+		global $message, $settings;
 		
 		//Check for non-existant comic
 		if ($this->comicDisplay->getTitle()=='')
@@ -53,10 +59,8 @@ class Xcomic {
 		//Set variables
 		$comicImageUrl = $settings->getSetting('urlToXcomic').'/'.COMICS_DIR.'/'.$this->comicDisplay->getFilename();
 		$comicTitle = $this->comicDisplay->getTitle();
-		$comicImageWidth = '650';
-		$comicImageHeight = '975';
 ?>
-			<div id="comic"><img src="<?php echo $comicImageUrl; ?>" width="<?php echo $comicImageWidth; ?>" height="<?php echo $comicImageHeight; ?>" alt="<?php echo $comicTitle; ?>"></div>
+			<div id="comic"><img src="<?php echo $comicImageUrl; ?>" alt="<?php echo $comicTitle; ?>"></div>
 <?php		
 
 	}
