@@ -86,8 +86,8 @@ include './includes/menu.php';
  <h2>Edit <?php echo $row['username']; ?></h2>
  <div class="section-body">
   <form method="post" action="">
-   <label for="'password">Change Password (leave blank to keep current password):</label><br />
-   <input type="password" name="password" size="20" /><br />
+   <label for="editPassword">Change Password (leave blank to keep current password):</label><br />
+   <input type="password" name="editPassword" size="20" /><br />
 
    <label for="email">Change E-mail Address:</label><br />
    <input type="text" name="email" value="<?php echo $row['email']; ?>" size="20" /><br />

@@ -28,12 +28,14 @@ class LatestNewsDisplay extends NewsDisplay
 	{
 		global $message;
 		
-		$sql = '
-		    SELECT MAX(id)
+		# [1074866] Bug with index fixed by Tom Parkison (trparky@toms-world.org)
+		# Problem was pinpointed to MAX() SQL call requiring an 'AS id' after MAX().
+		$sql = 'SELECT MAX(id) AS id
 			FROM '.XCOMIC_NEWS_TABLE;
+			
 		$result = $this->dbc->getOne($sql);
 		if (PEAR::isError($result)) {
-			echo 'Unable to get latest news id. SQL: '.$sql;
+			echo 'No news found!';
 		}
 
 		//Return latest news id

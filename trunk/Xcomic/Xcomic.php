@@ -159,11 +159,19 @@ class Xcomic {
 		include_once $xcomicRootPath.'includes/ComicListing.class.php';
 		$listComics = new ComicListing($this->dbc);
 		$comicsList = $listComics->getComicList(); //Array of comic listings
+		$numComics = $listComics->numComics(); //Number of elements in that array
 
 		//Since $comicsList is in ascending order. We want the most recent comic first
 		//Therefore, set the for loop counting backwards
+		/* The following does not work for this instance where we want the most recent comic
+		first:
 		foreach ($comicsList as $row) {
 			$comicOptionListCode .= '<option value="'.$row['cid'].'">'.date('Y-m-d', $row['date']).' ['.$row['cid'].'] '.$row['title']."</option>\n";
+		}
+		*/
+		for($comicCount = $numComics-1; $comicCount >= 0 ; $comicCount--)
+		{
+			$comicOptionListCode .= '<option value="'.$comicsList[$comicCount]['cid'].'">'.date('Y-m-d', $comicsList[$comicCount]['date']).' ['.$comicsList[$comicCount]['cid'].'] '.$comicsList[$comicCount]['title']."</option>\n";
 		}
 		//--------------------------------------------
 		

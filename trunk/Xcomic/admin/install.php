@@ -137,7 +137,7 @@ function installXcomic() {
 	$sql_query[] = "INSERT INTO config VALUES ('baseUrl', '$inBaseUrl', 'Base url', 'The base url that Xcomic is running on (ie. http://www.yoururl.com)')";
 	$sql_query[] = "INSERT INTO config VALUES ('urlToXcomic', '$inUrlToXcomic', 'Url to Xcomic', 'The full url to the installation of Xcomic (ie. http://www.xcomic.com/xcomic)')";
 
-    $id = $db->nextId(XCOMIC_USERS_TABLE);
+    $id = $db->nextId('users'); //This assumes that the users table is named users
     $sql_query[] = "INSERT INTO users VALUES ($id, 'admin', '".md5('changethis')."', 'example@example.com')";
 	
 	for ($i = 0; $i < sizeof($sql_query); $i++) {
@@ -246,14 +246,26 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'install') {
 	</p>
 	<p><strong>Database Information</strong></p>
 	<p>
-	Database type (currently only works for MySQL):<br />
+	Database type (currently only tested on MySQL 3.x and 4.x):<br />
 	<select name="dbms">
+	<!--
+		<option value="mysql">&lt=MySQL 4.0 (including 3.x)</option>
+		<option value="mysqli">&gt;=MySQL 4.1 (including 5.x)</option>
+	-->
 		<option value="mysql">MySQL 3.x</option>
-		<option value="mysql4">MySQL 4.x</option>
-		<option value="postgres">PostgreSQL 7.x</option>
+		<option value="mysql">MySQL 4.x</option>
+		<option value="mysqli">MySQL 5.x</option>
+		<option value="pgsql">PostgreSQL</option>
+		<option value="oci8">Oracle 8</option>
+		<option value="sqlite">SQLite</option>
+		<option value="msql">Mini-SQL</option>
+		<option value="odbc">ODBC</option>
 		<option value="mssql">MS SQL Server 7/2000</option>
-		<option value="msaccess">MS Access [ ODBC ]</option>
-		<option value="mssql-odbc">MS SQL Server [ ODBC ]</option>
+		<option value="dbase">Dbase</option>
+		<option value="fbsql">FrontBase</option>
+		<option value="ibase">Interbase</option>
+		<option value="ifx">Informix</option>
+		<option value="sybase">Sybase</option>
 	</select>
 	</p>
 	<p>

@@ -5,7 +5,7 @@ Xcomic
 $Id$
 */
 
-class Comics
+class Comic
 {
 	var $title;
 	var $comicFile; //$_FILES type
@@ -14,7 +14,7 @@ class Comics
 	var $cid;
 	var $dbc;
 	
-	function Comics(&$dbc, $inComicFile, $inTitle = null)
+	function Comic(&$dbc, $inComicFile, $inTitle = null)
 	{
 		global $message, $xcomicRootPath;
 		
