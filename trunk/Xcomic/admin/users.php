@@ -76,7 +76,10 @@ foreach ($result as $row) {
    <tr class="alternate">
     <td><strong><?php echo $row['username']; ?></strong></td>
     <td><a href="edituser.php?mode=<?php echo 'edit'; ?>&amp;id=<?php echo $row['uid']; ?>" class="edit">Edit</a></td>
+    <?php if (sizeof($result) == "1") {	?> <td><center>Delete</center></td> <?php }
+    else { ?>
     <td><a href="edituser.php?mode=<?php echo 'delete'; ?>&amp;id=<?php echo $row['uid']; ?>" class="delete" onclick="return confirm('You are about to delete this user. \'OK\' to delete, \'Cancel\' to stop.')">Delete</a></td>
+    <?php } ?>
    </tr>
 <?php
 }
