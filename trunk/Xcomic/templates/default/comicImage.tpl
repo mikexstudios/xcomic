@@ -1,0 +1,1 @@
+	<div id="comic"><img src="{COMIC_IMAGE_URL}" width="{COMIC_IMAGE_WIDTH}" height="{COMIC_IMAGE_HEIGHT}" alt="{COMIC_TITLE}"></div>
