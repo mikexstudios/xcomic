@@ -1,0 +1,6 @@
+(fixed) 1. the first cid (cid=1) does not have an associated news item unless news is posted before the comic.
+(fixed) 2. There is a difference in news items between the latest comic and the cid of that comic. The latest retrieves the latest news item (which is correct, while the cid retrieves the latest to that date).
+
+Fix? Get the next news id.
+
+3. When posting two news entries for a single comic under the same category, the first post will show when accessing the cid. However, if the news is the most recent, then accessing root index.php will show the second news entry.
