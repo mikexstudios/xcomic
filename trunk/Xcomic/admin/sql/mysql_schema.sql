@@ -1,9 +1,9 @@
 #
-# Table structure for table `comics`
+# Table structure for table `xcomic_comics`
 #
 
-DROP TABLE IF EXISTS `comics`;
-CREATE TABLE `comics` (
+DROP TABLE IF EXISTS `xcomic_comics`;
+CREATE TABLE `xcomic_comics` (
   `cid` int(255) unsigned NOT NULL,
   `title` varchar(50) NOT NULL default '',
   `filename` varchar(80) NOT NULL default '',
@@ -12,11 +12,11 @@ CREATE TABLE `comics` (
 ) TYPE=MyISAM;
 
 #
-# Table structure for table `config`
+# Table structure for table `xcomic_config`
 #
 
-DROP TABLE IF EXISTS `config`;
-CREATE TABLE `config` (
+DROP TABLE IF EXISTS `xcomic_config`;
+CREATE TABLE `xcomic_config` (
   `option` varchar(50) NOT NULL default '',
   `value` varchar(100) NOT NULL default '',
   `name` varchar(100) NOT NULL default '',
@@ -26,10 +26,10 @@ CREATE TABLE `config` (
 
 
 #
-# Table structure for table `news`
+# Table structure for table `xcomic_news`
 #
 
-DROP TABLE IF EXISTS `news`;
+DROP TABLE IF EXISTS `xcomic_news`;
 CREATE TABLE `news` (
   `id` int(10) unsigned NOT NULL,
   `cid` int(255) unsigned NOT NULL default '0',
@@ -42,11 +42,11 @@ CREATE TABLE `news` (
 ) TYPE=MyISAM;
 
 #
-# Table structure for table `users`
+# Table structure for table `xcomic_users`
 #
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE `users` (
+DROP TABLE IF EXISTS `xcomic_users`;
+CREATE TABLE `xcomic_users` (
   `uid` int(11) unsigned NOT NULL,
   `username` varchar(50) NOT NULL default '',
   `password` varchar(32) NOT NULL default '',
