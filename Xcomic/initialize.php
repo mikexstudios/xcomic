@@ -25,14 +25,14 @@ include_once($xcomicRootPath.'includes/constants.'.$phpEx);
 	//Include database configuration information
 	include_once($xcomicRootPath.'includes/config.'.$phpEx);
 	
-	//Use PEAR::DB
-	include_once('DB.php'); //LATER: Check first to see if it and PEAR exists
+	//Include db.php
+	include_once($xcomicRootPath.'includes/selectDatabase.'.$phpEx);
 	
 	//Create database object
-	$xcomicDb = DB::connect($xcomicDsn);
-	if (DB::isError($xcomicDb))
+	$xcomicDb = new sql_db($xcomicDbHost, $xcomicDbUser, $xcomicDbPasswd, $xcomicDbName, false);
+	if(!$xcomicDb->db_connect_id)
 	{
-		die ("Could not connect to the database: $xcomicDb->getMessage()\n");
+	   die('Could not connect to the database');
 	}
 //-----------------------------------------------
 
