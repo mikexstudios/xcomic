@@ -29,10 +29,12 @@ function installXcomic() {
     $dsn = array(
         'phptype'  => $dbms,
         'username' => $inDbUser,
-        'password' => $inDbPasswd,
+        'password' => $inDbPass,
         'hostspec' => $inDbHost,
         'database' => $inDbName,
     );
+    
+    //print_r($dsn);
     
     $options = array(
         'debug'       => 2,
@@ -136,11 +138,11 @@ function installXcomic() {
 	$sql_query[] = "INSERT INTO config VALUES ('urlToXcomic', '$inUrlToXcomic', 'Url to Xcomic', 'The full url to the installation of Xcomic (ie. http://www.xcomic.com/xcomic)')";
 
     $id = $db->nextId(XCOMIC_USERS_TABLE);
-    $sql_query[] = "INSERT INTO users VALUES ($id, 'admin', '925ad2679b095816cfc0cf772f467229', 'example@example.com');"
+    $sql_query[] = "INSERT INTO users VALUES ($id, 'admin', '925ad2679b095816cfc0cf772f467229', 'example@example.com')";
 	
 	for ($i = 0; $i < sizeof($sql_query); $i++) {
 		if (trim($sql_query[$i]) != '') {
-		    $result = $db->query($sql_query[$i])
+		    $result = $db->query($sql_query[$i]);
 			if (PEAR::isError($result)) {
 				$error = $db->sql_error();
 				die('Install error: '.$error);
