@@ -1,0 +1,18 @@
+<?php
+
+//This is the provided sample Xcomic configuation file. Please run admin/install.php to
+//install the script instead! 
+//$Id$
+
+$dbms = 'mysql'; //Database type
+
+$xcomicDbHost = 'localhost'; //Database host
+$xcomicDbName = 'xcomic'; //Database name
+$xcomicDbUser = 'xcomicuser'; //Database user
+$xcomicDbPassword = 'password'; //Database password
+
+$tablePrefix = 'xcomic_'; //Prefix for creating the tables
+
+define('XCOMIC_INSTALLED', true);
+
+?>

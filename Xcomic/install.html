@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Xcomic: Installation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<style type="text/css" media="screen">
+	<!--
+	body {
+		background: #eee;
+	}
+	#wrap {
+		background: #fff;
+		color: #000;
+		font-family: Georgia, "Times New Roman", Times, serif;
+		margin-left: 20%;
+		margin-right: 20%;
+		padding: .2em 2em;
+		border: 1px solid Black;
+	}
+	
+	.header {
+		margin-left: 20%;
+		margin-right: 20%;
+		margin-bottom: 5px;
+		color: #006;
+		font-size: large;
+		font-weight: lighter;
+	}
+	
+	.header img {
+		font-size: xx-large;
+		font-weight: lighter;
+	}
+	
+	h1 {
+		color: #006;
+		font-size: x-large;
+		font-weight: lighter;
+	}
+	
+	h2 {
+		color: #006;
+		font-size: large;
+		font-weight: lighter;
+	}
+	
+	p, li, dt {
+		line-height: 140%;
+		padding-bottom: 2px;
+	}
+
+	ul, ol {
+		padding: 5px 5px 5px 20px;
+	}
+	-->
+	</style>
+</head>
+<body>
+
+<h1 class="header"><img alt="Xcomic" src="http://xcomic.mikexstudios.com/css/xcomic-small.gif" /> <br />
+	a comic management system | Version 0.8.5</h1>
+	
+<div id="wrap">
+
+<h1>Installation Instructions</h1>
+
+<h2 id="requirements">System Requirements</h2>
+Please make sure that the system you plan to install Xcomic has the following:
+<ul>
+	<li>PHP version <strong>4.0</strong> or higher.</li>
+	<li>MySQL version <strong>3.0.0</strong> or higher. <small><em>Currently, Xcomic does not support other databases.</em></small></li>
+</ul>
+
+<h2>Steps to Install</h2>
+<ol>
+	<li>Unzip the package in an empty directory (ie. /xcomic)</li>
+	<li><code>chmod 777 includes</code> and <code>chmod 777 comics</code>.</li>
+	<li>Launch <a href="admin/install.php">/admin/install.php</a> in your browser. Enter in your database information and the URL paths to your Xcomic installation.</li>
+	<li><strong>Note the password given to you.</strong></li>
+	<li>The install script should then send you to the <a href="admin/login.php">login page</a>. Sign in with the username <code>admin</code> and the password given to you during the installation. You can then click on 'Users' to change the password.</li>
+	<li>Finally, <code>chmod 755 includes</code>. Congratulations, if everything went well, you have successfully installed Xcomic!</li> 
+
+</ol>
+
+<h2>Troubleshooting</h2>
+If you have trouble or errors installing Xcomic, check the following:
+<ul>
+	<li>Make sure the directories <code>includes</code> and <code>comics</code> are chmod 777 (that means world writable).</li>
+	<li>Make sure you have the correct database information. Only MySQL is supported in version 0.8.5</li>
+	<li>Make sure you entered the URL to Xcomic correctly.</li>
+	<li>Still having problems? <a href="http://www.sourceforge.net/projects/xcomic">Report the bug</a></li>
+</ul>
+
+<h2>Upgrading</h2>
+<p>If you are running version 0.8.0 and would like to upgrade to version 0.8.5, just replace all of the old files with the files from the new version.</p>
+<p>If you are (gasp) running a version of Xcomic before 0.8.0, please perform a full install of version 0.8.5 and manually port over your comic entries. <em>Would someone be willing to write an update.php script for this?</em></p>
+
+<h2>Online Resources</h2>
+<p>If you have any questions that aren't addressed in this document or run into problems, visit these Xcomic sites:</p>
+<dl>
+	<dt><a href="http://xcomic.sourceforge.net/">Xcomic main site</a></dt>
+	<dd>The homepage of the Xcomic project. Find the latest news and updates here.</dd>
+	<dt><a href="http://www.sourceforge.net/projects/xcomic">Xcomic project page @ Sourceforge</a></dt>
+	<dd>Discuss Xcomic, report bugs, request new features at the Xcomic sourceforge project page.</dd>
+	<dt><a href="http://xcomic.mikexstudios.com/documentation">Xcomic documentation and users manual</a></dt>
+</dl>
+
+<h2>Copyright</h2>
+<p>Xcomic is released under the <acronym title="GNU Public License">GPL</acronym> (see the <a href="LICENSE">LICENSE</a>).</p>
+<!-- End wrap -->
+</div>
+</body>
+</html>
