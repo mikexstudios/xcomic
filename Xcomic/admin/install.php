@@ -23,7 +23,11 @@ function installXcomic() {
 	$inDbName = (!empty($_REQUEST['dbname'])) ? $_REQUEST['dbname'] : null;
 	$inDbUser = (!empty($_REQUEST['dbuser'])) ? $_REQUEST['dbuser'] : null;
 	$inDbPass = (!empty($_REQUEST['dbpass'])) ? $_REQUEST['dbpass'] : null;
-	
+	$inUsUser = (!empty($_REQUEST['useruser'])) ? $_REQUEST['useruser'] : 'admin';
+	$inUsPass = (!empty($_REQUEST['userpass'])) ? $_REQUEST['userpass'] : 'changethis';
+	$inUsMail = (!empty($_REQUEST['usermail'])) ? $_REQUEST['usermail'] : 'example@example.com';
+	$xcomicTablePrefix = (!empty($_REQUEST['tblprefix'])) ? $_REQUEST['tblprefix'] : null;
+
 	require_once 'DB.php';
 	//Create database object
     $dsn = array(
@@ -65,6 +69,9 @@ function installXcomic() {
 	} else {
 		$result = @fputs($fp, $config_data, strlen($config_data));
 		@fclose($fp);
+		//Make the config file world-writable so that the user can delete it if
+		//the webserver steals permissions on it
+		chmod($xcomicRootPath . 'includes/config.'.$phpEx, 0666);
 	}
 	
 	//Now that we have a database connection, let's read the schema
@@ -125,7 +132,8 @@ function installXcomic() {
 	
 	include_once './includes/sql_parse.php'; //phpBB's DB schema cleaning
 	$sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema));
-	$sql_query = preg_replace('/xcomic_/', $table_prefix, $sql_query);
+	$table_prefix = (!empty($table_prefix)) ? $table_prefix : (!empty($xcomicTablePrefix)) ? $xcomicTablePrefix : 'xcomic_';
+	$sql_query = str_replace('xcomic_', $table_prefix, $sql_query);
 
 	$sql_query = remove_remarks($sql_query);
 	
@@ -134,18 +142,19 @@ function installXcomic() {
 	//Add URL Information
 	$inBaseUrl=(!empty($_REQUEST['baseurl'])) ? $_REQUEST['baseurl'] : null;
 	$inUrlToXcomic=(!empty($_REQUEST['urltoxcomic'])) ? $_REQUEST['urltoxcomic'] : null;
-	$sql_query[] = "INSERT INTO config VALUES ('baseUrl', '$inBaseUrl', 'Base url', 'The base url that Xcomic is running on (ie. http://www.yoururl.com)')";
-	$sql_query[] = "INSERT INTO config VALUES ('urlToXcomic', '$inUrlToXcomic', 'Url to Xcomic', 'The full url to the installation of Xcomic (ie. http://www.xcomic.com/xcomic)')";
+	$sql_query[] = "INSERT INTO " . $table_prefix . "config VALUES ('baseUrl', '$inBaseUrl', 'Base url', 'The base url that Xcomic is running on (ie. http://www.yoururl.com)')";
+	$sql_query[] = "INSERT INTO " . $table_prefix . "config VALUES ('urlToXcomic', '$inUrlToXcomic', 'Url to Xcomic', 'The full url to the installation of Xcomic (ie. http://www.xcomic.com/xcomic)')";
 
-    $id = $db->nextId('users'); //This assumes that the users table is named users
-    $sql_query[] = "INSERT INTO users VALUES ($id, 'admin', '".md5('changethis')."', 'example@example.com')";
+    $id = $db->nextId($table_prefix . 'users'); //This assumes that the users table is named users //Not anymore...
+    $sql_query[] = "INSERT INTO " . $table_prefix . "users VALUES ($id, '".$inUsUser."', '".md5($inUsPass)."', '".$inUsMail."')";
 	
 	for ($i = 0; $i < sizeof($sql_query); $i++) {
 		if (trim($sql_query[$i]) != '') {
 		    $result = $db->query($sql_query[$i]);
 			if (PEAR::isError($result)) {
-				$error = $db->sql_error();
-				die('Install error: '.$error);
+				//$error = $db->sql_error(); // Function no longer exists, but there is an object provided as part of $result
+				//when there is an error
+				die('Install error');
 			}
 		}
 	}
@@ -159,10 +168,8 @@ function installXcomic() {
 	Congratulations! Your install was a success! Proceed to 
 	the <a href="index.php">administrative pages</a> of Xcomic and login
 	with:
-	<p><strong>Username: admin</strong></p>
-	<p><strong>Password: changethis</strong></p>
-	Make sure you change your password in the user management area after you
-	login.
+	<p><strong>Username: <?=$inUsUser?></strong></p>
+	<p><strong>Password: <?=$inUsPass?></strong></p>
 	</div>
 <?php
 	displayFooter();
@@ -280,7 +287,20 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'install') {
 	<p>
 	Database password:<br /><input type="text" name="dbpass" size="20" />
 	</p>
+	<p>
+	Database table prefix:<br /><input type="text" name="tblprefix" size="20" value="xcomic_" />
+	</p>
 	
+	<p><strong>Administrative user</strong> (if left blank, defaults will be used.)</p>
+	<p>
+	Administrative username:<br /><input type="text" name="useruser" size="20" />
+	</p>
+	Administrative password:<br /><input type="password" name="userpass" size="20" />
+	</p>
+	<p>
+	Administrative e-mail address:<br /><input type="text" name="usermail" size="20" />
+	</p>
+
 	<p><strong>URL Information</strong></p>
 	<p>We tried to guess these urls for you. Double check to make sure that they are correct.</p>
 	<p>
