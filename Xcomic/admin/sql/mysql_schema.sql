@@ -30,7 +30,7 @@ CREATE TABLE `xcomic_config` (
 #
 
 DROP TABLE IF EXISTS `xcomic_news`;
-CREATE TABLE `news` (
+CREATE TABLE `xcomic_news` (
   `id` int(10) unsigned NOT NULL,
   `cid` int(255) unsigned NOT NULL default '0',
   `title` varchar(100) NOT NULL default '',
