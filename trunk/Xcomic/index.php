@@ -1,4 +1,21 @@
 <?php
+	/*
+	YOU CAN REMOVE THIS PART AFTER INSTALLATION.
+	--------------------------------------------
+	(Added for a more user friendly installation.
+	 Remove the following config file check to 
+	 increase page execution speed.)
+	*/
+	//Check for a config file
+	if(!file_exists('includes/config.php')) {
+		//Redirect to installation page
+		header('Location: admin/install.php');	
+	}
+	/*
+	--------------------------------------------
+	*/
+	
+	
 	/* 
 	DO NOT REMOVE THE FOLLLOWING. IT CALLS THE XCOMIC SCRIPT.
 	---------------------------------------------------------
@@ -90,7 +107,7 @@ echo '<?xml version="1.0" encoding="UTF-8">';
     <p>
      <a href="./admin">Administration Panel</a>
      <br />
-     Page generated in <?php $xcomic->getExecutionTime(); ?> seconds <cite>Powered by <a href="http://www.mikexstudios.com" title="Powered by Xcomic, state-of-the-art web comic publishing platform"><strong>Xcomic</strong></a></cite> &copy; 2004 mikeXstudios. <a href="http://binarybonsai.com/kubrick/">Kubrick Design by Michael Heilemann</a>.
+     Page generated in <?php $xcomic->getExecutionTime(); ?> seconds <cite>Powered by <a href="http://xcomic.sourceforge.net" title="Powered by Xcomic, state-of-the-art web comic publishing platform"><strong>Xcomic</strong></a></cite> &copy; 2004-2005 Xcomic. <a href="http://binarybonsai.com/kubrick/">Kubrick Design by Michael Heilemann</a>.
     </p>
    </div>
    <!-- Ending div for page-container -->

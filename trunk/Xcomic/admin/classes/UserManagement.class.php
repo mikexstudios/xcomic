@@ -180,11 +180,16 @@ class UserManagement
 			    $sql .= 'uid = '.$this->id;
 			} elseif (isset($this->username)) {
 			    $sql .= 'username = '.$db->quoteSmart($this->username);
+			} else {
+				//Neither id or username is set so the hypothetical user
+				//does not exist.
+				return false;	
 			}
-
+		
 		$result = $db->getOne($sql);
 		if (PEAR::isError($result)) {
-			$message->error('Unable to read usernames.');
+			echo 'Unable to read usernames.';
+			//$message->error('Unable to read usernames.');
 		}
 		
 		if (!empty($result)) {
@@ -211,6 +216,7 @@ class UserManagement
 		$sql = 'SELECT password 
 			FROM '.XCOMIC_USERS_TABLE.'
 			WHERE username = '.$db->quoteSmart($this->username);
+		
 		$result = $db->getOne($sql);
 		if (PEAR::isError($result)) {
 			$message->error('Unable to retrieve user information.');
@@ -298,7 +304,7 @@ class UserManagement
 				$this->rememberMe();
 			}
 			
-			//Sucess
+			//Success
 			return true;
 		} else {
 			//Failure

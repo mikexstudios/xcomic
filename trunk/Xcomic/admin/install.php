@@ -138,7 +138,7 @@ function installXcomic() {
 	$sql_query[] = "INSERT INTO config VALUES ('urlToXcomic', '$inUrlToXcomic', 'Url to Xcomic', 'The full url to the installation of Xcomic (ie. http://www.xcomic.com/xcomic)')";
 
     $id = $db->nextId(XCOMIC_USERS_TABLE);
-    $sql_query[] = "INSERT INTO users VALUES ($id, 'admin', '925ad2679b095816cfc0cf772f467229', 'example@example.com')";
+    $sql_query[] = "INSERT INTO users VALUES ($id, 'admin', '".md5('changethis')."', 'example@example.com')";
 	
 	for ($i = 0; $i < sizeof($sql_query); $i++) {
 		if (trim($sql_query[$i]) != '') {
