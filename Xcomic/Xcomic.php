@@ -35,7 +35,7 @@ class Xcomic {
     }
 
     function getComicTitle() {
-        return '<div id="comictitle">' . $this->comicDisplay->getTitle() .' </div>';
+        return '<div id="comictitle">' . stripslashes($this->comicDisplay->getTitle()) .' </div>';
     }
 
 	function getImageCode() {
@@ -168,7 +168,7 @@ class Xcomic {
 		//Therefore, set the for loop counting backwards
 		for($comicCount = $numComics-1; $comicCount >= 0 ; $comicCount--)
 		{
-			$comicOptionListCode .= '<option value="'.$comicsList[$comicCount]['cid'].'">'.date('Y-m-d', $comicsList[$comicCount]['date']).' ['.$comicsList[$comicCount]['cid'].'] '.$comicsList[$comicCount]['title']."</option>\n";
+			$comicOptionListCode .= '<option value="'.$comicsList[$comicCount]['cid'].'">'.date('Y-m-d', $comicsList[$comicCount]['date']).' ['.$comicsList[$comicCount]['cid'].'] '.stripslashes($comicsList[$comicCount]['title'])."</option>\n";
 		}
 		//--------------------------------------------
 		
