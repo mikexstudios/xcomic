@@ -154,7 +154,7 @@ function installXcomic() {
 			if (PEAR::isError($result)) {
 				//$error = $db->sql_error(); // Function no longer exists, but there is an object provided as part of $result
 				//when there is an error
-				die('Install error');
+				die('Install error<br />'. $result->getMessage());
 			}
 		}
 	}
@@ -285,7 +285,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'install') {
 	Database user:<br /><input type="text" name="dbuser" size="20" />
 	</p>
 	<p>
-	Database password:<br /><input type="text" name="dbpass" size="20" />
+	Database password:<br /><input type="password" name="dbpass" size="20" />
 	</p>
 	<p>
 	Database table prefix:<br /><input type="text" name="tblprefix" size="20" value="xcomic_" />
