@@ -27,8 +27,7 @@ class ComicListing {
 		global $message;
 		
 		$sql = '
-		    SELECT
-		        cid, title, filename, date
+			SELECT cid, title, filename, date
 			FROM '.XCOMIC_COMICS_TABLE;
 		$result = $this->dbc->getAll($sql);
 		if (PEAR::isError($result)) {

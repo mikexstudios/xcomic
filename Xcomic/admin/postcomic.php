@@ -20,7 +20,7 @@ if (isset($_POST['submit'])) {
 	//Must use $_FILES[$formComicFile]['name'] since empty on just $_FILES[$formComicFile] will always return false.
 	$comicFile = (!empty($_FILES[$formComicFile]['name'])) ? $_FILES[$formComicFile] : null; //Default to left
 	
-	include_once './classes/PostComic.'.$classEx;
+	include_once './classes/Comic.'.$classEx;
 	//Check for error
 	if ($comicTitle == null) {
 		$message->error('The comic title was left blank. Please click back and fill it in.');
@@ -31,7 +31,7 @@ if (isset($_POST['submit'])) {
 	//echo $comicFile['tmp_name'];
 	
 	//Actually post the news
-	$postComic =& new Comics($db, $comicFile, $comicTitle);
+	$postComic =& new Comic($db, $comicFile, $comicTitle);
 	if ($postComic->saveFile()) {
 		$postComic->sendToDatabase();
 	}

@@ -108,9 +108,6 @@ class Security
 	//From Wordpress
 	function addMagicQuotes($array)
 	{
-	    if (!is_array($array)) {
-	        echo 'Isnt array';
-	    }
 		if (!get_magic_quotes_gpc()) {
 			foreach ($array as $k => $v) {
 				if (is_array($v)) {

@@ -10,12 +10,17 @@ define('IN_XCOMIC', true);
 $xcomicRootPath = '../';
 require_once './admininitialize.php';	//Include all admin common settings
 
+//Form field variables
+$formNewUsername = 'newusername';
+$formNewPassword = 'newpassword';
+$formNewEmail = 'newemail';
+
 //Check for form submission for add user
 if (isset($_POST['submit'])) {
 		
-$username = (!empty($_REQUEST['username'])) ? $security->secureText($_REQUEST['username']) : null;
-$password = (!empty($_REQUEST['password'])) ? $security->secureText($_REQUEST['password']) : null;
-$email = (!empty($_REQUEST['email'])) ? $security->allowOnlyEmail($_REQUEST['email']) : null;
+$username=(!empty($_REQUEST[$formNewUsername])) ? $security->secureText($_REQUEST[$formNewUsername]) : NULL;
+$password=(!empty($_REQUEST[$formNewPassword])) ? $security->secureText($_REQUEST[$formNewPassword]) : NULL;
+$email=(!empty($_REQUEST[$formNewEmail])) ? $security->allowOnlyEmail($_REQUEST[$formNewEmail]) : NULL;
 
 //Check for error
 if (empty($username)) {
@@ -84,14 +89,14 @@ foreach ($result as $row) {
  <h2>Add New User</h2>
  <div class="section-body">
   <form method="post" action="">
-   <label for="username">Username:</label><br />
-   <input type="text" name="username" size="20" /><br />
+   <label for="<?php echo $formNewUsername; ?>">Username:</label><br />
+   <input type="text" name="<?php echo $formNewUsername; ?>" size="20" /><br />
 
-   <label for="password">Password:</label><br />
-   <input type="password" name="password" size="20" /><br />
+   <label for="<?php echo $formNewPassword; ?>">Password:</label><br />
+   <input type="password" name="<?php echo $formNewPassword; ?>" size="20" /><br />
 
-   <label for="email">E-mail Address:</label><br />
-   <input type="text" name="email" size="20" /><br />
+   <label for="<?php echo $formNewEmail; ?>">E-mail Address:</label><br />
+   <input type="text" name="<?php echo $formNewEmail; ?>" size="20" /><br />
 
    <p class="submit">
     <input type="submit" name="submit" value="Add New User" />

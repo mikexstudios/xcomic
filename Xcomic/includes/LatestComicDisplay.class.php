@@ -27,14 +27,15 @@ class LatestComicDisplay extends ComicDisplay
 	{
 		global $message;
 		
-		$sql = '
-		    SELECT MAX(cid)
-			FROM '.XCOMIC_COMICS_TABLE.';';
+		# [1074866] Bug with index fixed by Tom Parkison (trparky@toms-world.org)
+		# Problem was pinpointed to MAX() SQL call requiring an 'AS cid' after MAX().
+		$sql = 'SELECT MAX(cid) AS cid
+			FROM '.XCOMIC_COMICS_TABLE;
+			
 	    $result = $this->dbc->getOne($sql);
 		//Make the changes happen
 		if (PEAR::isError($result)) {
-			#$message->error('Unable to get latest comic id');
-            die('Unable to get latest comic id');
+			echo 'No comic found!';
 		}
 		
 		//Return latest comic id

@@ -34,15 +34,19 @@ class NewsDisplay
 		global $message;
 
 		$sql = '
-		    SELECT
-		        id, title, date, username, content
+			SELECT id, title, date, username, content
 			FROM '.XCOMIC_NEWS_TABLE." 
 			WHERE id $idOperator $inId
 			ORDER BY id $inOrderBy";
 		$result = $this->dbc->getRow($sql);
+		
+		//Suppress error message if user never posts any news.
+		//There should be a better workaround to this however.
+		/* 
 		if (PEAR::isError($result)) {
-			echo 'Unable to get latest news info. SQL: '.$sql;
+			echo 'Unable to obtain news.';
 		}
+		*/
 		
 		return $result;		
 	}

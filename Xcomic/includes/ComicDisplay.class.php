@@ -41,15 +41,22 @@ class ComicDisplay
 		global $db, $message;
 		
 		$sql = '
-		    SELECT
-		        cid, title, filename, date
+			SELECT cid, title, filename, date
 			FROM '.XCOMIC_COMICS_TABLE." 
 			WHERE cid $idOperator $inCid
-			ORDER BY cid $inOrderBy";
+			ORDER BY cid $inOrderBy
+			";
 		$result = $this->dbc->getRow($sql);
+		
+		//Suppress error message since legitimate calls to queryComicInfo
+		//can return no results which are interpreted as an error. There
+		//should be a better workaround for this however.
+		//Note: This only happens for when cid is 1 or the latest.
+		/* 
 		if (PEAR::isError($result)) {
-			echo 'Unable to get latest comic info';
+			echo 'Unable to obtain comic information.';
 		}
+		*/
 		
 		return $result;
 	}

@@ -73,7 +73,7 @@ echo '<?xml version="1.0" encoding="UTF-8">';
   <div id="page">
    <div id="header">
     <div id="headerimg">
-     <h1><a href="asdf" title="asdf">Xcomic</a></h1>
+     <h1><a href="./index.php" title="asdf">Xcomic</a></h1>
      <div class="description">a webcomic about stuff</div>
     </div>
    </div>
@@ -97,7 +97,7 @@ echo '<?xml version="1.0" encoding="UTF-8">';
      ?>
 	<br />
 	<div id="comic-functions">
-		<?php $xcomic->getComicNavCode(); ?>
+		<?php $xcomic->getComicNavCode(); //Will make two calls to queryComicInfo. Hence the double messages.?>
 	</div>
 	<?php $xcomic->getNewsCode('default'); ?>
     <!-- End div for id content -->

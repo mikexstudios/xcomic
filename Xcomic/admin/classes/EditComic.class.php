@@ -58,8 +58,9 @@ class EditComic
 		global $xcomicRootPath, $classEx, $message;
 		
 		//Create a PostComic object and save the new file through that object
-		include_once $xcomicRootPath.'admin/classes/PostComic.'.$classEx;
-		$postComic = new PostComic($this->dbc, $inNewFile);
+		//include_once $xcomicRootPath.'admin/classes/Comic.'.$classEx;
+		include_once './classes/Comic.'.$classEx;
+		$postComic = new Comic($this->dbc, $inNewFile);
 		if ($postComic->saveFile()) { //If successful
 			//Delete image for current cid first before
 			//the new filename is written to database.
