@@ -17,7 +17,7 @@
 <meta name="author" content="David Kerkeslager" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<link rel="stylesheet" type="text/css" href="templates/default/layout.css" title="standard layout" media="screen" />
+<link rel="stylesheet" type="text/css" href="styles/kubrick/layout.css" title="standard layout" media="screen" />
 
 <style type="text/css" media="screen">
 
@@ -26,10 +26,10 @@
 				and not in the wp-layout.css file. If you prefer to use only CSS for colors and what
 				not, then go right ahead and delete the following lines, and the image files. */
 			
-			body	 	{ background: url("templates/default/images/kubrickbgcolor.jpg"); }				
-			#page		{ background: url("templates/default/images/kubrickbg.jpg") repeat-y top; border: none; } 			
-			#header 	{ background: url("templates/default/images/kubrickheader.jpg") no-repeat bottom center; }
-			#footer 	{ background: url("templates/default/images/kubrickfooter.jpg") no-repeat bottom; border: none;}
+			body	 	{ background: url("styles/kubrick/images/kubrickbgcolor.jpg"); }				
+			#page		{ background: url("styles/kubrick/images/kubrickbg.jpg") repeat-y top; border: none; } 			
+			#header 	{ background: url("styles/kubrick/images/kubrickheader.jpg") no-repeat bottom center; }
+			#footer 	{ background: url("styles/kubrick/images/kubrickfooter.jpg") no-repeat bottom; border: none;}
 			
 			
 			/*	Because the template is slightly different, size-wise, with images, this needs to be set here
@@ -45,7 +45,7 @@
 			directory. Dimensions should be at least 760px x 200px. Anything above that will
 			get cropped off of the image. */
 		
-		#headerimg 	{ background: url('templates/default/images/personalheader.jpg') no-repeat top;}
+		#headerimg 	{ background: url('styles/kubrick/images/personalheader.jpg') no-repeat top;}
 		
 	</style>
 

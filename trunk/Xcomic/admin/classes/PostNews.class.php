@@ -18,23 +18,20 @@ class PostNews {
 	
 	var $title;
 	var $content;
-	var $category; //left or right
 	var $username;
 	
-	function PostNews($inContent, $inTitle, $inCategory='default', $inUsername) {
+	function PostNews($inContent, $inTitle, $inUsername) {
 		$this->content = $inContent;
 		$this->title = $inTitle;
-		$this->category = $inCategory;
 		$this->username = $inUsername;
 	}
 	
 	function sendToDatabase() {
 		global $xcomicDb;
 		
-		$sql='INSERT INTO '.XCOMIC_NEWS_TABLE." (title , category, date, username, content)
+		$sql='INSERT INTO '.XCOMIC_NEWS_TABLE." (title , date, username, content)
 			VALUES ( 
 				'$this->title', 
-				'$this->category', 
 				".time().", 
 				'$this->username',
 				'$this->content'

@@ -28,9 +28,6 @@ class PostComic {
 		//echo $inComicFile['tmp_name'];
 		$this->title = $inTitle;
 		
-		//Display message with admin templates
-		$message->setAdmin(true);
-		
 		//Make sure directory exists
 		if (!is_dir($this->comicDir)) {
 			$message->error($this->comicDir.' directory doesn\'t exist');

@@ -29,13 +29,12 @@ class LatestNewsDisplay extends NewsDisplay {
 		global $xcomicDb, $message;
 		
 		$sql = 'SELECT MAX(id)
-			FROM '.XCOMIC_NEWS_TABLE.'
-			WHERE category = "'.$this->category.'";';
+			FROM '.XCOMIC_NEWS_TABLE;
 			
 		//Make the changes happen
 		if(!($result = $xcomicDb->sql_query($sql)))
 		{
-			$message->error('Unable to get latest news id');
+			echo 'Unable to get latest news id. SQL: '.$sql;
 		}
 		
 		//Get the result (only one)
