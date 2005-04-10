@@ -30,8 +30,7 @@ class ComicDisplay
 		//$this->comicsDir = $xcomicRootPath.COMICS_DIR;
 		
 		if ($inCid != null) {
-			$this->cid = $inCid;
-			$this->getComicInfo($inCid);
+			$this->setCurrentComicId($inCid);
 		}
 	
 	}
@@ -64,14 +63,16 @@ class ComicDisplay
 	function getComicInfo($inCid)
 	{	
 		//Set this to current comic id
-		$this->cid = $inCid;
+		//$this->cid = $inCid;
 		
 		$this->comicInfo = $this->queryComicInfo($inCid);	
 	}
 	
 	function setCurrentComicId($inCid)
 	{
-		$this->cid = $inCid;		
+		$this->cid = $inCid;
+		//Update comic information for this new cid
+		$this->getComicInfo($this->cid);			
 	}
 	
 	function nextId()
