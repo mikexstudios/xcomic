@@ -20,7 +20,7 @@ class LatestComicDisplay extends ComicDisplay
 	function LatestComicDisplay(&$dbc)
 	{
 		$this->ComicDisplay($dbc);
-		$this->getComicInfo($this->getLatestComicId());
+		$this->setCurrentComicId($this->getLatestComicId());
 	}
 	
 	function getLatestComicId()

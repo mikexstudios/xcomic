@@ -22,7 +22,7 @@ class Xcomic {
     function Xcomic(&$dbc) {
         $this->dbc =& $dbc;
         //Create security object
-        $this->security = new Security($dbc);
+        $this->security = new Security($this->dbc);
 
         $this->cid = (!empty($_REQUEST[IN_CID])) ? $this->security->allowOnlyNumbers($_REQUEST[IN_CID]) : NULL; //Default to NULL
 
@@ -51,32 +51,11 @@ class Xcomic {
 		$comicTitle = $this->comicDisplay->getTitle();
 		return '<div id="comic"><img src="' . $comicImageUrl . '" alt="' . $this->security->removeMagicQuotes($comicTitle) . '" /></div>';	
 	}
-
-	function selectNewsDisplay() {
-		global $xcomicRootPath;
-		
-		//If cid is defined, use ComicAssociatedNewsDisplay
-		//Otherwise, use LatestNewsDisplay
-		if (!empty($this->cid)) {
-			include_once $xcomicRootPath.'includes/ComicAssociatedNewsDisplay.class.php'; //Also includes NewsDisplay
-			$this->newsDisplay = new ComicAssociatedNewsDisplay($this->dbc, $this->cid);
-		} else {
-			include_once $xcomicRootPath.'includes/LatestNewsDisplay.class.php'; //Also includes NewsDisplay
-			$this->newsDisplay = new LatestNewsDisplay($this->dbc);
-		}
-					
-	}
 	
 	function getNewsCode() {
-		global $xcomicRootPath, $settings;
+		global $xcomicRootPath;
 		
 		//Display variables
-		/*
-		$consoleLink = '';
-		$consoleImageUrl = '';
-		$consoleImageWidth = '';
-		$consoleImageHeight = '';
-		*/
 		$newsTitle = '';
 		$newsDate = '';
 		$newsTime = '';
@@ -85,50 +64,50 @@ class Xcomic {
 		$newsContent = '';
 		
 		//Create NewsDisplay object depending on cid
-		$this->selectNewsDisplay();
-		
-		//Create UserInformation Object
-		include_once $xcomicRootPath.'includes/UserInformation.class.php';
-		$userInfo = new UserInformation($this->dbc, $this->newsDisplay->getUsername());
-		
-		//If user is deleted, their email could be blank. Therefore, we set
-		//email to a blank string
-		$userEmail = $userInfo->getEmail();
-		if (empty($userEmail)) {
-			$userEmail = '';
-		}
+		//There used to be a separate LatestNewsDisplay class, but that has been merged into
+		//the ComicAssociatedNewsDisplay class
+		include_once($xcomicRootPath.'includes/ComicAssociatedNewsDisplay.class.php'); //Also includes NewsDisplay
+		$this->newsDisplay = new ComicAssociatedNewsDisplay($this->dbc, $this->comicDisplay->getId());
 
-		//Set variables
-		/*
-		$consoleLink = '';
-		$consoleImageUrl = '';
-		$consoleImageWidth = '275';
-		$consoleImageHeight = '275';
-		*/
-		$newsTitle = $this->newsDisplay->getTitle();
-		$newsDate = date('l - F jS, Y', $this->newsDisplay->getDate()); //ex. Wednesday - March 15th, 2004
-		$newsTime = date('G:i:s', $this->newsDisplay->getDate());
-		$newsUserEmail = $userEmail;
-		$newsUsername = $this->newsDisplay->getUsername();
-		$newsContent = $this->newsDisplay->getContent();
+		//Create UserInformation Object
+		include_once($xcomicRootPath.'includes/UserInformation.class.php');
+		$userInfo = new UserInformation($this->dbc);
 		
-		# Empty News Error fixed by Tom Parkison (trparky@toms-world.org)
-		if ($newsContent != '') { //If news exists, then display
+		//News number counter
+		do {
+			//Set variables
+			$newsTitle = $this->newsDisplay->getTitle();
+			$newsDate = date('l - F jS, Y', $this->newsDisplay->getDate()); //ex. Wednesday - March 15th, 2004
+			$newsTime = date('G:i:s', $this->newsDisplay->getDate());
+			$newsUsername = $this->newsDisplay->getUsername();
+			$newsContent = $this->newsDisplay->getContent();
+			
+			//Query user info
+			$userInfo->getUserInfo($newsUsername);
+			
+			//If user is deleted, their email could be blank. Therefore, we set
+			//email to a blank string
+			$userEmail = $userInfo->getEmail();
+			if(empty($userEmail)) {
+				$userEmail = '';
+			}
+			$newsUserEmail = $userEmail;
+
+			
+			# Empty News Error fixed by Tom Parkison (trparky@toms-world.org)
+			if ($newsContent != '') { //If news exists, then display
 ?>
-<!--
-<div class="console">
-<a href="{CONSOLE_LINK}"><img src="{CONSOLE_IMAGE_URL}" width="{CONSOLE_IMAGE_WIDTH}" height="{CONSOLE_IMAGE_HEIGHT}"></a>
-</div>
--->
 <div class="post">
- <h2><?php echo $newsTitle; ?></h2>
- <small>On <?php echo $newsDate; ?> <?php echo $newsTime; ?> by <a href="mailto:<?php echo $newsUserEmail; ?>"><?php echo $newsUsername; ?></a></small> 
- <div class="entry">
-  <?php echo $this->security->removeMagicQuotes($newsContent); ?>
- </div>
+	<h2><?php echo $newsTitle; ?></h2>
+
+	<small>On <?php echo $newsDate; ?> <?php echo $newsTime; ?> by <a href="mailto:<?php echo $newsUserEmail; ?>"><?php echo $newsUsername; ?></a></small> 
+	<div class="entry">
+	<?php echo $this->security->removeMagicQuotes($newsContent); ?>
+	</div>
 </div>
 <?php
-		} //End newsContent empty check		
+			} //End newsContent empty check
+		} while($this->newsDisplay->updateForNextId());
 	}
 
 	function getComicNavCode() {

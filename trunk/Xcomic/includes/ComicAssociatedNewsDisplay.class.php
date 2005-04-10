@@ -19,67 +19,123 @@ class ComicAssociatedNewsDisplay extends NewsDisplay
 {
 	
 	var $comicDisplay;
-
-	function ComicAssociatedNewsDisplay(&$dbc, $inCid, $inCategory = 'default')
+	var $associatedNewsIds; //Array of news ids associated with the currentCid
+	var $curAssociatedNewsId=0; //Focused nid
+	var $currentCid;
+	
+	function ComicAssociatedNewsDisplay(&$dbc, $inCid='')
 	{
-		$this->NewsDisplay($dbc, $inCategory);
+		$this->NewsDisplay($dbc);
 		
-		//Create ComicDisplay object
-		$this->comicDisplay = new ComicDisplay($dbc, $inCid);
-		
-		$this->getNewsInfo($this->getAssociatedNewsId(), $inCategory);
+		if(!empty($inCid))
+		{
+			//Create ComicDisplay object
+			$this->comicDisplay = new ComicDisplay($dbc, $inCid);
+			$this->associateNews();
+		}
 		
 	}
 	
-	function getAssociatedNewsId()
-	{
-		global $message;
+	function setCid($inCid) {
+		$this->currentCid = $inCid;
+		$this->comicDisplay->setCurrentComicId($inCid);
+	}
+	
+	function associateNews() {
+		$this->getAssociatedNewsIds();
+		
+		//If next news id does not exist, display the last
+		//most recent news. This replaces the LatestNewsDisplay class
+		$nextNid = $this->getNextAssociatedNewsId();
+		if($nextNid)
+		{
+			$this->getNewsInfo($nextNid);
+		}
+		else
+		{
+			//Set to previous comic id
+			$this->setCid($this->comicDisplay->prevId());
+			$this->getAssociatedNewsIds();
+			$this->getNewsInfo($this->getNextAssociatedNewsId());
+		}	
+	}
+	
+	function getAssociatedNewsIds($order='ASC') {
+		global $xcomicDb, $message;
 		
 		//comicDate holds *nix timestamp
 		$comicDate = $this->comicDisplay->getDate();
 		
-		//Get the latest news id at the date of
-		//the comic or earlier. We assume here that
-		//the higher the id, the more recent it is.
-		$sql = '
-		    SELECT MAX(id)
+		//Get the news id associated with a comic
+		$sql = 'SELECT id
 			FROM '.XCOMIC_NEWS_TABLE."
-			WHERE date <= '$comicDate'";
+			WHERE date >= '$comicDate'";
+		
+		//Get the date of the next comic (if exists)
+		$nextCid = $this->comicDisplay->nextId();
+		if($nextCid) //A next comic exists
+		{
+			$this->comicDisplay->setCurrentComicId($nextCid);
+			$this->comicDisplay->getComicInfo($nextCid);
+			$nextComicDate = $this->comicDisplay->getDate();
 			
-		$result = $this->dbc->getOne($sql);
+			//Add to SQL query
+			$sql .= " AND date < '$nextComicDate'";
+		}
+		
+		//Add sorting
+		$sql .= " ORDER BY id $order"; //Should make this variable
+		
+		//Make the changes happen
+		$result = $this->dbc->getAll($sql);
 		if (PEAR::isError($result)) {
-			echo 'Unable to get the latest news id associated with the selected comic. SQL: '.$sql;
+			echo 'Unable to get the news ids associated with the selected comic.';
 			exit;
 		}
 		
-		//BELOW: QUICK FIXES FOR NEWS DISPLAY. THERE SHOULD BE A BETTER WAY
-		//TO SYNC COMIC WITH NEWS
+		//Place associated id(s) in array. Note: Do NOT send null values into 
+		//the associatedNewsIds array (since this will mess up getNextAssociatedNewsId()
+		//Forunately, the foreach loop takes care of this.
+		foreach ($result as $row) {
+			$this->associatedNewsIds[] = $row['id'];
+			//print_r($this->associatedNewsIds);
+		}
 
-		//Fix for cid=1: $result would be empty so the next id wouldn't exist
-		if (empty($result)) {
-			$result = 1;
-			 //Set the current news id to less than 0 so that it will search for news
-			 //that is >= 0
-			$this->setCurrentNewsId($result - 1);
-			return $this->nextId();
-		}
+	}
+	
+	function getNextAssociatedNewsId() {
 		
-		//Since the comic is posted before the news is, we want to return the news
-		//post after the comic. This isn't the best way to do this, but it's alright
-		//for now.
-		$this->setCurrentNewsId($result);
-		if ($this->nextId() != false) {	
-			return $this->nextId();
+		$nid = $this->associatedNewsIds[$this->curAssociatedNewsId];
+		if(isset($nid))
+		{
+			$this->curAssociatedNewsId++;
+			return $nid;
 		}
-        return $result;
+		else
+		{
+			return false;
+		}	
+	}
+	
+	//Called by Xcomic.php in the news generating loop to that the next news
+	//entry is in focus.
+	function updateForNextId() {
+		$nextId = $this->getNextAssociatedNewsId();
+		if($nextId)
+		{
+			$this->getNewsInfo($nextId);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	
 }
 
 /*
 //Testing LatestNewsDisplay
-$x = new ComicAssociatedNewsDisplay('1');
-echo $x->getTitle();
-echo $x->getContent();
+
 */
 ?>
