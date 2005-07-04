@@ -109,12 +109,16 @@ class Security
 	function addMagicQuotes($array)
 	{
 		if (!get_magic_quotes_gpc()) {
-			foreach ($array as $k => $v) {
-				if (is_array($v)) {
-					$array[$k] = $this->addMagicQuotes($v);
-				} else {
-					$array[$k] = addslashes($v);
+			if (is_array($array)) {
+				foreach ($array as $k => $v) {
+					if (is_array($v)) {
+						$array[$k] = $this->addMagicQuotes($v);
+					} else {
+						$array[$k] = addslashes($v);
+					}
 				}
+			}else{
+				$array = addslashes($array);
 			}
 			return $array;
 		} else {
