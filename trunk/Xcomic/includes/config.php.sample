@@ -6,13 +6,14 @@
 
 $dbms = 'mysql'; //Database type
 
-$xcomicDbHost = 'localhost'; //Database host
-$xcomicDbName = 'xcomic'; //Database name
-$xcomicDbUser = 'xcomicuser'; //Database user
-$xcomicDbPassword = 'password'; //Database password
+$dbHost = 'localhost'; //Database host
+$dbName = 'xcomicdb'; //Database name
+$dbUser = 'xcomicuser'; //Database user
+$dbPasswd = 'password'; //Database password
 
-$tablePrefix = 'xcomic_'; //Prefix for creating the tables
+$table_prefix = 'xcomic_'; //Prefix for creating the tables
 
 define('XCOMIC_INSTALLED', true);
 
+define('USE_XCOMIC_PEAR', false); // You should always leave this false unless you know what you're doing
 ?>

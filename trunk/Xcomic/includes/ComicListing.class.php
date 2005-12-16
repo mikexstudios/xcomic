@@ -16,19 +16,22 @@ class ComicListing {
 	
 	var $allComicInfo; //Holds all comic info records
 	var $dbc;
+	var $ignoredate;
 
-	function ComicListing(&$dbc) {
+	function ComicListing(&$dbc, $ignoredate = false) {
         if (DB::isConnection($dbc)) {
             $this->dbc =& $dbc;
         }
+        $this->ignoredate = $ignoredate;
 	}
-	
+
 	function queryComicInfo() {
 		global $message;
 		
 		$sql = '
 			SELECT cid, title, filename, date
-			FROM '.XCOMIC_COMICS_TABLE;
+			FROM '.XCOMIC_COMICS_TABLE.
+            (!$this->ignoredate ? (' WHERE date <= '.time()) : '');
 		$result = $this->dbc->getAll($sql);
 		if (PEAR::isError($result)) {
 			#$message->error('Unable to get comic information');

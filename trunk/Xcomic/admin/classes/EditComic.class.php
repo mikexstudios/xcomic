@@ -32,7 +32,7 @@ class EditComic
 		*/
 
 	}
-	
+
 	function setCid($inCid)
 	{
 		$this->cid = $inCid;	
@@ -70,11 +70,11 @@ class EditComic
 
 	function changeFile($inNewFile)
 	{
-		global $xcomicRootPath, $classEx, $message;
+		global $xcomicRootPath, $message;
 		
 		//Create a PostComic object and save the new file through that object
-		//include_once $xcomicRootPath.'admin/classes/Comic.'.$classEx;
-		include_once './classes/Comic.'.$classEx;
+		//include_once $xcomicRootPath.'admin/classes/Comic.class.php';
+		include_once $xcomicRootPath.'classes/Comic.class.php';
 		$postComic = new Comic($this->dbc, $inNewFile);
 		if ($postComic->saveFile()) { //If successful
 			//Delete image for current cid first before
@@ -98,16 +98,14 @@ class EditComic
 		}
 		return false; //Failed
 	}
-	
-	//TO DO: Add change of date/time
-	
+
 	function deleteFile()
 	{
-		global $xcomicRootPath, $classEx, $message;
+		global $xcomicRootPath, $message;
 		
 		//Get filename for current cid------
-		include_once $xcomicRootPath.'includes/ComicDisplay.'.$classEx;
-		$comicInformation = new ComicDisplay($this->dbc, $this->cid);
+		include_once $xcomicRootPath.'includes/Comic.class.php';
+		$comicInformation = new Comic($this->dbc, $this->cid);
 		$currentComicFilename = $comicInformation->getFilename();
 		//----------------------------------
 		

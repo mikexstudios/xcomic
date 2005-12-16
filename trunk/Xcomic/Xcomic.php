@@ -1,196 +1,275 @@
 <?php
 /**
-Xcomic
+ * Xcomic - Comic Management Script
+ *
+ * $Id$
+ */
 
-$Id$
-*/
+/**
+ * Reference to the Xcomic class. Just declaring it first.
+ *
+ * Used to set an external reference to the Xcomic class. Allows
+ * nested functions and outside functions to access the instance
+ * of the Xcomic class.
+ *
+ * @global reference $xcomic
+ */
+$xcomic = null;
 
-define('IN_XCOMIC', true);
-
-//$xcomicRootPath='./'; //define in file that calls this file
-require_once $xcomicRootPath.'initialize.php';	//Include all page common settings
-include_once $xcomicRootPath.'includes/Security.'.$classEx;
-include_once $xcomicRootPath.'includes/LatestComicDisplay.class.php'; //Also includes ComicDisplay
-
+/**
+ * The core class of the Xcomic system. 
+ *
+ * Pulls together the base classes and loads the actions (plugin) system for 
+ * the rest of the script to use. This is meant to be small and very extensible.
+ */
 class Xcomic {
-    var $comicDisplay;
-    var $newsDisplay;
-    var $security;
-    var $cid;
-    var $dbc;
+	var $cid;
+	var $actions = array();
 
-    function Xcomic(&$dbc) {
-        $this->dbc =& $dbc;
-        //Create security object
-        $this->security = new Security($this->dbc);
+	// {{{ Classes objects
+     /**#@+
+     * @access public
+     * @var object
+     */
+     var $dbc;
+	var $security; //Pretty much useless at the moment
+	var $comic;
+	var $news;
+	var $user;
+	var $plugins;
+	var $pages;
+	/**#@-*/
+	// }}}
 
-        $this->cid = (!empty($_REQUEST[IN_CID])) ? $this->security->allowOnlyNumbers($_REQUEST[IN_CID]) : NULL; //Default to NULL
-
-		if (empty($this->cid)) {
-			//Latest comic
-			$this->comicDisplay = new LatestComicDisplay($this->dbc);
-		} else {
-			$this->comicDisplay = new ComicDisplay($this->dbc, $this->cid);
-		}    
-    }
-
-    function getComicTitle() {
-        return '<div id="comictitle">' . $this->security->removeMagicQuotes($this->comicDisplay->getTitle()) .' </div>';
-    }
-
-	function getImageCode() {
-		global $message, $settings;
+	/**
+	 * Constructor for the Xcomic class.
+	 *
+	 * Takes a database reference as the only parameter. Therefore, a database
+	 * object must be created first. This constructor also calls some private
+	 * methods that sets up Xcomic's actions system and obtains the cid from
+	 * REQUEST.
+	 *
+	 * @param reference &$dbc Database (PEAR::DB) reference
+	 */
+	function Xcomic(&$dbc) {
+		//Take database reference from initialize and set to class variable.
+          if (DB::isConnection($dbc)) 
+          {
+               $this->dbc =& $dbc;
+          }
+          else 
+          {
+               die('Error: The DB reference could not be established!');
+          }
 		
-		//Check for non-existant comic
-		if ($this->comicDisplay->getTitle() == '') {
-			return 'The comic you selected does not exist!';
-		}
+		//Set external $xcomic reference so nested functions can make
+		//call methods in this class and make changes if needed.
+		$this->setExternalReference();
 		
-		//Set variables
-		$comicImageUrl = COMICS_DIR.'/'.$this->comicDisplay->getFilename();
-		$comicTitle = $this->comicDisplay->getTitle();
-		return '<div id="comic"><img src="' . $comicImageUrl . '" alt="' . $this->security->removeMagicQuotes($comicTitle) . '" /></div>';	
+		//Get input (This might be better if cid was input through a function instead)...
+		//Can't run input cid through security yet since it was not constructed yet! Will
+		//secure cid before constructing class, however.
+		$this->cid = (!empty($_REQUEST[IN_CID])) ? $_REQUEST[IN_CID] : null; //Default to NULL
+
+		$this->loadAndAssociateCoreClasses();
+		
+		//$this->loadFilesInDirectory('xc-plugins/', '.plugin.php');
+		$this->plugins->registerPlugins();
+	}
+		
+	/**
+	 * Sets an external global variable to $this (reference to this class).
+	 *
+	 * Since the actions functions are being loaded inside the loadFilesInDirectory()
+	 * method of this class, they are functions existing inside another function. Therefore
+	 * they cannot access the $this reference to this class. To work around this problem,
+	 * an external global variable, $xcomic, is used to reference $this. This method
+	 * sets the external, global variable.
+	 *
+	 * @access private
+	 */
+	function setExternalReference() {
+		
+		//As described by the PHP manual (http://www.php.net/manual/en/language.references.whatdo.php)
+		//one cannot just assign a reference inside a function to a global variable like:
+		//global $var; $var =& $this;
+		//since $var is a reference to $GLOBALS[] array.
+		$GLOBALS['xcomic'] =& $this;
+	}
+
+	/**
+	 * Loads and constructs core Xcomic class (Comic, News, etc.).
+	 *
+	 * These core classes provide all the methods that can be used to access
+	 * the database. Perhaps the core classes can be replaced by pure actions
+	 * but that would destroy the elegancy of the classes in favor of architecture.
+	 *
+	 * @access private
+	 */
+	function loadAndAssociateCoreClasses() {
+		//Security class - used to make sure that input text is secure.
+		include_once 'includes/Security.class.php';
+		$this->security = new Security($this->dbc);
+		
+		//Comic class
+		//Secure input cid:
+		$this->cid = $this->security->allowOnlyNumbers($this->cid);
+		include_once 'includes/Comic.class.php';
+		$this->comic = new Comic($this->dbc, $this->cid); //If cid is not set, it should be null
+		
+		//News class
+		//include_once 'includes/News.class.php';
+		//$this->news = new News($this->dbc, $this->cid); //If cid is not set, it should be null
+		include_once 'includes/ComicAssociatedNews.class.php';
+		$this->news = new ComicAssociatedNews($this->dbc, $this->comic->getId());
+		
+		//User class
+		include_once 'includes/UserInformation.class.php';
+		$this->user= new UserInformation($this->dbc);
+		
+		include_once 'includes/Plugin.class.php';
+		include_once 'includes/PluginRegistry.class.php';
+		$this->plugins = new PluginRegistry($this->dbc);
+
+		include_once 'includes/StaticPages.class.php';
+		$this->pages = new StaticPages($this->dbc);
 	}
 	
-	function getNewsCode() {
-		global $xcomicRootPath;
-		
-		//Display variables
-		$newsTitle = '';
-		$newsDate = '';
-		$newsTime = '';
-		$newsUserEmail = '';
-		$newsUsername = '';
-		$newsContent = '';
-		
-		//Create NewsDisplay object depending on cid
-		//There used to be a separate LatestNewsDisplay class, but that has been merged into
-		//the ComicAssociatedNewsDisplay class
-		include_once($xcomicRootPath.'includes/ComicAssociatedNewsDisplay.class.php'); //Also includes NewsDisplay
-		$this->newsDisplay = new ComicAssociatedNewsDisplay($this->dbc, $this->comicDisplay->getId());
+	//The following are part of Xcomic's new extensible features. Code based off of
+	//Wordpress (http://www.wordpress.org).
+	
+	/**
+	 * Scans the specified directory and includes all files in that directory. 
+      *
+	 * This is intended for loading actions with each action file registering 
+	 * themselves with registerAction().
+	 *
+	 * @access private
+	 * @param string $inDir Directory of files to be loaded. NOTE: The directory should be input with the trailing slash.
+	 * @param string $ext the extention of files to be loaded (defaults to '.php')
+	 */
+	function loadFilesInDirectory($inDir, $ext = '.php') {
+		//Declare global here so that all of the action/included
+		//files do not have to do so.
+		global $xcomic;
 
-		//Create UserInformation Object
-		include_once($xcomicRootPath.'includes/UserInformation.class.php');
-		$userInfo = new UserInformation($this->dbc);
-		
-		//News number counter
-		do {
-			//Set variables
-			$newsTitle = $this->newsDisplay->getTitle();
-			$newsDate = date('l - F jS, Y', $this->newsDisplay->getDate()); //ex. Wednesday - March 15th, 2004
-			$newsTime = date('G:i:s', $this->newsDisplay->getDate());
-			$newsUsername = $this->newsDisplay->getUsername();
-			$newsContent = $this->newsDisplay->getContent();
-			
-			//Query user info
-			$userInfo->getUserInfo($newsUsername);
-			
-			//If user is deleted, their email could be blank. Therefore, we set
-			//email to a blank string
-			$userEmail = $userInfo->getEmail();
-			if(empty($userEmail)) {
-				$userEmail = '';
-			}
-			$newsUserEmail = $userEmail;
-
-			
-			# Empty News Error fixed by Tom Parkison (trparky@toms-world.org)
-			if ($newsContent != '') { //If news exists, then display
-?>
-<div class="post">
-	<h2><?php echo $newsTitle; ?></h2>
-
-	<small>On <?php echo $newsDate; ?> <?php echo $newsTime; ?> by <a href="mailto:<?php echo $newsUserEmail; ?>"><?php echo $newsUsername; ?></a></small> 
-	<div class="entry">
-	<?php echo $this->security->removeMagicQuotes($newsContent); ?>
-	</div>
-</div>
-<?php
-			} //End newsContent empty check
-		} while($this->newsDisplay->updateForNextId());
-	}
-
-	function getComicNavCode() {
-		global $xcomicRootPath, $classEx, $settings;	
-		
-		//Display variables
-		$prevComicLink = '';
-		$prevComicText = '';
-		$nextComicLink = '';
-		$nextComicText = '';
-		$comicOptionListCode=''; //Holds HTML for drop down
-		$comicDropdownHeader = 'Archives';
-		
-		if ($this->comicDisplay->prevId() === false) {
-			$prevComicLink = '';
-			$prevComicText = '';
-		} else {
-			$prevComicLink = $settings->getSetting('baseUrl').$_SERVER["PHP_SELF"].'?cid='.$this->comicDisplay->prevId();
-			$prevComicText = '< Previous';
-		}
-		
-		if ($this->comicDisplay->nextId() === false) {
-			$nextComicLink = '';
-			$nextComicText = '';
-		} else {
-			$nextComicLink = $settings->getSetting('baseUrl').$_SERVER["PHP_SELF"].'?cid='.$this->comicDisplay->nextId();
-			$nextComicText = 'Next >';
-		}
-				
-		//Generate drop down box ---------------------
-		include_once $xcomicRootPath.'includes/ComicListing.class.php';
-		$listComics = new ComicListing($this->dbc);
-		$comicsList = $listComics->getComicList(); //Array of comic listings
-		$numComics = $listComics->numComics(); //Number of elements in that array
-
-		//Since $comicsList is in ascending order. We want the most recent comic first
-		//Therefore, set the for loop counting backwards
-		for($comicCount = $numComics-1; $comicCount >= 0 ; $comicCount--)
+		if ($handle = opendir($inDir)) 
 		{
-			$comicOptionListCode .= '<option value="'.$comicsList[$comicCount]['cid'].'">'.date('Y-m-d', $comicsList[$comicCount]['date']).' ['.$comicsList[$comicCount]['cid'].'] '.$this->security->removeMagicQuotes($comicsList[$comicCount]['title'])."</option>\n";
-		}
-		//--------------------------------------------
-		
-		//Display page
-?>
-<ul class="comicnav comicnav-left">
-<li class="comicnav-link"><a href="<?php echo $prevComicLink; ?>"><?php echo $prevComicText; ?></a></li>
-</ul>
-
-<ul class="comicnav comicnav-right">
-	<li class="comicnav-link"><a href="<?php echo $nextComicLink; ?>"><?php echo $nextComicText; ?></a></li>
-</ul>
-
-<form class="comicdropdown-form" action="" method="post">
-<script language="javascript">
-<!--
-	//From MegaTokyo (http://www.megatokyo.com)
-        function StripJump(cid)        {
-                if (cid != '')  {
-                        top.location.href = "<?php echo $_SERVER['PHP_SELF']; ?>" + "?cid=" + cid;
+			//Need the !== so that directories called '0' don't break the loop
+			while (false !== ($file = readdir($handle)))
+			{
+			    if (is_dir($inDir.$file))
+			    {
+                    if ($file != '.' && $file != '..')
+                        $xcomic->loadFilesInDirectory($inDir.$file); // Recurse subdirectories
+                    continue;
                 }
-        }
-//-->
-</script>
-<select onchange="StripJump(this.options[selectedIndex].value);" name="cid"> 
-<option value="" selected="selected"><?php echo $comicDropdownHeader; ?></option> 
-<?php echo $comicOptionListCode; ?>
-</select>
-</form>
-<?php
+				if (strpos($file, $ext) !== false) // Only php files, for safety.
+				{
+					include_once($inDir.$file);
+				}
+			}
+			closedir($handle); 
+		}
+	}
+
+	/**
+	 * Registers a function with the core so that it can be called
+	 * by a tag later during script execution. Useful for template
+	 * purposes.
+	 *
+	 * @access public
+	 * @param string $tag Short variable-like name to associate with the function such as 'getimagetag'.
+	 * @param string $functionName Function (that exists) to be registered such as 'getImageTag()'.
+	 */
+	function registerAction($tag, $functionName) {
+		
+		//Check for existing action. Match tags.
+		foreach($this->actions as $actionName=>$actionFunction)
+		{
+			if($tag == $actionName)
+			{
+				//Error
+				echo 'Error: '.$tag;
+				return;
+			}
+		}
+		
+		//Add new action to actions array
+		$this->actions[$tag] = $functionName;  
 
 	}
 	
-	function getExecutionTime() {
-		global $xcomicStartTime;
+	/**
+	 * Executes the function associated with the tag.
+	 *
+	 * @access public
+	 * @param string $tag Short variable-like name associated with a function such as 'getimagetag'.
+	 * @param mixed $arg1,... Optional arguments that are associated with the tag.
+	 * @return mixed Returns whatever the function associated to the tag returns. Could possibly be nothing.
+	 */
+	function doAction($tag) {
+		$args = array_slice(func_get_args(), 1); //Get all arguments after the first one ($tag).
 
-		//Calculate the time needed to execute the script
-		$xcomicEndTime = strtok(microtime(), " ") + strtok(" ");
-		$executionTime = $xcomicEndTime-$xcomicStartTime;
+		//Check to see if tag exists
+		if ((is_string($this->actions[$tag]) && !function_exists($this->actions[$tag])) ||
+            (is_array($this->actions[$tag]) && !method_exists($this->actions[$tag][0], $this->actions[$tag][1])))
+		{
+		  echo "Error: Invalid action '$tag'";
+		  return '';
+		}
+
+		//Call associated function
+		return call_user_func_array($this->actions[$tag], $args);
 		
-		//Rounded off to three places
-		echo sprintf('%01.3f', $executionTime);
 	}
+}
+
+/**
+ * An alias for $xcomic->doAction() that is used in templating
+ * so that users have an easier time using "tags". Can accept
+ * additional arguments which will be passed to ->doAction().
+ *
+ * @param string $inTag Short variable-like name associated with a function such as 'getimagetag'.
+ * @return mixed Returns whatever the function associated to the tag returns. Could possibly be nothing. Usually, expect a string.
+ */
+function get($inTag) {
+	global $xcomic;
+
+    if (func_num_args() > 1)
+    {
+        $args = func_get_args();
+        return call_user_func_array(array(&$xcomic, 'doAction'), $args);
+    }
+
+	return $xcomic->doAction($inTag);
+}
+
+/**
+ * Similar to get() as an allias for $xcomc->doAction, but prints
+ * the output rather than returning it. Can accept
+ * additional arguments which will be passed to ->doAction().
+ * 
+ * @param string $inTag Short variable-like name associated with a function such as 'getimagetag'.
+ */
+function out($inTag) {
+    global $xcomic;
+    
+    if (func_num_args() > 1)
+    {
+        $args = func_get_args();
+        echo call_user_func_array(array(&$xcomic, 'doAction'), $args);
+        return;
+    }
+
+    echo $xcomic->doAction($inTag);
+}
+
+function theme_include($file)
+{
+    global $themePath;
+    
+    include $themePath.'/'.$file;
 }
 
 ?>

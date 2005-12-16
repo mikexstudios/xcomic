@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -58,7 +59,7 @@
 <body>
 
 <h1 class="header"><img alt="Xcomic" src="http://xcomic.mikexstudios.com/css/xcomic-small.gif" /> <br />
-	a comic management system | Version 0.8.5</h1>
+	a comic management system | Version 0.9.0</h1>
 	
 <div id="wrap">
 
@@ -75,10 +76,10 @@ Please make sure that the system you plan to install Xcomic has the following:
 <ol>
 	<li>Unzip the package in an empty directory (ie. /xcomic)</li>
 	<li><code>chmod 777 includes</code> and <code>chmod 777 comics</code>.</li>
-	<li>Launch <a href="admin/install.php">/admin/install.php</a> in your browser. Enter in your database information and the URL paths to your Xcomic installation.</li>
-	<li><strong>Note the password given to you.</strong></li>
-	<li>The install script should then send you to the <a href="admin/login.php">login page</a>. Sign in with the username <code>admin</code> and the password given to you during the installation. You can then click on 'Users' to change the password.</li>
-	<li>Finally, <code>chmod 755 includes</code>. Congratulations, if everything went well, you have successfully installed Xcomic!</li> 
+	<li>Launch <a href="admin/install/">/admin/install/</a> in your browser. Enter in your database information and the URL paths to your Xcomic installation.</li>
+	<li><strong>Remember what password you use for your administrator user.</strong></li>
+	<li>The install script should then send you to the <a href="admin/login.php">login page</a>. Sign in with the username and password you chose during the installation. You can then click on 'Users' to change the password.</li>
+	<li>Finally, <code>chmod 755 includes</code>. Congratulations, if everything went well, you have successfully installed Xcomic!</li>
 
 </ol>
 
@@ -86,14 +87,15 @@ Please make sure that the system you plan to install Xcomic has the following:
 If you have trouble or errors installing Xcomic, check the following:
 <ul>
 	<li>Make sure the directories <code>includes</code> and <code>comics</code> are chmod 777 (that means world writable).</li>
-	<li>Make sure you have the correct database information. Only MySQL is officially supported in version 0.8.5</li>
+	<li>Make sure you have the correct database information. Only MySQL is officially supported in version 0.9.0</li>
 	<li>Make sure you entered the URL to Xcomic correctly.</li>
 	<li>Still having problems? <a href="http://xcomic.mikexstudios.com/forum">Get Support and Report the bug</a></li>
 </ul>
 
 <h2>Upgrading</h2>
-<p>If you are running version 0.8.0 or 0.8.1 and would like to upgrade to version 0.8.5, just replace all of the old files with the files from the new version. If you have made many modifications to your Xcomic install, grab the <a href="http://xcomic.mikexstudios.com/Download">Changed Files</a> instead and overwrite your older files.</p>
-<p>If you are (gasp) running a version of Xcomic before 0.8.0, please perform a full install of version 0.8.5 and manually port over your comic entries. <em>Would someone be willing to write an update.php script for this?</em></p>
+<p><strong>Important! Always make a backup of your files AND your database before upgrade, in case something goes wrong!</strong> Contact your web hosting provider for information on creating a backup if you do not know how.</p>
+<p>If you are running version 0.8.x and would like to upgrade to version 0.9.0, replace all of the old files with the files from the new version. You must then go to <a href="admin/install/upgrade.php">admin/install/upgrade.php</a> to finish the upgrade. The upgrade script will finalize the upgrade process.</p>
+<p>If you are (gasp) running a version of Xcomic before 0.8.0, please perform a full install of version 0.9.0 and manually port over your comic entries.</p>
 
 <h2>Online Resources</h2>
 <p>If you have any questions that aren't addressed in this document or run into problems, visit these Xcomic sites:</p>

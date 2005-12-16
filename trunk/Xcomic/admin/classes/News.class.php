@@ -19,7 +19,7 @@ class News
         } 
     }
 
-    function addNews($title, $content, $uid, $username)
+    function addNews($title, $content, $uid, $username, $date)
 	{
 		global $message;
 		
@@ -28,8 +28,8 @@ class News
 		    INSERT INTO '.XCOMIC_NEWS_TABLE.' (id, title , date, uid, username, content)
 			VALUES ( 
 			    '.$id.',
-				'.$this->dbc->quoteSmart($title).', 
-				'.time().', 
+				'.$this->dbc->quoteSmart($title).',
+				'.$date.',
 				'.$uid.',
 				'.$this->dbc->quoteSmart($username).',
 				'.$this->dbc->quoteSmart($content).'
@@ -55,13 +55,14 @@ class News
 		}
 	}
 
-    function updateNews($id, $title, $content)
+    function updateNews($id, $title, $content, $date=null)
     {
         global $message;
         
         $sql = 'UPDATE '.XCOMIC_NEWS_TABLE.' SET
                 title = '.$this->dbc->quoteSmart($title).',
-                content = '.$this->dbc->quoteSmart($content).'
+                content = '.$this->dbc->quoteSmart($content).
+                ($date != null ? (', date = '.$date) : '').'
                 WHERE id = '.$id;
         
         $result = $this->dbc->query($sql);

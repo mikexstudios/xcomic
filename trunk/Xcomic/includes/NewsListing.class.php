@@ -17,12 +17,14 @@ class NewsListing
 	
 	var $allNewsInfo; //Holds all News info records
     var $dbc;
+    var $ignoredate;
 
-	function NewsListing(&$dbc)
+	function NewsListing(&$dbc, $ignoredate = false)
 	{
         if (DB::isConnection($dbc)) {
             $this->dbc =& $dbc;
         }
+        $this->ignoredate = $ignoredate;
 	}
 	
 	function queryNewsInfo()
@@ -32,7 +34,8 @@ class NewsListing
 		$sql = '
 		    SELECT
 		        id, title, date, username, content
-			FROM '.XCOMIC_NEWS_TABLE;
+			FROM '.XCOMIC_NEWS_TABLE.
+			(!$this->ignoredate ? (' WHERE date <= '.time()) : '');
 		$result = $this->dbc->getAll($sql);
 		if (PEAR::isError($result)) {
 			#$message->error('Unable to get news information. SQL: '.$sql);
