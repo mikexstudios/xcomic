@@ -5,9 +5,10 @@ Xcomic
 $Id$
 */
 
+/*
 $xcomicRootPath = '../';
 include_once $xcomicRootPath.'initialize.php';
-
+*/
 
 //Start sessions
 session_start();
@@ -17,11 +18,11 @@ class UserManagement
     var $username, $id; //password is unencrypted
     var $md5pass;
     var $dbc;
-	
+
 	function UserManagement(&$dbc, $id = null, $inPassword = null)
 	{
 		global $message;
-		
+
         if (DB::isConnection($dbc)) {
             $this->dbc =& $dbc;
         }
@@ -182,7 +183,7 @@ class UserManagement
 	
 	function userExists() {
 		global $message;
-		
+
 		if (!isset($this->username) && !isset($this->id)) {
 		    return false;
 		}
@@ -219,9 +220,10 @@ class UserManagement
 	function authUser()
 	{
 		global $message;
-	
+		
 		//Verify that the user exists
 		if (!$this->userExists()) {
+		
 			return false;
 			
 			//The following could weaken security
@@ -251,8 +253,8 @@ class UserManagement
 	function registerSessionVariables()
 	{
 		//Set session variables
-		$_SESSION['SESSION_USERNAME'] = $this->username;
-		$_SESSION['SESSION_PASSWORD'] = $this->md5pass;
+		$_SESSION[SESSION_USERNAME] = $this->username;
+		$_SESSION[SESSION_PASSWORD] = $this->md5pass;
 	}
 	
 	function setCookies($func = 'login')
@@ -263,8 +265,8 @@ class UserManagement
 		//If logging out
 		if ($func == 'login') {
 			//Set cookies from session variables
-			setcookie(COOKIE_USERNAME, $_SESSION['SESSION_USERNAME'], time()+$cookieTime, "/");
-			setcookie(COOKIE_PASSWORD, $_SESSION['SESSION_PASSWORD'], time()+$cookieTime, "/");
+			setcookie(COOKIE_USERNAME, $_SESSION[SESSION_USERNAME], time()+$cookieTime, "/");
+			setcookie(COOKIE_PASSWORD, $_SESSION[SESSION_PASSWORD], time()+$cookieTime, "/");
 		} else {//Logout
 			//Minus the time set to logout. (Setting the time in the past)
 			setcookie(COOKIE_USERNAME, '', time()-$cookieTime, "/");
@@ -276,20 +278,20 @@ class UserManagement
 	{
 		
 		//If cookies exists, set session variables with them
-		if (!empty($_COOKIE['COOKIE_USERNAME']) && !empty($_COOKIE['COOKIE_PASSWORD'])) {
-			$_SESSION['SESSION_USERNAME'] = $_COOKIE['COOKIE_USERNAME'];
-			$_SESSION['SESSION_PASSWORD'] = $_COOKIE['COOKIE_PASSWORD'];
+		if (!empty($_COOKIE[COOKIE_USERNAME]) && !empty($_COOKIE[COOKIE_PASSWORD])) {
+			$_SESSION[SESSION_USERNAME] = $_COOKIE[COOKIE_USERNAME];
+			$_SESSION[SESSION_PASSWORD] = $_COOKIE[COOKIE_PASSWORD];
 		}
-		
-		//echo $_SESSION['SESSION_USERNAME'];
-		//echo $_SESSION['SESSION_PASSWORD'];
-		
+
+		//echo $_SESSION[SESSION_USERNAME];
+		//echo $_SESSION[SESSION_PASSWORD];
+
 		//Check if session variables have been set
-		if (!empty($_SESSION['SESSION_USERNAME']) && !empty($_SESSION['SESSION_PASSWORD'])) {
+		if (!empty($_SESSION[SESSION_USERNAME]) && !empty($_SESSION[SESSION_PASSWORD])) {
 			
 			//Set username and password
-			$this->setUsername($_SESSION['SESSION_USERNAME']);
-			$this->setMd5Password($_SESSION['SESSION_PASSWORD']);
+			$this->setUsername($_SESSION[SESSION_USERNAME]);
+			$this->setMd5Password($_SESSION[SESSION_PASSWORD]);
 			
 			//Authenticate user
 			if ($this->authUser()) {
@@ -297,8 +299,8 @@ class UserManagement
 				return true;
 			} else {
 				//Session variables are incorrect. Unset
-				unset($_SESSION['SESSION_USERNAME']);
-				unset($_SESSION['SESSION_PASSWORD']);
+				unset($_SESSION[SESSION_USERNAME]);
+				unset($_SESSION[SESSION_PASSWORD]);
 				
 				//User not logged in
 				return false;	
@@ -312,7 +314,6 @@ class UserManagement
 	
 	function processLogin($alsoDo = '')
 	{
-		
 		//If authentication is correct, set sessions
 		if ($this->authUser()) {
 			$this->registerSessionVariables();
@@ -324,6 +325,7 @@ class UserManagement
 			//Success
 			return true;
 		}
+
 		//Failure
 		return false;
 	}

@@ -11,13 +11,13 @@ $xcomicRootPath = '../';
 
 require_once $xcomicRootPath.'initialize.php';	//Include all page common settings
 							//Creates $db connection. Grabs config info.
-include_once $xcomicRootPath.'includes/Security.'.$classEx;
+include_once $xcomicRootPath.'includes/Security.class.php';
 
 //Create AdminMessage class
-include_once './classes/AdminMessage.'.$classEx;
+include_once './classes/AdminMessage.class.php';
 $message = new AdminMessage();
 
-include_once './classes/UserManagement.'.$classEx; //Login/Logout
+include_once './classes/UserManagement.class.php'; //Login/Logout
 
 //Form field variables
 $formUsername = 'loginUsername';
@@ -32,11 +32,14 @@ $inUsername=(!empty($_REQUEST[$formUsername])) ? $security->allowOnlyChars($_REQ
 $inPassword=(!empty($_REQUEST[$formPassword])) ? $security->allowOnlyChars($_REQUEST[$formPassword]) : NULL;
 
 //Set them in User Management
+
 $userManagement->setUsername($inUsername);
 $userManagement->setPassword($inPassword);	
+$userManagement->getUid();
 
 //Process login information
-if ($userManagement->processLogin('remember')) {
+if ($userManagement->processLogin('remember')) 
+{
 	header('Location: index.php');
 }
 

@@ -14,10 +14,10 @@ class AdminMessage
 	{
 		$this->noMenu = false; //Initialize to display menu
 	}
-		
+
 	function say($inMsg, $type = 'message')
 	{
-		global $xcomicStartTime;
+		global $xadmin, $xcomicStartTime, $xcomicRootPath, $settings;
 		
 		//Determine section title
 		//$sectionTitle;
@@ -28,12 +28,12 @@ class AdminMessage
 		}
 		
 		//Include script header
-		include './includes/header.php';
+		include $xcomicRootPath.'admin/includes/header.php';
 		
 		//Check to see if menu will be displayed
 		if ($this->noMenu === false) {
 			//Include script menu
-			include './includes/menu.php';
+			include $xcomicRootPath.'admin/includes/menu.php';
 		}
 ?>
 <div class="wrap">
@@ -45,7 +45,7 @@ class AdminMessage
 <?php	
 
 		//Include script footer
-		include './includes/footer.php';
+		include $xcomicRootPath.'admin/includes/footer.php';
 	}
 	
 	function error($inMsg)

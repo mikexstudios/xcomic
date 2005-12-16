@@ -16,7 +16,7 @@ a.delete:hover {
 a.edit, a.delete, a.edit:hover, a.delete:hover {
 	border-bottom: none;
 	display: block;
-	padding: 5px 0;
+	/*padding: 5px 0;*/
 	text-align: center;
 }
 
@@ -82,6 +82,15 @@ fieldset.options legend {
 	font-size: 16px;
 }
 
+fieldset.date {
+    width: 30em;
+    padding-bottom: 10px;
+}
+
+fieldset.date input, fieldset.date select {
+    margin-bottom: 0px;
+}
+
 form, label input {
 	margin: 0;
 	padding: 0;
@@ -94,7 +103,7 @@ h2 {
 	margin: 5px 10px;
 }
 
-input:focus, textarea:focus, label:focus {
+input:focus, textarea:focus, label:focus, select:focus {
 	background: #fff;
 	border: 1px solid #878787;
 }
@@ -120,7 +129,7 @@ textarea, input, select {
 	padding: 3px;
 }
 
-input, textarea {
+input, textarea, select {
     margin-bottom: 10px;
 }
 
@@ -461,3 +470,10 @@ br {
 	height: 45px;
 	margin: 6px;
 }
+
+/* emeyer additions */
+
+.active td {background: #BEB;}
+.active .name {background: #9C9;}
+.alternate.active td {background: #ADA;}
+.alternate.active .name {background: #8B8;}

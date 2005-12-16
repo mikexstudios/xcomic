@@ -8,19 +8,16 @@ Xcomic
 $Id$
 */
 
-if (!defined('IN_XCOMIC')) {
-	die("Hacking attempt");
-}
-
 //
 // gzip_compression
 //
-$do_gzip_compress = FALSE;
-if ($board_config['gzip_compress']) {
+
+if ($settings->getSetting('gzipcompress') && !@ini_get('zlib.output_compression')) {
 	$phpver = phpversion();
 
 	$useragent = (isset($_SERVER["HTTP_USER_AGENT"]) ) ? $_SERVER["HTTP_USER_AGENT"] : $HTTP_USER_AGENT;
 
+    $do_gzip_compress = false;
 	if ($phpver >= '4.0.4pl1' && (strstr($useragent,'compatible') || strstr($useragent,'Gecko'))) {
 		if (extension_loaded('zlib')) {
 			ob_start('ob_gzhandler');
@@ -28,7 +25,7 @@ if ($board_config['gzip_compress']) {
 	} elseif ($phpver > '4.0') {
 		if (strstr($HTTP_SERVER_VARS['HTTP_ACCEPT_ENCODING'], 'gzip')) {
 			if (extension_loaded('zlib')) {
-				$do_gzip_compress = TRUE;
+				$do_gzip_compress = true;
 				ob_start();
 				ob_implicit_flush(0);
 
@@ -36,6 +33,7 @@ if ($board_config['gzip_compress']) {
 			}
 		}
 	}
+	unset($phpver);
 }
 
 ?>

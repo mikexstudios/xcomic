@@ -13,8 +13,9 @@ class Comic
 	var $comicDir;
 	var $cid;
 	var $dbc;
+	var $date;
 	
-	function Comic(&$dbc, $inComicFile, $inTitle = null)
+	function Comic(&$dbc, $inComicFile, $inTitle = null, $comicDate = null)
 	{
 		global $message, $xcomicRootPath;
 		
@@ -26,7 +27,8 @@ class Comic
 		$this->comicFile = $inComicFile;
 		//echo $inComicFile['tmp_name'];
 		$this->title = $inTitle;
-		
+		$this->date = $comicDate ? $comicDate : time();
+
 		//Make sure directory exists
 		if (!is_dir($this->comicDir)) {
 			$message->error($this->comicDir.' directory doesn\'t exist');
@@ -42,11 +44,14 @@ class Comic
 		
 		$tempName = $this->comicFile['tmp_name'];
 		$fileName = $this->comicFile['name'];
-		$this->comicFilename = $fileName; 
+		$this->comicFilename = $fileName;
 		$fileType = $this->comicFile['type']; 
 		$fileSize = $this->comicFile['size']; 
 		$result    = $this->comicFile['error'];
 		$filePath = $this->comicDir.'/'.$fileName;
+		
+		if (file_exists($filePath))
+		  $message->error("$fileName already exists. Please use a different file name.");
 		
 		//Security Checks-----------------------------------------
 		//File Name Check
@@ -85,7 +90,7 @@ class Comic
 		
 		//Delete temporary image, if needed
 		@unlink($tempName);
-		
+
 		//Success
 		return true;
 		
@@ -102,7 +107,7 @@ class Comic
 			    '.$id.',
 				'.$this->dbc->quoteSmart($this->title).', 
 				'.$this->dbc->quoteSmart($this->comicFilename).', 
-				'.time().'
+				'.$this->date.'
 				)';
 		$result = $this->dbc->query($sql);
 		//Make the changes happen
