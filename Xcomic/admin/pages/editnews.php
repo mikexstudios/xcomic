@@ -38,8 +38,8 @@ if ($action == 'delete') {
 
 //Check for form edit submission
 if (isset($_POST['submit'])) {
-	$newsTitle = (!empty($_REQUEST['newsTitle'])) ? $security->secureText($_REQUEST['newsTitle']) : null;
-	$newsContent = (!empty($_REQUEST['newsContent'])) ? $security->secureText($_REQUEST['newsContent']) : null;
+	$newsTitle = (!empty($_REQUEST['newsTitle'])) ? $_REQUEST['newsTitle'] : null;
+	$newsContent = (!empty($_REQUEST['newsContent'])) ? $_REQUEST['newsContent'] : null;
 	
 	$newsDate = new DateWidget();
     $newsDate->processWidget();
@@ -93,7 +93,7 @@ include $xcomicRootPath.'admin/includes/menu.php';
    <textarea wrap="soft" name="<?php echo 'newsContent'; ?>" rows="20" cols="70"><?php echo $newsContent; ?></textarea><br />
    <?php $NewsDate->printWidget(); ?><br />
 
-   <input type="submit" name="submit" value="Post!" />
+   <input type="submit" name="submit" value="Update!" />
   </form>
  </div>
 </div>

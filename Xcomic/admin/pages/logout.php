@@ -50,5 +50,5 @@ $userManagement->logout();
 //Display logout
 //Set a new header for message
 $message->setNoMenu(true);
-$message->say('You have been successfully logged out. Click <a href="index.php">here to log back in</a>.');
+$message->say('You have been successfully logged out. Click <a href="../index.php">here to log back in</a>.');
 ?>
