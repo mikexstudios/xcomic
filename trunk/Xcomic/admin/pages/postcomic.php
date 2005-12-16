@@ -51,7 +51,7 @@ include_once $xcomicRootPath.'admin/classes/DateWidget.class.php';
 
 //Check for form submission
 if (isset($_POST['submit'])) {
-	$comicTitle = (!empty($_REQUEST[$form['comictitle']])) ? $security->secureText($_REQUEST[$form['comictitle']]) : null;
+	$comicTitle = (!empty($_REQUEST[$form['comictitle']])) ? $_REQUEST[$form['comictitle']] : null;
 	//Must use $_FILES[$form['comicfile']]['name'] since empty on just $_FILES[$form['comicfile']] will always return false.
 	$comicFile = (!empty($_FILES[$form['comicfile']]['name'])) ? $_FILES[$form['comicfile']] : null; //Default to left
 	

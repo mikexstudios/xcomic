@@ -39,8 +39,8 @@ include_once $xcomicRootPath.'admin/classes/DateWidget.class.php';
 
 //Check for form submission
 if (isset($_POST['submit'])) {
-	$newsTitle = (!empty($_REQUEST['newsTitle'])) ? $security->secureText($_REQUEST['newsTitle']) : null;
-	$newsContent = (!empty($_REQUEST['newsContent'])) ? $security->secureText($_REQUEST['newsContent']) : null;
+	$newsTitle = (!empty($_REQUEST['newsTitle'])) ? $_REQUEST['newsTitle'] : null;
+	$newsContent = (!empty($_REQUEST['newsContent'])) ? $_REQUEST['newsContent'] : null;
 
     $newsDate = new DateWidget();
     $newsDate->processWidget();

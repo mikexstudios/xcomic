@@ -44,7 +44,7 @@ if ($action == $modeDelete) {
 
 //Check for form edit submission
 if (isset($_POST['submit'])) {
-	$comicTitle = (!empty($_REQUEST[$formComicTitle])) ? $security->secureText($_REQUEST[$formComicTitle]) : null;
+	$comicTitle = (!empty($_REQUEST[$formComicTitle])) ? $_REQUEST[$formComicTitle] : null;
 	//Must use $_FILES[$formComicFile]['name'] since empty on just $_FILES[$formComicFile] will always return false.
 	$comicFile = (!empty($_FILES[$formComicFile]['name'])) ? $_FILES[$formComicFile] : null; //Default to left
 	
@@ -69,7 +69,7 @@ if (isset($_POST['submit'])) {
 	
 	//Change the title
 	$editComic->changeTitle($comicTitle);
-	
+
 	//Change the date
 	$editComic->changeDate($Date->getTime());
 
@@ -108,7 +108,7 @@ include $xcomicRootPath.'admin/includes/menu.php';
    <label for="<?php echo $formComicFile; ?>">Upload New Comic (leave blank to keep the same comic file):</label><br />
    <input type="file" size="35" name="<?php echo $formComicFile; ?>"><br />
 
-   <input type="submit" name="submit" value="Post!" />
+   <input type="submit" name="submit" value="Update!" />
   </form>
  </div>
 </div>

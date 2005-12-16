@@ -57,9 +57,9 @@ if (isset($_REQUEST['action']))
             $message->say("Static page deleted.");
             break;
         case 'add':
-            $pagename = !empty($_POST['pagename']) ? $_POST['pagename'] : null;
-            $themefile = !empty($_POST['themefile']) ? $_POST['themefile'] : null;
-            if (!strlen(trim($pagename)) || !strlen(trim($themefile)))
+            $pagename = !empty($_POST['pagename']) ? trim($security->allowOnlyWordsNumbers($_POST['pagename'])) : null;
+            $themefile = !empty($_POST['themefile']) ? trim($_POST['themefile']) : null;
+            if (!strlen($pagename) || !strlen($themefile))
                 $message->say("Invalid static page name or theme file.");
             
             $pages->addPage($pagename, $themefile);
