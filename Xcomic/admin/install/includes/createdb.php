@@ -80,7 +80,7 @@ $sql_query[] = 'INSERT INTO `' . $table_prefix . 'config` VALUES ("2", "title", 
 $sql_query[] = 'INSERT INTO `' . $table_prefix . 'config` VALUES ("3", "enableRSS", "1", "boolean", "yesno", "Enable RSS", "Enable Really Simple Syndication of comics")';
 $sql_query[] = 'INSERT INTO `' . $table_prefix . 'config` VALUES ("4", "rssNumComics", "5", "number", "number", "Number of comics to syndicate", "The number of comics syndicated in the RSS feed")';
 $sql_query[] = 'INSERT INTO `' . $table_prefix . 'config` VALUES ("5", "usingTheme", "Kubrick", "string", "", "Current Theme", "The currently selected theme")';
-$sql_query[] = 'INSERT INTO `' . $table_prefix . 'config` VALUES ("6", "gzipcompress", "1", "boolean", "yesno", "GZip Compression", " Compression can speed up pages on browsers that support it, but requires additional server processing")';
+$sql_query[] = 'INSERT INTO `' . $table_prefix . 'config` VALUES ("6", "gzipcompress", "0", "boolean", "yesno", "GZip Compression", " Compression can speed up pages on browsers that support it, but requires additional server processing")';
 
 //Execute queries
 for ($i = 0; $i < sizeof($sql_query); $i++) 

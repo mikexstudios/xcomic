@@ -34,7 +34,23 @@ class News
 	function queryNewsInfo($inId, $idOperator = '=', $inOrderBy = '')
 	{
 		global $message;
-
+		
+		//If the id is empty (most likely because the first posted
+		//comic does not have any news associated to it), then skip
+		//querying the news info and set newsInfo values to empty.
+		if(empty($inId))
+		{
+			//Kind of a crude hack here since we have to manually specify
+			//each of the hashes to empty values. -mX
+			$this->newsInfo = array();
+			$this->newsInfo['id'] = '';
+			$this->newsInfo['title'] = '';
+			$this->newsInfo['date'] = '';
+			$this->newsInfo['username'] = '';
+			$this->newsInfo['content'] = '';
+			return;
+		}
+		
 		$sql = '
 			SELECT id, title, date, username, content
 			FROM '.XCOMIC_NEWS_TABLE." 
@@ -43,13 +59,10 @@ class News
 			ORDER BY id $inOrderBy";
 		$result = $this->dbc->getRow($sql);
 		
-		//Suppress error message if user never posts any news.
-		//There should be a better workaround to this however.
-		/* 
 		if (PEAR::isError($result)) {
 			echo 'Unable to obtain news.';
 		}
-		*/
+		
 		
 		return $result;		
 	}

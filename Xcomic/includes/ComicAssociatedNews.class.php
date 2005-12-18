@@ -47,14 +47,24 @@ class ComicAssociatedNews extends News
 		//If next news id does not exist, display the last
 		//most recent news. This replaces the LatestNewsDisplay class
 		$nextNid = $this->getNextAssociatedNewsId();
-		if($nextNid)
+		
+		if($nextNid) //This should probably use a !empty()
 		{
 			$this->getNewsInfo($nextNid);
 		}
 		else
 		{
-			//Set to previous comic id
-			$this->setCid($this->comic->prevId());
+			//Set to previous comic id. But if there is no previous id, then
+			//false is returned.
+			$prevId = $this->comic->prevId();
+			if($prevId === false)
+			{
+				//getAssociatedNewsIds already completed above so we can just
+				//return here.
+				return;
+			}
+			
+			$this->setCid($prevId);
 			$this->getAssociatedNewsIds();
 			$this->getNewsInfo($this->getNextAssociatedNewsId());
 		}	

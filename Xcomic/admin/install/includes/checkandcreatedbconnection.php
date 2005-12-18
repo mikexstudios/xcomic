@@ -32,7 +32,8 @@ if (!class_exists('DB'))
 
 //Create the $dsn in the file that includes this for maximum functionality.
 
-$db = DB::connect($dsn, $options);
+//$db = DB::connect($dsn, $options);
+$db = DB::connect($dsn);
 
 
 //Check connection. Make sure incoming data is not all null. Allow for
