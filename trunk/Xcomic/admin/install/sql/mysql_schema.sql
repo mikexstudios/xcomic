@@ -132,7 +132,7 @@ INSERT INTO `xcomic_plugins` VALUES ('XcomicNewsDisplay', 3, 1, 'builtin');
 # Table structure for table `xcomic_plugin_vars`
 #
 
-DROP TABLE IF EXISTS `xcomic_plugin_vars`
+DROP TABLE IF EXISTS `xcomic_plugin_vars`;
 CREATE TABLE IF NOT EXISTS `xcomic_plugin_vars` (
   `plugin` varchar(50) NOT NULL default '',
   `option` varchar(50) NOT NULL default '',

@@ -48,6 +48,22 @@ class Comic
 
 	function queryComicInfo($inCid, $idOperator = '=', $inOrderBy = '')
 	{
+		//If the latest comic id is also null, that indicates no comic 
+		//postings. Therefore, we can skip querying the comic and set
+		//the comicInfo array to empty values.
+		if(empty($inCid))
+		{
+			//Kind of a crude hack here since we have to manually specify
+			//each of the hashes to empty values. -mX
+			$this->comicInfo = array();
+			$this->comicInfo['cid'] = '';
+			$this->comicInfo['filename'] = '';
+			$this->comicInfo['title'] = '';
+			$this->comicInfo['newsitem'] = '';
+			$this->comicInfo['date'] = '';
+			return;
+		}
+		
 		global $db, $message;
 
 		$sql = '
@@ -59,16 +75,10 @@ class Comic
 			LIMIT 1";
 		$result = $this->dbc->getRow($sql);
 
-		//Suppress error message since legitimate calls to queryComicInfo
-		//can return no results which are interpreted as an error. There
-		//should be a better workaround for this however.
-		//Note: This only happens for when cid is 1 or the latest.
-		/*
 		if (PEAR::isError($result)) {
 			echo 'Unable to obtain comic information.';
 		}
-		*/
-
+		
 		return $result;
 	}
 
@@ -93,7 +103,7 @@ class Comic
 	    $result = $this->dbc->getOne($sql);
 		//Make the changes happen
 		if (PEAR::isError($result)) {
-			//echo 'No comic found!';
+			echo 'No comic found!';
 		}
 
 		//Return latest comic id
