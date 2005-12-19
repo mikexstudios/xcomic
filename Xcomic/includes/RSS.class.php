@@ -57,7 +57,7 @@ class XML_RSSCreator
 
 	/**
 	 * Creates RFC 822 formatted date, required for RSS 2.0 compliance
-	 * 
+	 *
 	 * @param int Timestamp (seconds since epoch)
 	 *
 	 * @return string RFC 822 formatted date
@@ -69,7 +69,7 @@ class XML_RSSCreator
 		$timezone = date('T', $time);
 		//Create an array from the string
 		$timezone = explode(' ', $timezone);
-		
+
 		$i = 0;
 		$shortenedTZ = '';
 		$sizeOf = sizeOf($timezone);
@@ -78,7 +78,7 @@ class XML_RSSCreator
 			$shortenedTZ = $shortenedTZ . substr($timezone[$i], '0', '1');
 			$i++;
 		}
-		
+
 		$date = $date . ' ' . $shortenedTZ;
 		return $date;
 	}
@@ -97,7 +97,7 @@ class XML_RSSCreator
 		{
 			return XML_RSSCREATOR_ERROR_NEED_MORE_DATA;
 		}
-		
+
 		if ($this->type == 'RSS 2.0')
 		{
 			/*
@@ -113,7 +113,7 @@ class XML_RSSCreator
 			return XML_RSSCREATOR_OK;
 		}
 	}
-	
+
 	/**
 	 * Creates the RSS document
 	 * If $this->file is set,
@@ -123,7 +123,7 @@ class XML_RSSCreator
 	 */
 	function save()
 	{
-		if (!$this->file)
+		if (!isset($this->file) || !$this->file)
 		{
 			$string = 1;
 		}
@@ -167,14 +167,13 @@ class XML_RSSCreator
 			);
 
 			//Loop through all of the optional <channel> data
-			//and add them to an assoc. array if they're set, 
+			//and add them to an assoc. array if they're set,
 			//otherwise skip them
-			$totalTags = sizeOf($channeltags);
-			for ($i = 0; $i < $totalTags; $i++)
+			foreach ($channeltags as $key => $tag)
 			{
-				if (isset($this->$channeltags[$i]['0']) === TRUE)
+			    if (isset($this->$key) === TRUE)
 				{
-					$optionalChannelData[$channeltags][$i]['1'] = $this->$channeltags[$i]['0'];
+					$optionalChannelData[$tag] = $this->$key;
 				}
 			}
 
@@ -195,12 +194,12 @@ class XML_RSSCreator
 					$rssData['channel'][$key] = $value;
 				}
 			}
-			
+
 			/*
 			 * Automagically add the items (hack-ish), as we need multiple <item>
 			 * groups, but you can't have multiple parts of an array be named the
 			 * same with different data and corresponding keys, so we set a default
-			 * key and add indexed arrays instead that get added to 
+			 * key and add indexed arrays instead that get added to
 			 * <$serializer_options['defaultTagName']>
 			 */
 			$totalItems = sizeOf($this->items);
