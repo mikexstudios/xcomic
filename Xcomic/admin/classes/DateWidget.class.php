@@ -21,6 +21,7 @@ class DateWidget
         $this->_forminfo['year'] = 'dateyear';
         $this->_forminfo['hour'] = 'datehour';
         $this->_forminfo['minute'] = 'dateminute';
+        $this->_forminfo['second'] = 'datesecond';
     }
     
     function getTime()
@@ -37,6 +38,7 @@ class DateWidget
         $date['year'] = date('Y', $this->timestamp);
         $date['hour'] = date('H', $this->timestamp);
         $date['minute'] = date('i', $this->timestamp);
+        $date['second'] = date('s', $this->timestamp);
         ?>
         <fieldset class="date"><legend><?php echo $title; ?></legend>
           <select name="<?php echo $this->_forminfo['month']; ?>">
@@ -58,7 +60,9 @@ class DateWidget
           &nbsp;&nbsp;
           <input type="text" name="<?php echo $this->_forminfo['hour']; ?>" size="3" maxlength="2" value="<?php echo $date['hour']; ?>" /> :
           <input type="text" name="<?php echo $this->_forminfo['minute']; ?>" size="3" maxlength="2" value="<?php echo $date['minute']; ?>" />
-        </fieldset>
+          
+          <input type="hidden" name="<?php echo $this->_forminfo['second']; ?>" value="<?php echo $date['second']; ?>" />
+		</fieldset>
         <?php
     }
     
@@ -71,7 +75,8 @@ class DateWidget
 	    $comicYear = intval($_REQUEST[$this->_forminfo['year']]);
 	    $comicHour = intval($_REQUEST[$this->_forminfo['hour']]);
 	    $comicMinute = intval($_REQUEST[$this->_forminfo['minute']]);
-	    $this->timestamp = mktime($comicHour, $comicMinute, 0, $comicMonth, $comicDay, $comicYear);
+	    $comicSecond = intval($_REQUEST[$this->_forminfo['second']]);
+	    $this->timestamp = mktime($comicHour, $comicMinute, $comicSecond, $comicMonth, $comicDay, $comicYear);
     }
 }
 ?>
