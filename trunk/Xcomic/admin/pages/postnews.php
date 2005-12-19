@@ -60,7 +60,7 @@ if (isset($_POST['submit'])) {
 	//Actually post the news
 	include_once $xcomicRootPath.'admin/classes/News.class.php';
 	$news =& new News($db);
-	$news->addNews($newsTitle, $newsContent, $userManagement->getUid(), $userManagement->getUsername(), max(time(), $newsDate->getTime()));
+	$news->addNews($newsTitle, $newsContent, $userManagement->getUid(), $userManagement->getUsername(), $newsDate->getTime()); //Removed max(time(), )
 
 	//Display success page
 	$message->say('News has been sucessfully posted.');		
