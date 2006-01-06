@@ -50,6 +50,7 @@ $search[] = 'localhost'; $replace[] = $inDbHost;
 $search[] = 'xcomicdb'; $replace[] = $inDbName;
 $search[] = 'xcomicuser'; $replace[] = $inDbUser;
 $search[] = 'password'; $replace[] = $inDbPass;
+$search[] = 'xcomic_'; $replace[] = $inPrefix;
 
 $configSampleFile = str_replace($search, $replace, $configSampleFile);
 //echo $configSampleFile;

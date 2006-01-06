@@ -20,9 +20,10 @@ $inDbHost = (!empty($_REQUEST['dbhost'])) ? $_REQUEST['dbhost'] : null;
 $inDbName = (!empty($_REQUEST['dbname'])) ? $_REQUEST['dbname'] : null;
 $inDbUser = (!empty($_REQUEST['dbuser'])) ? $_REQUEST['dbuser'] : null;
 $inDbPass = (!empty($_REQUEST['dbpass'])) ? $_REQUEST['dbpass'] : null;
+$inPrefix = isset($_RESUEST['tblprefix']) ? $_RESUEST['tblprefix'] : null;
 
 //Check for empty values
-if($dbms==null||$inDbHost==null||$inDbName==null||$inDbUser==null)
+if($dbms==null||$inDbHost==null||$inDbName==null||$inDbUser==null||$inPrefix==null)
 {
      //Db connection failed
      header('Location: '.$xcomicRootPath.'admin/install/error/dbfailed.php');

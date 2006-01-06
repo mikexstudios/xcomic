@@ -7,7 +7,7 @@ ALTER TABLE `xcomic_comics`
 # Add user id and comic id to news
 ALTER TABLE `xcomic_news`
     CHANGE `id` `id` int(10) unsigned NOT NULL default '0',
-    CHANGE `date` `date` int(10) unsigned NOT NULL default '0'
+    CHANGE `date` `date` int(10) unsigned NOT NULL default '0',
     ADD `cid` int(10) unsigned NOT NULL default '0' AFTER `id`,
     ADD `uid` int(10) unsigned NOT NULL default '0' AFTER `username`;
 
@@ -24,6 +24,9 @@ CREATE TABLE IF NOT EXISTS `xcomic_comics_seq` (
   PRIMARY KEY  (`id`)
 ) AUTO_INCREMENT=comics_autoinc;
 
+DELETE FROM `xcomic_comics_seq`;
+INSERT INTO `xcomic_comics_seq` () VALUES ();
+
 #
 # Table structure for table `xcomic_news_seq`
 #
@@ -32,6 +35,9 @@ CREATE TABLE IF NOT EXISTS `xcomic_news_seq` (
   `id` int(10) unsigned NOT NULL auto_increment,
   PRIMARY KEY  (`id`)
 ) AUTO_INCREMENT=news_autoinc;
+
+DELETE FROM `xcomic_news_seq`;
+INSERT INTO `xcomic_news_seq` () VALUES ();
 
 #
 # Table structure for table `xcomic_users_seq`
@@ -42,6 +48,8 @@ CREATE TABLE IF NOT EXISTS `xcomic_users_seq` (
   PRIMARY KEY  (`id`)
 ) AUTO_INCREMENT=users_autoinc;
 
+DELETE FROM `xcomic_users_seq`;
+INSERT INTO `xcomic_users_seq` () VALUES ();
 
 #
 # Config table changes
@@ -55,8 +63,8 @@ ALTER TABLE `xcomic_config`
     ADD PRIMARY KEY (`order`);
 
 ALTER TABLE `xcomic_config`
-    DROP PRIMARY KEY,
-    CHANGE `order` smallint(5) unsigned NOT NULL default '0';
+    CHANGE `order` `order` smallint(5) unsigned NOT NULL default '0',
+    DROP PRIMARY KEY;
 
 ALTER TABLE `xcomic_config`
     ADD PRIMARY KEY (`option`),
@@ -90,8 +98,10 @@ INSERT INTO `xcomic_admin_menu` VALUES ('editcomiclist.php', 'Edit Comics', 'all
 INSERT INTO `xcomic_admin_menu` VALUES ('editnewslist.php', 'Edit News', 'all', 'top', 14);
 INSERT INTO `xcomic_admin_menu` VALUES ('logout.php', 'Logout', 'all', 'top', 100);
 INSERT INTO `xcomic_admin_menu` VALUES ('options.php', 'Options', 'all', 'top', 22);
-INSERT INTO `xcomic_admin_menu` VALUES ('plugins.php', 'Plugins', 'all', 'top', 17);
+INSERT INTO `xcomic_admin_menu` VALUES ('plugins.php', 'Plugins', 'all', 'top', 24);
+INSERT INTO `xcomic_admin_menu` VALUES ('postcomic.php', 'Post Comic', 'all', 'top', 2);
 INSERT INTO `xcomic_admin_menu` VALUES ('postnews.php', 'Post News', 'all', 'top', 10);
+INSERT INTO `xcomic_admin_menu` VALUES ('staticpages.php', 'Static Pages', 'all', 'top', 17);
 INSERT INTO `xcomic_admin_menu` VALUES ('themes.php', 'Themes', 'all', 'top', 16);
 INSERT INTO `xcomic_admin_menu` VALUES ('users.php', 'Users', 'all', 'top', 18);
 INSERT INTO `xcomic_admin_menu` VALUES ('viewsite.php', 'View Site', 'all', 'top', 26);
@@ -102,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `xcomic_admin_vars` (
   PRIMARY KEY  (`name`)
 );
 
-INSERT INTO `xcomic_admin_vars` VALUES ('page_directory_files', 'dashboard.php,editcomic.php,editcomiclist.php,editnews.php,editnewslist.php,edituser.php,index.php,logout.php,options.php,plugins.php,postcomic.php,postnews.php,themes.php,users.php,viewsite.php');
+INSERT INTO `xcomic_admin_vars` VALUES ('page_directory_files', 'dashboard.php,editcomic.php,editcomiclist.php,editnews.php,editnewslist.php,edituser.php,index.php,logout.php,options.php,plugins.php,postcomic.php,postnews.php,staticpages.php,themes.php,users.php,viewsite.php');
 
 #
 # Plugins
@@ -129,4 +139,14 @@ CREATE TABLE IF NOT EXISTS `xcomic_plugin_vars` (
   `option` varchar(50) NOT NULL default '',
   `value` text NOT NULL,
   PRIMARY KEY  (`plugin`,`option`)
+);
+
+#
+# Static pages
+#
+
+CREATE TABLE `xcomic_pages` (
+  `pagename` varchar(30) NOT NULL default '',
+  `themefile` varchar(30) NOT NULL default '',
+  PRIMARY KEY  (`pagename`)
 );

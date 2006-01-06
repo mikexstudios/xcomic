@@ -58,16 +58,16 @@ $delimiter_basic = $available_dbms[$dbms]['DELIM_BASIC'];
 include_once $xcomicRootPath.'admin/install/includes/sql_parse.php'; //phpBB's DB schema cleaning
 $sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema));
 //Set up table prefix
-$table_prefix = (!empty($table_prefix)) ? $table_prefix : (!empty($xcomicTablePrefix)) ? $xcomicTablePrefix : 'xcomic_';
+$table_prefix = isset($table_prefix) ? $table_prefix : (isset($xcomicTablePrefix) ? $xcomicTablePrefix : 'xcomic_');
 $sql_query = str_replace('xcomic_', $table_prefix, $sql_query);
 
 //Clean up SQL file
 $sql_query = remove_remarks($sql_query);
 
-$comicauto = $db->getOne("SELECT MAX(`cid`) FROM `".$table_prefix."comics`");
-$newsauto = $db->getOne("SELECT MAX(`id`) FROM `".$table_prefix."news`");
-$usersauto = $db->getOne("SELECT MAX(`uid`) FROM `".$table_prefix."users`");
-$numconfigs = max($db->getOne("SELECT COUNT(*) FROM `".$table_prefix."config`")-2, 0);
+$comicauto = intval($db->getOne("SELECT `cid` FROM `".$table_prefix."comics` ORDER BY `cid` DESC LIMIT 1"))+1;
+$newsauto = intval($db->getOne("SELECT `id` FROM `".$table_prefix."news` ORDER BY `id` DESC LIMIT 1"))+1;
+$usersauto = intval($db->getOne("SELECT `uid` FROM `".$table_prefix."users` ORDER BY `uid` DESC LIMIT 1"))+1;
+$numconfigs = max(intval($db->getOne("SELECT COUNT(*) FROM `".$table_prefix."config`"))-2, 0);
 
 // Replace vars
 $sql_query = str_replace(array('comics_autoinc', 'news_autoinc', 'users_autoinc', 'num_configs'), array($comicauto, $newsauto, $usersauto, $numconfigs), $sql_query);
@@ -80,6 +80,7 @@ for ($i = 0; $i < sizeof($sql_query); $i++)
 {
 	if (trim($sql_query[$i]) != '') 
     {
+        print($sql_query[$i]." [$i]<br />");
 	    $result = $db->query($sql_query[$i]);
 
 		if (PEAR::isError($result)) 
@@ -99,7 +100,7 @@ foreach ($newsposts as $news)
 {
     if (!isset($users[$news['username']]))
     {
-        $users[$news['username']] = $db->getOne("SELECT `uid` FROM `".$table_prefix."users` WHERE `username`='$news[username]' LIMIT 1");
+        $users[$news['username']] = intval($db->getOne("SELECT `uid` FROM `".$table_prefix."users` WHERE `username`='$news[username]' LIMIT 1"));
     }
     $db->query("UPDATE `".$table_prefix."news` SET `uid`=".$users[$news['username']]." WHERE `id`=$news[id] LIMIT 1");
 }
