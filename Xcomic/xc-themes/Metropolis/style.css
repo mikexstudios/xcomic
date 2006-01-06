@@ -1,0 +1,257 @@
+/*  
+Theme Name: Metropolis
+Theme URI: http://www.mikexstudios.com/metropolis/
+Description: Based off of the Megatokyo (http://www.megatokyo.com) web comic comes this new XHTML/CSS based "Big City" template with dual column news posting.
+Version: 1.0
+Author: Michael Huynh
+Author URI: http://www.mikexstudios.com
+
+	Metropolis v1.0
+	http://www.mikexstudios.com
+
+	The CSS, XHTML and design is released under GPL:
+	http://www.opensource.org/licenses/gpl-license.php
+*/
+
+a:link { text-decoration: none ; color: #FF6600 }
+a:hover { text-decoration: none; COLOR: #EB5252 }
+a:active { text-decoration: none ; color: #3d4e4e }
+a:visited { text-decoration: none ; color: #ECECA3 } 
+
+
+.orange {
+	color: Orange;
+}
+.gray {
+	color: #666666;
+}
+
+body {
+	margin: 0;
+	text-align: center;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	background-color: #4c565e;
+	color: #e4e4d6;
+}
+
+#container {
+	text-align: left;
+	margin-left: auto;
+	margin-right: auto;
+	width: 700px;
+	margin-bottom: 20px;
+}
+
+#header {
+	margin: 0;
+}
+#header-description p {
+	margin: 0;
+	/*background: url(mt2-bar-comic.gif) no-repeat left;*/
+	/*text-indent: -48em;*/
+	width: 700px;
+	height: 18px;
+	background-color: Black;
+	padding-left: 8px;
+	letter-spacing: 12px;
+	word-spacing: 7px;
+	font-size: 15px;
+	font-weight: bold;
+	font-family: Arial, Helvetica, sans-serif;
+}
+#header h1 {
+	margin: 0;
+	padding: 0;
+	background: url(logo.gif) no-repeat left;
+	width: 561px;
+	height: 115px;
+	text-indent: -48em;
+
+}
+#header h4 {
+	font-size: smaller;
+	margin: 0;
+	padding: 0;
+}
+
+#navigation {
+	margin: 0;
+	height: 20px;
+	padding-top: 3px;
+	padding-bottom: 2px;
+	color: Orange;
+	background-color: Black;
+	text-align: center;
+}
+#navigation a {
+	color: #f6b33d;
+}
+#navigation ul {
+	margin: 0;
+	padding-left: 0px; /* Move list to the left */
+}
+#navigation ul li {
+	margin: 0;
+	display: inline;
+	list-style-type: none;
+	padding-left: 6px;
+	padding-right: 6px;
+	height: 20px;
+	font-size: small;
+
+}
+
+
+#comicarea {
+	margin: 0;
+	text-align: center;
+	background-color: #b7bfc7;
+	margin-bottom: 20px;
+}
+#comic {
+	padding-top: 30px;
+	padding-bottom: 25px;
+}
+#comic img {
+	/*
+	border-top: 1px solid Gray;
+	border-left: 1px solid Gray;
+	border-right: 3px solid Gray;
+	border-bottom: 3px solid Gray;
+	*/
+}
+
+#comicnavigation {
+	margin: 0;
+}
+#comic-navigation-dropdown {
+	margin: 0;
+	text-align: left;
+	margin-left: 30px;
+	float: left;
+
+}
+#comic-navigation-dropdown form select {
+	width: 440px;
+}
+#comic-navigation-buttons {
+
+}
+#comic-navigation-buttons img {
+	border: 0;
+}
+
+#newsarea {
+	margin: 0;
+}
+#news-header h2 {
+	margin: 0;
+	width: 700px;
+	height: 18px;
+	background-color: Black;
+	/*background: url(mt-blk_bar-console.gif) no-repeat left;
+	text-indent: -48em;*/
+	padding-left: 8px;
+	letter-spacing: 12px;
+	word-spacing: 7px;
+	font-size: 15px;
+	font-weight: bold;
+	font-family: Arial, Helvetica, sans-serif;
+	margin-bottom: 20px;
+}
+#news-entry {
+	margin: 0;
+	width: 350px;
+	margin-bottom: 30px;
+	float: left;
+}
+#news-console {
+	text-align: center;
+	/*padding-top: 20px; the bottom margin for news-header handles this */
+	padding-bottom: 20px;
+}
+#news-title {
+	background-color: #757b81;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	font-size: 12pt;
+	font-weight: bold;
+	color: #F6B33D;
+	text-align: center;
+	width: 340px;
+	margin-left: auto;
+	margin-right: auto;
+}
+#news-body {
+	font-size: small;
+	color: #B7BFC7;
+	width: 337px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+/* *-one is for when there is only one news post and we want it to take up
+   the whole space */
+#news-entry-one {
+	margin: 0;
+	width: 650px;
+	margin-bottom: 30px;
+}
+#news-console-one {
+	text-align: center;
+	/*padding-top: 20px; the bottom margin for news-header handles this */
+	padding-bottom: 20px;
+}
+#news-title-one {
+	background-color: #757b81;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	font-size: 12pt;
+	font-weight: bold;
+	color: #F6B33D;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+#news-body-one {
+	font-size: small;
+	color: #B7BFC7;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+
+#footer {
+	clear: both;
+	margin: 0;
+	background-color: #757b81;
+}
+#footer-header {
+	margin: 0;
+	padding: 0;
+	width: 700px;
+	height: 18px;
+	text-align: left;
+	/*
+	background: url(mt-blk_bar-credits.gif) no-repeat left;
+	text-indent: -48em;
+	*/
+	background-color: Black;
+	padding-left: 8px;
+	letter-spacing: 12px;
+	word-spacing: 7px;
+	font-size: 15px;
+	font-weight: bold;
+	font-family: Arial, Helvetica, sans-serif;
+}
+#footer-body {
+	text-align: center;
+	font-size: 8pt;
+	color: #E4E4D6;
+	padding-top: 5px;
+	padding-bottom: 20px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+#footer-body p {
+	margin: 0;
+}
