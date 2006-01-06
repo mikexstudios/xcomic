@@ -81,8 +81,10 @@ INSERT INTO `xcomic_admin_menu` VALUES ('editcomiclist.php', 'Edit Comics', 'all
 INSERT INTO `xcomic_admin_menu` VALUES ('editnewslist.php', 'Edit News', 'all', 'top', 14);
 INSERT INTO `xcomic_admin_menu` VALUES ('logout.php', 'Logout', 'all', 'top', 100);
 INSERT INTO `xcomic_admin_menu` VALUES ('options.php', 'Options', 'all', 'top', 22);
-INSERT INTO `xcomic_admin_menu` VALUES ('plugins.php', 'Plugins', 'all', 'top', 17);
+INSERT INTO `xcomic_admin_menu` VALUES ('plugins.php', 'Plugins', 'all', 'top', 24);
+INSERT INTO `xcomic_admin_menu` VALUES ('postcomic.php', 'Post Comic', 'all', 'top', 2);
 INSERT INTO `xcomic_admin_menu` VALUES ('postnews.php', 'Post News', 'all', 'top', 10);
+INSERT INTO `xcomic_admin_menu` VALUES ('staticpages.php', 'Static Pages', 'all', 'top', 17);
 INSERT INTO `xcomic_admin_menu` VALUES ('themes.php', 'Themes', 'all', 'top', 16);
 INSERT INTO `xcomic_admin_menu` VALUES ('users.php', 'Users', 'all', 'top', 18);
 INSERT INTO `xcomic_admin_menu` VALUES ('viewsite.php', 'View Site', 'all', 'top', 26);
@@ -102,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `xcomic_admin_vars` (
 # Dumping data for table `xcomic_admin_vars`
 #
 
-INSERT INTO `xcomic_admin_vars` VALUES ('page_directory_files', 'dashboard.php,editcomic.php,editcomiclist.php,editnews.php,editnewslist.php,edituser.php,index.php,logout.php,options.php,plugins.php,postcomic.php,postnews.php,themes.php,users.php,viewsite.php');
+INSERT INTO `xcomic_admin_vars` VALUES ('page_directory_files', 'dashboard.php,editcomic.php,editcomiclist.php,editnews.php,editnewslist.php,edituser.php,index.php,logout.php,options.php,plugins.php,postcomic.php,postnews.php,staticpages.php,themes.php,users.php,viewsite.php');
 
 #
 # Table structure for table `xcomic_plugins`
@@ -138,6 +140,16 @@ CREATE TABLE IF NOT EXISTS `xcomic_plugin_vars` (
   `option` varchar(50) NOT NULL default '',
   `value` text NOT NULL,
   PRIMARY KEY  (`plugin`,`option`)
+);
+
+#
+# Table structure for table `xcomic_pages`
+#
+
+CREATE TABLE `xcomic_pages` (
+  `pagename` varchar(30) NOT NULL default '',
+  `themefile` varchar(30) NOT NULL default '',
+  PRIMARY KEY  (`pagename`)
 );
 
 #

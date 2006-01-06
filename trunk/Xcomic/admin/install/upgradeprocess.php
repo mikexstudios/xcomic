@@ -36,9 +36,10 @@ if (versionCompare($db_version, '0.9.0') < 0) // Versions pre-0.9.0
     // Create new-style config file
     $inDbHost = $dbHost;
     $inDbUser = $dbUser;
-    $inDbPasswd = $dbPasswd;
+    $inDbPass = $dbPasswd;
     $inDbName = $dbName;
-    include_one($xcomicRootPath.'admin/install/includes/createconfigfile.php');
+    $inPrefix = $table_prefix;
+    include_once($xcomicRootPath.'admin/install/includes/createconfigfile.php');
     // Above is created in a temporary space. Now move it.
     unlink($xcomicRootPath."includes/config.php");
     if(!rename($xcomicRootPath.'includes/config.temp.php', $xcomicRootPath.'includes/config.php'))
@@ -56,7 +57,7 @@ if (versionCompare($db_version, '0.9.0') < 0) // Versions pre-0.9.0
 if (versionCompare($db_version, '0.9.0') < 0)
 {
     // Insert version row...
-    $order = $db->getOne("SELECT MAX(`order`) FROM `".$table_prefix."config`");
+    $order = intval($db->getOne("SELECT MAX(`order`) FROM `".$table_prefix."config`"));
     $db->query("INSERT INTO `".$table_prefix."config` SET `order`=$order+1,`option`='version',`value`='".XCOMIC_CODE_VERSION."',`name`='Xcomic Version',`description`='The current version of Xcomic'");
     $message[] = "Finalized Xcomic version";
 }
@@ -77,16 +78,16 @@ include_once $xcomicRootPath.'admin/install/includes/header.php';
 <div id="main">
      <div id="description">
      <p>
-     Upgrading...
+     Upgrading...<br />
      <?php
-     foreach ($line in $message)
+     foreach ($message as $line)
      {
          echo "...$line<br />";
      }
      ?>
      </p>
      <p>
-        Congratulations! Xcomic successfully upgraded from <?php echo $db_version; ?> to <?php XCOMIC_CODE_VERSION; ?>!
+        Congratulations! Xcomic successfully upgraded from <?php echo !empty($db_version) ? $db_version : '0.8.x'; ?> to <?php echo XCOMIC_CODE_VERSION; ?>!
      </p>
      <form action="../index.php" method="post">
           <input type="submit" name="submit" value="Visit the administration panel &gt;" class="continuebutton" />
