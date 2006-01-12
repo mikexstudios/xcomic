@@ -20,7 +20,7 @@ $inDbHost = (!empty($_REQUEST['dbhost'])) ? $_REQUEST['dbhost'] : null;
 $inDbName = (!empty($_REQUEST['dbname'])) ? $_REQUEST['dbname'] : null;
 $inDbUser = (!empty($_REQUEST['dbuser'])) ? $_REQUEST['dbuser'] : null;
 $inDbPass = (!empty($_REQUEST['dbpass'])) ? $_REQUEST['dbpass'] : null;
-$inPrefix = isset($_RESUEST['tblprefix']) ? $_RESUEST['tblprefix'] : null;
+$inPrefix = (!empty($_REQUEST['tblprefix'])) ? $_REQUEST['tblprefix'] : null;
 
 //Check for empty values
 if($dbms==null||$inDbHost==null||$inDbName==null||$inDbUser==null||$inPrefix==null)
