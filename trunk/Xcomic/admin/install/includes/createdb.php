@@ -65,7 +65,7 @@ $delimiter_basic = $available_dbms[$dbms]['DELIM_BASIC'];
 include_once $xcomicRootPath.'admin/install/includes/sql_parse.php'; //phpBB's DB schema cleaning
 $sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema));
 //Set up table prefix
-$table_prefix = (!empty($table_prefix)) ? $table_prefix : (!empty($xcomicTablePrefix)) ? $xcomicTablePrefix : 'xcomic_';
+$table_prefix = (!empty($inPrefix)) ? $inPrefix : 'xcomic_';
 $sql_query = str_replace('xcomic_', $table_prefix, $sql_query);
 
 //Clean up SQL file
