@@ -8,21 +8,21 @@ $Id$
 //Check to see if being included by another file (ie. Xadmin.php)
 if(basename($_SERVER['PHP_SELF']) !== basename(__FILE__))
 {
-     //This file is being included. Assume Xadmin.php is 
+     //This file is being included. Assume Xadmin.php is
      //including the file.
-     
+
      if(empty($xadmin))
      {
           echo 'Error: This file requires Xadmin.php to function correctly.';
-     }  
-     
+     }
+
      //Check to see if already registered in the menu
      if(!$xadmin->menu->isLinkToInMenu(basename(__FILE__)))
      {
           //Not already registered, so register
           $xadmin->menu->addEntry('Plugins', basename(__FILE__), 24); //After Options
      }
-     
+
      //Exit so rest of file doesn't display. When including
      //a file, control to the base file can be returned by
      //using the return construct.
@@ -114,7 +114,7 @@ if (isset($_REQUEST['action']))
                 $pluginname = !empty($_GET['name']) ? $security->allowOnlyWordsNumbers($_GET['name']) : null;
                 if ($pluginname == null)
                     $message->say("Invalid plugin selected.");
-                    
+
                 $found = false;
                 foreach ($allPlugins as $plugin)
                 {
@@ -127,12 +127,12 @@ if (isset($_REQUEST['action']))
                 if (!$found)
                     $message->say("Plugin selected does not exist.");
 
-                eval($plugin['name'].'::install($dbc);');
+                eval($plugin['name'].'::install($db);');
 
                 $order = $db->getOne("SELECT `order` FROM `".XCOMIC_PLUGINS_TABLE."` ORDER BY `order` DESC LIMIT 1");
                 $plugin['name'] = $security->secureText($plugin['name']);
                 $db->query("INSERT INTO `".XCOMIC_PLUGINS_TABLE."` SET `name`='$plugin[name]',`order`=".($order+1).",`type`='addon'");
-                
+
                 $message->say("Plugin successfully installed.");
             }
             break;
@@ -152,7 +152,7 @@ include $xcomicRootPath.'admin/includes/menu.php';
  <h2>Plugins</h2>
  <div class="section-body">
   <table width="100%" cellpadding="3" cellspacing="3">
-   <tr> 
+   <tr>
     <th scope="col">Name</th>
     <th scope="col">Author</th>
     <th scope="col">Description</th>
