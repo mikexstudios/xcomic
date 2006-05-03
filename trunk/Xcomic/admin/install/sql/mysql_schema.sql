@@ -96,7 +96,7 @@ INSERT INTO `xcomic_admin_menu` VALUES ('viewsite.php', 'View Site', 'all', 'top
 DROP TABLE IF EXISTS `xcomic_admin_vars`;
 CREATE TABLE IF NOT EXISTS `xcomic_admin_vars` (
   `name` varchar(255) NOT NULL default '',
-  `value` varchar(255) NOT NULL default '',
+  `value` text NOT NULL default '',
   PRIMARY KEY  (`name`)
 );
 
