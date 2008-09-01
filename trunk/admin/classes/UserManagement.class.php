@@ -201,7 +201,6 @@ class UserManagement
 				//does not exist.
 				return false;
 			}
-
 		$result = $this->dbc->getOne($sql);
 
 		if (PEAR::isError($result)) {
@@ -229,7 +228,6 @@ class UserManagement
 			//The following could weaken security
 			//$message->error('The entered username does not exist.');
 		}
-
 		//Grab password from db
 		$sql = '
 		    SELECT password 
@@ -325,7 +323,7 @@ class UserManagement
 			//Success
 			return true;
 		}
-
+		
 		//Failure
 		return false;
 	}

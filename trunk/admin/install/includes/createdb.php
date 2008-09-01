@@ -25,13 +25,6 @@ $available_dbms = array(
 		'DELIM'			=> ';',
 		'DELIM_BASIC'	=> ';',
 		'COMMENTS'		=> 'remove_remarks'
-	), 
-	'mysql4' => array(
-		'LABEL'			=> 'MySQL 4.x',
-		'SCHEMA'		=> 'mysql', 
-		'DELIM'			=> ';', 
-		'DELIM_BASIC'	=> ';',
-		'COMMENTS'		=> 'remove_remarks'
 	)/*, 
 	'postgres' => array(
 		'LABEL'			=> 'PostgreSQL 7.x',

@@ -38,7 +38,7 @@ include_once $xcomicRootPath.'admin/install/includes/header.php';
                     	-->
                               <option value="mysql">MySQL 4.x</option>
                     		<option value="mysql">MySQL 3.x</option>
-                    		<option value="mysqli">MySQL 5.x</option>
+                    		<option value="mysql">MySQL 5.x</option>
                     	<!--
                     		<option value="pgsql">PostgreSQL</option>
                     		<option value="oci8">Oracle 8</option>
