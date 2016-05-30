@@ -48,8 +48,8 @@ Check out some sites using Xcomic.
 - All other releases can be found on the [Xcomic sourceforge project page][sf]
 - Branches and trunk code can be found at the [Xcomic svn repository][svn].
 
-[stable]: http://downloads.sourceforge.net/xcomic/Xcomic_0.8.3.zip
-[unstable]: http://downloads.sourceforge.net/xcomic/xcomic_0.9.0a.zip
+[stable]: https://github.com/mikexstudios/xcomic/releases/download/v0.8.3/Xcomic_0.8.3.zip
+[unstable]: https://github.com/mikexstudios/xcomic/releases/download/v0.9.0a/xcomic_0.9.0a.zip
 [sf]: https://sourceforge.net/projects/xcomic/files/xcomic%20pre-1.0/ 
 [svn]: https://sourceforge.net/p/xcomic/code/HEAD/tree/
 
