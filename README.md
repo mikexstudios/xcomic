@@ -2,6 +2,8 @@
 
 ### Note: Since Xcomic is no longer being developed or maintained, you should not use Xcomic for your production website. The code is archived here for learning purposes. 
 
+<img src="https://github.com/mikexstudios/xcomic/blob/master/screenshots/home-top.png" width="60%">
+
 Xcomic is a comic publishing / comic management / web comic / comic update
 script that fits within any site to facilitate the publishing of web comics
 (like [Megatokyo][mt] or [Penny Arcade][pa]). Features include maximum
@@ -11,6 +13,59 @@ simplistic and logical design.
 
 [mt]: http://www.megatokyo.com/
 [pa]: http://www.pennyarcade.com/
+
+## Screenshots
+
+<table>
+<tr>
+  <td align="center" width="33%">
+   <img src="https://github.com/mikexstudios/xcomic/blob/master/screenshots/home-top.png" width="100%">
+   <p><strong>Home top</strong></p>
+  </td>
+  <td align="center" width="33%">
+    <img src="https://github.com/mikexstudios/xcomic/blob/master/screenshots/home-bot.png" width="100%">
+    <p><strong>Home bottom</strong></p>
+  </td>
+  <td align="center" width="33%">
+    <img src="https://github.com/mikexstudios/xcomic/blob/master/screenshots/install.png" width="100%">
+    <p><strong>Install</strong></p>
+  </td>
+</tr>
+<tr>
+  <td align="center" width="33%">
+    <img src="https://github.com/mikexstudios/xcomic/blob/master/screenshots/post.png" width="100%">
+    <p><strong>Post new comic</strong></p>
+  </td>
+  <td align="center" width="33%">
+    <img src="https://github.com/mikexstudios/xcomic/blob/master/screenshots/edit.png" width="100%">
+    <p><strong>Edit comic</strong></p>
+  </td>
+  <td align="center" width="33%">
+   <img src="https://github.com/mikexstudios/xcomic/blob/master/screenshots/news-new.png" width="100%">
+   <p><strong>Post new news</strong></p>
+  </td>
+</tr>
+<tr>
+  <td align="center" width="33%">
+    <img src="https://github.com/mikexstudios/xcomic/blob/master/screenshots/news-edit.png" width="100%">
+    <p><strong>Edit news/strong></p>
+  </td>
+  <td align="center" width="33%">
+    <img src="https://github.com/mikexstudios/xcomic/blob/master/screenshots/options.png" width="100%">
+    <p><strong>Options</strong></p>
+  </td>
+  <td align="center" width="33%">
+   <img src="https://github.com/mikexstudios/xcomic/blob/master/screenshots/users.png" width="100%">
+   <p><strong>Users</strong></p>
+  </td>
+</tr>
+</table>
+
+## Usage
+
+Since this script is outdated, the easiest way to run it (for educational purposes) is to use our [Docker setup over at mikexstudios/xcomic-docker][xcd].
+
+[xcd]: https://github.com/mikexstudios/xcomic-docker
 
 ## Why use Xcomic?
 
