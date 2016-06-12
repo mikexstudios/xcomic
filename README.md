@@ -48,7 +48,7 @@ simplistic and logical design.
 <tr>
   <td align="center" width="33%">
     <img src="https://github.com/mikexstudios/xcomic/blob/master/screenshots/news-edit.png" width="100%">
-    <p><strong>Edit news/strong></p>
+    <p><strong>Edit news</strong></p>
   </td>
   <td align="center" width="33%">
     <img src="https://github.com/mikexstudios/xcomic/blob/master/screenshots/options.png" width="100%">
